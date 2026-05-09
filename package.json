@@ -1,6 +1,6 @@
 {
   "name": "kithulgala-rafting",
-  "homepage": "https://github.com/KavinduLakmal2000/THELIGAMA_VALLEY_ADVENTURE",
+  "homepage": "https://kavindulakmal2000.github.io/THELIGAMA_VALLEY_ADVENTURE",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -9,7 +9,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "react": "^18.3.1",
