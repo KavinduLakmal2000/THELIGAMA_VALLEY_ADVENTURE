@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { logout } from "../../AdminLogin";
 
 const NAV = [
   { id: "dashboard",  label: "Dashboard",    icon: "▦" },
@@ -12,6 +14,12 @@ const NAV = [
 export default function AdminLayout({ children, page, setPage, pendingCount }) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/admin/login", { replace: true });
+  };
 
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
@@ -68,21 +76,32 @@ export default function AdminLayout({ children, page, setPage, pendingCount }) {
         })}
       </nav>
 
-      {/* Bottom — back to site */}
-      <div className="p-3 border-t border-stone-800">
+      {/* Bottom — back to site, logout, collapse */}
+      <div className="p-3 border-t border-stone-800 space-y-1">
         <a
           href="/"
           className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-stone-500 hover:text-stone-300 hover:bg-stone-800/60 text-sm font-semibold transition-all ${collapsed ? "justify-center" : ""}`}
           style={{ fontFamily: "'Syne', sans-serif" }}
+          title="Back to Site"
         >
-          <span>←</span>
-          {!collapsed && <span>Back to Site</span>}
+          <span>🌐</span>
+          {!collapsed && <span>Public Site</span>}
         </a>
         <button
-          onClick={() => setCollapsed(c => !c)}
-          className={`w-full mt-1 flex items-center gap-3 px-3 py-2.5 rounded-xl text-stone-600 hover:text-stone-400 hover:bg-stone-800/40 text-sm transition-all ${collapsed ? "justify-center" : ""}`}
+          onClick={handleLogout}
+          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-stone-500 hover:text-red-400 hover:bg-red-500/10 text-sm font-semibold transition-all ${collapsed ? "justify-center" : ""}`}
+          style={{ fontFamily: "'Syne', sans-serif" }}
+          title="Log out"
         >
-          <span>{collapsed ? "»" : "«"}</span>
+          <span>🚪</span>
+          {!collapsed && <span>Log Out</span>}
+        </button>
+        <button
+          onClick={() => setCollapsed(c => !c)}
+          className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-stone-700 hover:text-stone-500 hover:bg-stone-800/40 text-sm transition-all ${collapsed ? "justify-center" : ""}`}
+          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+        >
+          <span className="text-xs">{collapsed ? "»" : "«"}</span>
           {!collapsed && <span className="text-xs" style={{ fontFamily: "'Syne', sans-serif" }}>Collapse</span>}
         </button>
       </div>
@@ -145,7 +164,14 @@ export default function AdminLayout({ children, page, setPage, pendingCount }) {
                 {pendingCount} pending
               </button>
             )}
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-teal-600 flex items-center justify-center text-stone-950 font-black text-sm">
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 text-stone-500 hover:text-red-400 border border-stone-800 hover:border-red-500/30 hover:bg-red-500/5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all hidden sm:flex"
+              style={{ fontFamily: "'Syne', sans-serif" }}
+            >
+              <span>🚪</span> Log out
+            </button>
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-teal-600 flex items-center justify-center text-stone-950 font-black text-sm select-none">
               A
             </div>
           </div>

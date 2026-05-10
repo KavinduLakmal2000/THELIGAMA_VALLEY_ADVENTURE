@@ -27,6 +27,7 @@ function PublicSite() {
       <Schedule />
       <Reviews />
       <Guidelines />
+      
       <Booking />
       <Contact />
       <Footer />
