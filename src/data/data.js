@@ -67,7 +67,7 @@ export const activities = [
     title: "White Water Rafting",
     location: "Kelani River",
     duration: "1 – 2 Hours",
-    image: "https://images.unsplash.com/photo-1530866495561-7b4ceec6d988?w=600&q=80",
+    image: "https://deepcreekinns.com/wp-content/uploads/2025/06/shutterstock_114911380.jpg",
     tag: "Most Popular",
     price: "LKR 3,500",
   },
