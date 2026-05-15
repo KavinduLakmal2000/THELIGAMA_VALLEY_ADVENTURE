@@ -4,43 +4,28 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-  scroll-behavior: smooth;
-}
+* { scroll-behavior: smooth; }
 
+/* ── Public site: white background ── */
 body {
-  background-color: #0c0a09;
-  color: #e7e5e4;
+  background-color: #ffffff;
+  color: #1c1917;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #1c1917;
-}
-::-webkit-scrollbar-thumb {
-  background: #06b6d4;
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #22d3ee;
+/* ── Admin area keeps dark background ── */
+body.admin-mode {
+  background-color: #0c0a09;
+  color: #e7e5e4;
 }
 
-/* Smooth transitions for section animations */
+::-webkit-scrollbar        { width: 6px; }
+::-webkit-scrollbar-track  { background: #f5f5f4; }
+::-webkit-scrollbar-thumb  { background: #06b6d4; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #0891b2; }
+
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
-
-.fade-in-up {
-  animation: fadeInUp 0.6s ease-out forwards;
-}
+.fade-in-up { animation: fadeInUp 0.5s ease-out forwards; }
