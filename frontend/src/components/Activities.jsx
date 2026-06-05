@@ -19,7 +19,7 @@ export default function Activities() {
           <h2 className="text-stone-900 font-black leading-none mb-6" style={{ fontFamily:"'Bebas Neue','Impact',sans-serif", fontSize:"clamp(2.8rem,6vw,5rem)" }}>
             ADVENTURE <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-teal-500">ACTIVITIES</span>
           </h2>
-          <p className="text-stone-500 text-lg max-w-xl mx-auto leading-relaxed" style={{ fontFamily:"'DM Sans',sans-serif" }}>
+          <p className="text-stone-500 text-xl max-w-xl mx-auto leading-relaxed" style={{ fontFamily:"'DM Sans',sans-serif" }}>
             Discover thrilling outdoor experiences in Kithulgala — designed for nature lovers, adrenaline seekers, and first-time explorers.
           </p>
         </div>
@@ -52,7 +52,7 @@ export default function Activities() {
                   </div>
                 </div>
                 <div className="p-5">
-                  <h3 className="text-stone-900 font-black text-lg mb-2 group-hover:text-cyan-600 transition-colors" style={{ fontFamily:"'Syne',sans-serif" }}>{act.title}</h3>
+                  <h3 className="text-stone-900 font-black text-xl uppercase mb-2 group-hover:text-cyan-600 transition-colors" style={{ fontFamily:"'Bebas Neue', 'Impact', sans-serif", letterSpacing: "0.05em" }}>{act.title}</h3>
                   <div className="flex items-center gap-3 text-stone-400 text-xs mb-4" style={{ fontFamily:"'DM Sans',sans-serif" }}>
                     <span>📍 {act.location}</span>
                     <span className="text-stone-200">·</span>

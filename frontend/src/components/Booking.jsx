@@ -116,7 +116,7 @@ export default function Booking() {
           <h2 className="text-stone-900 font-black mb-4" style={{ fontFamily:"'Bebas Neue','Impact',sans-serif", fontSize:"clamp(2.8rem,6vw,5rem)" }}>
             BOOK YOUR <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-teal-500">ADVENTURE</span>
           </h2>
-          <p className="text-stone-500 text-lg" style={{ fontFamily:"'DM Sans',sans-serif" }}>Choose your activity, pick a date, and we'll handle the rest.</p>
+          <p className="text-stone-500 text-xl" style={{ fontFamily:"'DM Sans',sans-serif" }}>Choose your activity, pick a date, and we'll handle the rest.</p>
         </div>
 
         {submitted ? (
@@ -139,7 +139,7 @@ export default function Booking() {
 
               {/* Step 1 */}
               <div className="bg-stone-50 border border-stone-200 rounded-2xl p-6">
-                <h3 className="text-stone-900 font-black text-lg mb-5 flex items-center gap-2" style={{ fontFamily:"'Syne',sans-serif" }}>
+                <h3 className="text-stone-900 font-black text-2xl mb-5 flex items-center gap-2" style={{ fontFamily:"'Bebas Neue', 'Impact', sans-serif", letterSpacing: "0.05em"  }}>
                   <span className="w-7 h-7 rounded-full bg-cyan-500 text-white text-xs flex items-center justify-center font-black">1</span> Personal Details
                 </h3>
                 <div className="grid sm:grid-cols-2 gap-4">
@@ -159,7 +159,7 @@ export default function Booking() {
 
               {/* Step 2 */}
               <div className="bg-stone-50 border border-stone-200 rounded-2xl p-6">
-                <h3 className="text-stone-900 font-black text-lg mb-5 flex items-center gap-2" style={{ fontFamily:"'Syne',sans-serif" }}>
+                <h3 className="text-stone-900 font-black text-2xl mb-5 flex items-center gap-2" style={{ fontFamily:"'Bebas Neue', 'Impact', sans-serif", letterSpacing: "0.05em"  }}>
                   <span className="w-7 h-7 rounded-full bg-cyan-500 text-white text-xs flex items-center justify-center font-black">2</span> Choose Activity
                 </h3>
                 {loadingData ? (
@@ -181,7 +181,7 @@ export default function Booking() {
 
               {/* Step 4 */}
               <div className="bg-stone-50 border border-stone-200 rounded-2xl p-6">
-                <h3 className="text-stone-900 font-black text-lg mb-5 flex items-center gap-2" style={{ fontFamily:"'Syne',sans-serif" }}>
+                <h3 className="text-stone-900 font-black text-2xl mb-5 flex items-center gap-2" style={{ fontFamily:"'Bebas Neue', 'Impact', sans-serif", letterSpacing: "0.05em"  }}>
                   <span className="w-7 h-7 rounded-full bg-cyan-500 text-white text-xs flex items-center justify-center font-black">4</span> Select Time Slot
                 </h3>
                 <div className="grid sm:grid-cols-3 gap-3">
@@ -199,7 +199,7 @@ export default function Booking() {
 
               {/* Step 5 */}
               <div className="bg-stone-50 border border-stone-200 rounded-2xl p-6">
-                <h3 className="text-stone-900 font-black text-lg mb-4 flex items-center gap-2" style={{ fontFamily:"'Syne',sans-serif" }}>
+                <h3 className="text-stone-900 font-black text-2xl mb-4 flex items-center gap-2" style={{ fontFamily:"'Bebas Neue', 'Impact', sans-serif", letterSpacing: "0.05em" }}>
                   <span className="w-7 h-7 rounded-full bg-stone-200 text-stone-500 text-xs flex items-center justify-center font-black">5</span>
                   Special Requests <span className="text-stone-400 text-sm font-normal">(optional)</span>
                 </h3>
@@ -210,7 +210,7 @@ export default function Booking() {
             <div className="lg:col-span-2 space-y-5">
               {/* Step 3 — Calendar */}
               <div className="bg-stone-50 border border-stone-200 rounded-2xl p-6">
-                <h3 className="text-stone-900 font-black text-lg mb-5 flex items-center gap-2" style={{ fontFamily:"'Syne',sans-serif" }}>
+                <h3 className="text-stone-900 font-black text-2xl mb-5 flex items-center gap-2" style={{ fontFamily:"'Bebas Neue', 'Impact', sans-serif", letterSpacing: "0.05em" }}>
                   <span className="w-7 h-7 rounded-full bg-cyan-500 text-white text-xs flex items-center justify-center font-black">3</span> Pick a Date
                 </h3>
                 <MiniCalendar selected={form.date} onSelect={d=>set("date",d)} minDate={today} blockedDates={blockedDates} />
@@ -220,7 +220,7 @@ export default function Booking() {
 
               {/* Summary */}
               <div className="bg-stone-50 border border-stone-200 rounded-2xl p-6">
-                <h3 className="text-stone-900 font-black text-lg mb-4" style={{ fontFamily:"'Syne',sans-serif" }}>Summary</h3>
+                <h3 className="text-stone-900 font-black text-2xl mb-4" style={{ fontFamily:"'Bebas Neue', 'Impact', sans-serif", letterSpacing: "0.05em" }}>Summary</h3>
                 <div className="space-y-3 text-sm" style={{ fontFamily:"'DM Sans',sans-serif" }}>
                   {[["Activity",form.activity||"—"],["Date",form.date?form.date.toLocaleDateString("en-GB"):"—"],["Time",form.slot?form.slot.split(" ")[0]:"—"],["Guests",form.guests]].map(([l,v])=>(
                     <div key={l} className="flex justify-between items-center py-2 border-b border-stone-200 last:border-0">

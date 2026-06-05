@@ -30,7 +30,7 @@ export default function Contact() {
 
         <div className="mt-8 text-center bg-stone-50 border border-stone-200 rounded-2xl p-6">
           <span className="text-3xl">🕐</span>
-          <p className="text-stone-900 font-black text-lg mt-2" style={{ fontFamily:"'Syne',sans-serif" }}>{contact.hours}</p>
+          <p className="text-stone-900 font-black text-5xl mt-2" style={{ fontFamily:"'Bebas Neue', 'Impact', sans-serif", letterSpacing: "0.05em"  }}>{contact.hours}</p>
           <p className="text-stone-500 text-sm mt-1" style={{ fontFamily:"'DM Sans',sans-serif" }}>Open 7 days a week, all year round</p>
         </div>
       </div>

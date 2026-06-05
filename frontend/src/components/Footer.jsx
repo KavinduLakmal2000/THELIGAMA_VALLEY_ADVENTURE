@@ -8,19 +8,19 @@ export default function Footer() {
           <div>
             <div className="flex items-center gap-3 mb-5">
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-400 to-teal-600 flex items-center justify-center text-xl">🌊</div>
-              <span className="font-black text-xl text-white" style={{ fontFamily:"'Bebas Neue','Impact',sans-serif", letterSpacing:"0.05em" }}>
+              <span className="font-black text-3xl text-white" style={{ fontFamily:"'Bebas Neue','Impact',sans-serif", letterSpacing:"0.05em" }}>
                 KithulGala<span className="text-cyan-400"> Adventures</span>
               </span>
             </div>
-            <p className="text-stone-400 text-sm leading-relaxed" style={{ fontFamily:"'DM Sans',sans-serif" }}>{footer.about}</p>
+            <p className="text-stone-400 text-lg leading-relaxed" style={{ fontFamily:"'DM Sans',sans-serif" }}>{footer.about}</p>
           </div>
 
           <div>
-            <h4 className="text-white font-black text-sm tracking-widest uppercase mb-5" style={{ fontFamily:"'Syne',sans-serif" }}>Quick Links</h4>
+            <h4 className="text-white font-black text-lg tracking-widest uppercase mb-5" style={{ fontFamily:"'Syne',sans-serif" }}>Quick Links</h4>
             <ul className="space-y-2">
               {footer.quickLinks.map(link => (
                 <li key={link.label}>
-                  <a href={link.href} className="text-stone-400 hover:text-cyan-400 text-sm transition-colors flex items-center gap-2 group" style={{ fontFamily:"'DM Sans',sans-serif" }}>
+                  <a href={link.href} className="text-stone-400 hover:text-cyan-400 text-base transition-colors flex items-center gap-2 group" style={{ fontFamily:"'DM Sans',sans-serif" }}>
                     <span className="w-0 group-hover:w-3 overflow-hidden transition-all text-cyan-400">→</span>
                     {link.label}
                   </a>
@@ -30,8 +30,8 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-white font-black text-sm tracking-widest uppercase mb-5" style={{ fontFamily:"'Syne',sans-serif" }}>Get In Touch</h4>
-            <div className="space-y-3 text-sm" style={{ fontFamily:"'DM Sans',sans-serif" }}>
+            <h4 className="text-white font-black text-lg tracking-widest uppercase mb-5" style={{ fontFamily:"'Syne',sans-serif" }}>Get In Touch</h4>
+            <div className="space-y-3 text-lg" style={{ fontFamily:"'DM Sans',sans-serif" }}>
               <p className="text-stone-400">📍 Kitulgala, Sri Lanka</p>
               <p className="text-stone-400">📞 +94 XX XXX XXXX</p>
               <p className="text-stone-400">✉️ info@kithulgalaadventures.com</p>

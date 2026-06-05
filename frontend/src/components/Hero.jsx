@@ -86,7 +86,7 @@ export default function Hero() {
 
           {/* Subtitle */}
           <p
-            className="text-stone-300 text-lg leading-relaxed mb-10 max-w-xl"
+            className="text-stone-300 text-xl leading-relaxed mb-10 max-w-xl"
             style={{ fontFamily: "'DM Sans', sans-serif" }}
           >
             {hero.subtitle}

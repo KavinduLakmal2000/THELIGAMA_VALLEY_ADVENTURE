@@ -311,3 +311,82 @@ if (!res.ok) navigate("/admin/login");
 3. Use a strong `JWT_SECRET` (at least 64 random hex chars)
 4. Use MongoDB Atlas instead of local MongoDB
 5. Consider putting Nginx in front of Express to serve `/uploads` efficiently
+
+```
+rafting_frontend
+├─ README.md
+├─ backend
+│  ├─ middleware
+│  │  ├─ auth.js
+│  │  ├─ errorHandler.js
+│  │  └─ upload.js
+│  ├─ models
+│  │  ├─ Activity.js
+│  │  ├─ Admin.js
+│  │  ├─ Booking.js
+│  │  ├─ Review.js
+│  │  └─ Schedule.js
+│  ├─ package-lock.json
+│  ├─ package.json
+│  ├─ routes
+│  │  ├─ activities.js
+│  │  ├─ auth.js
+│  │  ├─ bookings.js
+│  │  ├─ reviews.js
+│  │  └─ schedule.js
+│  ├─ scripts
+│  │  └─ seedAdmin.js
+│  ├─ server.js
+│  └─ uploads
+│     ├─ 1778611191640-786f6007298e42b287320b38.png
+│     └─ 1778625909545-b4a0f580eda7a953e23dd0d2.png
+└─ frontend
+   ├─ index.html
+   ├─ package-lock.json
+   ├─ package.json
+   ├─ postcss.config.js
+   ├─ public
+   │  └─ hero_vid.mp4
+   ├─ src
+   │  ├─ AdminLogin.jsx
+   │  ├─ App.jsx
+   │  ├─ ProtectedRoute.jsx
+   │  ├─ admin
+   │  │  ├─ AdminApp.jsx
+   │  │  ├─ components
+   │  │  │  └─ AdminLayout.jsx
+   │  │  ├─ pages
+   │  │  │  ├─ ActivitiesPage.jsx
+   │  │  │  ├─ BookingsPage.jsx
+   │  │  │  ├─ CalendarPage.jsx
+   │  │  │  ├─ Dashboard.jsx
+   │  │  │  ├─ ReviewsPage.jsx
+   │  │  │  └─ SchedulePage.jsx
+   │  │  └─ store
+   │  │     └─ mockData.js
+   │  ├─ api
+   │  │  └─ client.js
+   │  ├─ components
+   │  │  ├─ About.jsx
+   │  │  ├─ Activities.jsx
+   │  │  ├─ Booking.jsx
+   │  │  ├─ Contact.jsx
+   │  │  ├─ Footer.jsx
+   │  │  ├─ Guidelines.jsx
+   │  │  ├─ Hero.jsx
+   │  │  ├─ Navbar.jsx
+   │  │  ├─ ParallaxDivider.jsx
+   │  │  ├─ Reviews.jsx
+   │  │  └─ Schedule.jsx
+   │  ├─ data
+   │  │  └─ data.js
+   │  ├─ index.css
+   │  └─ main.jsx
+   ├─ tailwind.config.js
+   ├─ testfolder
+   │  ├─ AdminLayout.jsx
+   │  ├─ App.jsx
+   │  └─ package.json
+   └─ vite.config.js
+
+```

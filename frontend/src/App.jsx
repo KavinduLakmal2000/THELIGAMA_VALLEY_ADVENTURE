@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { BrowserRouter, HashRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 
 import Navbar          from "./components/Navbar";
 import Hero            from "./components/Hero";
@@ -111,7 +111,8 @@ function PublicSite() {
 // ─── Router ───────────────────────────────────────────────────────────────────
 export default function App() {
   return (
-    <BrowserRouter>
+    // </BrowserRouter> chnage it to this
+    <HashRouter> 
       <BodyTheme />
       <Routes>
         <Route path="/"            element={<PublicSite />} />
@@ -122,6 +123,6 @@ export default function App() {
         />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }

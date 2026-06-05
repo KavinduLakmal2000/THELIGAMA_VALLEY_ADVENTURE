@@ -11,7 +11,7 @@ export default function Schedule() {
           <h2 className="text-stone-900 font-black mb-6" style={{ fontFamily:"'Bebas Neue','Impact',sans-serif", fontSize:"clamp(2.8rem,6vw,5rem)" }}>
             SCHEDULE & <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-teal-500">OPERATING TIMES</span>
           </h2>
-          <p className="text-stone-500 text-lg max-w-xl mx-auto" style={{ fontFamily:"'DM Sans',sans-serif" }}>{schedule.subtitle}</p>
+          <p className="text-stone-500 text-xl max-w-xl mx-auto" style={{ fontFamily:"'DM Sans',sans-serif" }}>{schedule.subtitle}</p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-10 items-start">
