@@ -26,7 +26,7 @@ function MiniCalendar({ selected, onSelect, minDate, blockedDates=[] }) {
     <div className="bg-white border border-stone-200 rounded-2xl p-5 shadow-sm">
       <div className="flex items-center justify-between mb-4">
         <button onClick={prev} className="w-8 h-8 flex items-center justify-center rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 transition-colors">‹</button>
-        <span className="text-stone-900 font-black text-sm" style={{ fontFamily:"'Syne',sans-serif" }}>{MONTH_NAMES[viewMonth]} {viewYear}</span>
+        <span className="text-stone-900 font-black text-2xl" style={{ fontFamily:"'Bebas Neue', 'Impact', sans-serif" }}>{MONTH_NAMES[viewMonth]} {viewYear}</span>
         <button onClick={next} className="w-8 h-8 flex items-center justify-center rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 transition-colors">›</button>
       </div>
       <div className="grid grid-cols-7 mb-2">
@@ -112,7 +112,7 @@ export default function Booking() {
 
       <div className="max-w-6xl mx-auto relative z-10">
         <div className="text-center mb-16">
-          <span className="inline-block text-cyan-600 text-xs font-bold tracking-[0.35em] uppercase mb-4" style={{ fontFamily:"'Syne',sans-serif" }}>— Reserve Your Spot —</span>
+          <span className="inline-block text-cyan-600 text-xl font-bold tracking-[0.35em] uppercase mb-4" style={{ fontFamily:"'Bebas Neue', 'Impact', sans-serif" }}>— Reserve Your Spot —</span>
           <h2 className="text-stone-900 font-black mb-4" style={{ fontFamily:"'Bebas Neue','Impact',sans-serif", fontSize:"clamp(2.8rem,6vw,5rem)" }}>
             BOOK YOUR <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-teal-500">ADVENTURE</span>
           </h2>
@@ -131,7 +131,7 @@ export default function Booking() {
               {priceEst && <p className="text-stone-700 text-sm">💰 <strong>Estimated:</strong> LKR {priceEst.toLocaleString()}</p>}
             </div>
             <p className="text-stone-400 text-xs mt-5">Confirmation sent to <span className="text-cyan-600">{form.email}</span></p>
-            <button onClick={resetForm} className="mt-8 px-6 py-3 border border-stone-200 hover:border-cyan-400 text-stone-500 hover:text-cyan-600 text-sm font-bold tracking-widest uppercase rounded-full transition-all" style={{ fontFamily:"'Syne',sans-serif" }}>Book Another</button>
+            <button onClick={resetForm} className="mt-8 px-6 py-3 border border-stone-200 hover:border-cyan-400 text-stone-500 hover:text-cyan-600 text-2xl font-bold tracking-widest uppercase rounded-full transition-all" style={{ fontFamily:"'Bebas Neue', 'Impact', sans-serif" }}>Book Another</button>
           </div>
         ) : (
           <div className="grid lg:grid-cols-5 gap-8">
@@ -232,7 +232,7 @@ export default function Booking() {
                     <div className="mt-4 pt-3 border-t border-stone-300">
                       <div className="flex justify-between items-center">
                         <span className="text-stone-500">Estimated Total</span>
-                        <span className="text-cyan-600 font-black text-xl" style={{ fontFamily:"'Syne',sans-serif" }}>LKR {priceEst.toLocaleString()}</span>
+                        <span className="text-cyan-600 font-black text-xl" style={{ fontFamily:"'Bebas Neue', 'Impact', sans-serif", letterSpacing: "0.05em" }}>LKR {priceEst.toLocaleString()}</span>
                       </div>
                       <p className="text-stone-400 text-xs mt-1">*Final price confirmed at booking</p>
                     </div>
@@ -247,8 +247,8 @@ export default function Booking() {
                 )}
 
                 <button onClick={handleSubmit} disabled={submitting}
-                  className="mt-6 w-full py-4 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 disabled:from-stone-300 disabled:to-stone-300 disabled:cursor-not-allowed text-white font-black text-sm tracking-widest uppercase rounded-xl transition-all shadow-lg shadow-cyan-200 hover:shadow-cyan-300 hover:scale-[1.02] disabled:shadow-none disabled:hover:scale-100"
-                  style={{ fontFamily:"'Syne',sans-serif" }}>
+                  className="mt-6 w-full py-4 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 disabled:from-stone-300 disabled:to-stone-300 disabled:cursor-not-allowed text-white font-black text-3xl tracking-widest uppercase rounded-xl transition-all shadow-lg shadow-cyan-200 hover:shadow-cyan-300 hover:scale-[1.02] disabled:shadow-none disabled:hover:scale-100"
+                  style={{ fontFamily:"'Bebas Neue', 'Impact', sans-serif"}}>
                   {submitting ? (
                     <span className="flex items-center justify-center gap-2">
                       <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>

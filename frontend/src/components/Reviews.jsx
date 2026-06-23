@@ -62,8 +62,8 @@ function ReviewForm({ activities, onSubmitted }) {
       <div className="max-w-2xl mx-auto bg-white border border-stone-200 rounded-3xl overflow-hidden shadow-xl shadow-stone-100">
         <div className="flex items-center justify-between px-8 py-5 border-b border-stone-100 bg-stone-50">
           <div>
-            <h3 className="text-stone-900 font-black text-xl" style={{ fontFamily:"'Syne',sans-serif" }}>Write a Review</h3>
-            <p className="text-stone-500 text-xs mt-0.5" style={{ fontFamily:"'DM Sans',sans-serif" }}>Reviews are moderated before appearing publicly</p>
+            <h3 className="text-stone-900 font-black text-4xl" style={{ fontFamily:"'Bebas Neue', 'Impact', sans-serif" }}>Write a Review</h3>
+            <p className="text-stone-500 text-sm mt-0.5" style={{ fontFamily:"'DM Sans',sans-serif" }}>Reviews are moderated before appearing publicly</p>
           </div>
           <button onClick={() => setOpen(false)} className="w-9 h-9 flex items-center justify-center rounded-full bg-stone-200 hover:bg-stone-300 text-stone-500 hover:text-stone-700 transition-colors">✕</button>
         </div>
@@ -112,8 +112,8 @@ function ReviewForm({ activities, onSubmitted }) {
           )}
 
           <button onClick={handleSubmit} disabled={loading}
-            className="w-full py-3.5 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 disabled:from-stone-300 disabled:to-stone-300 disabled:cursor-not-allowed text-white font-black text-sm tracking-widest uppercase rounded-xl transition-all shadow-md shadow-cyan-200 hover:shadow-cyan-300 disabled:shadow-none"
-            style={{ fontFamily:"'Syne',sans-serif" }}>
+            className="w-full py-3.5 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 disabled:from-stone-300 disabled:to-stone-300 disabled:cursor-not-allowed text-white font-black text-3xl tracking-widest uppercase rounded-xl transition-all shadow-md shadow-cyan-200 hover:shadow-cyan-300 disabled:shadow-none"
+            style={{ fontFamily:"'Bebas Neue', 'Impact', sans-serif" }}>
             {loading ? (
               <span className="flex items-center justify-center gap-2">
                 <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
@@ -133,7 +133,7 @@ function ThankYou({ onReset }) {
       <div className="w-16 h-16 rounded-full bg-cyan-50 border-2 border-cyan-200 flex items-center justify-center text-3xl mx-auto mb-5">🎉</div>
       <h3 className="text-stone-900 font-black text-2xl mb-2" style={{ fontFamily:"'Bebas Neue','Impact',sans-serif" }}>THANK YOU!</h3>
       <p className="text-stone-500 text-sm leading-relaxed mb-6" style={{ fontFamily:"'DM Sans',sans-serif" }}>Your review has been submitted and will appear after our team reviews it.</p>
-      <button onClick={onReset} className="px-6 py-2.5 border border-stone-200 hover:border-cyan-400 text-stone-500 hover:text-cyan-600 text-xs font-bold tracking-widest uppercase rounded-full transition-all" style={{ fontFamily:"'Syne',sans-serif" }}>Write Another</button>
+      <button onClick={onReset} className="px-6 py-2.5 border border-stone-200 hover:border-cyan-400 text-stone-500 hover:text-cyan-600 text-xl font-bold tracking-widest uppercase rounded-full transition-all" style={{ fontFamily:"'Bebas Neue', 'Impact', sans-serif" }}>Write Another</button>
     </div>
   );
 }
@@ -158,7 +158,7 @@ export default function Reviews() {
 
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-20">
-          <span className="inline-block text-cyan-600 text-xs font-bold tracking-[0.35em] uppercase mb-4" style={{ fontFamily:"'Syne',sans-serif" }}>— Guest Experiences —</span>
+          <span className="inline-block text-cyan-600 text-xl font-bold tracking-[0.35em] uppercase mb-4" style={{ fontFamily:"'Bebas Neue', 'Impact', sans-serif" }}>— Guest Experiences —</span>
           <h2 className="text-stone-900 font-black mb-6" style={{ fontFamily:"'Bebas Neue','Impact',sans-serif", fontSize:"clamp(2.8rem,6vw,5rem)" }}>
             WHAT OUR <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-teal-500">ADVENTURERS</span> SAY
           </h2>
@@ -182,14 +182,14 @@ export default function Reviews() {
               <div key={review._id} className="group bg-white border border-stone-200 hover:border-cyan-300 rounded-2xl p-7 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-100">
                 <div className="text-cyan-300/60 font-black leading-none mb-4 select-none" style={{ fontFamily:"'Georgia',serif", fontSize:"5rem", lineHeight:0.8 }}>"</div>
                 <div className="flex gap-0.5 mb-4">{[...Array(5)].map((_,j) => <span key={j} className={j < review.rating ? "text-amber-400" : "text-stone-200"}>★</span>)}</div>
-                <p className="text-stone-600 text-sm leading-relaxed mb-6" style={{ fontFamily:"'DM Sans',sans-serif" }}>{review.text}</p>
+                <p className="text-stone-600 text-xl leading-relaxed mb-6" style={{ fontFamily:"'DM Sans',sans-serif" }}>{review.text}</p>
                 <div className="flex items-center gap-3 pt-5 border-t border-stone-100">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-500 to-teal-600 flex items-center justify-center text-white font-black text-sm flex-shrink-0">
                     {review.name.split(" ").map(n=>n[0]).join("").slice(0,2)}
                   </div>
                   <div>
-                    <p className="text-stone-900 font-black text-sm" style={{ fontFamily:"'Syne',sans-serif" }}>{review.name}</p>
-                    <p className="text-stone-400 text-xs" style={{ fontFamily:"'DM Sans',sans-serif" }}>{review.location}{review.activity ? ` · ${review.activity}` : ""}</p>
+                    <p className="text-stone-900 font-black text-3xl" style={{ fontFamily:"'Bebas Neue', 'Impact', sans-serif" }}>{review.name}</p>
+                    <p className="text-stone-400 text-sm" style={{ fontFamily:"'DM Sans',sans-serif" }}>{review.location}{review.activity ? ` · ${review.activity}` : ""}</p>
                   </div>
                 </div>
               </div>
@@ -206,7 +206,7 @@ export default function Reviews() {
               </div>
               <div className="w-px h-12 bg-stone-200"/>
               <div className="text-left">
-                <p className="text-stone-900 font-black text-lg" style={{ fontFamily:"'Syne',sans-serif" }}>Overall Rating</p>
+                <p className="text-stone-900 font-black text-3xl" style={{ fontFamily:"'Bebas Neue', 'Impact', sans-serif" }}>Overall Rating</p>
                 <p className="text-stone-500 text-sm" style={{ fontFamily:"'DM Sans',sans-serif" }}>Based on {reviews.length} review{reviews.length!==1?"s":""}</p>
               </div>
             </div>

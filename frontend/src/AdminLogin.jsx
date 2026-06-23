@@ -129,7 +129,7 @@ export default function AdminLogin() {
         {/* Logo */}
         <div className="text-center mb-10">
           <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-teal-600 flex items-center justify-center text-3xl mx-auto mb-5 shadow-2xl shadow-cyan-500/25 ring-1 ring-cyan-400/20">🌊</div>
-          <h1 className="text-white font-black text-4xl leading-none" style={{ fontFamily:"'Bebas Neue','Impact',sans-serif", letterSpacing:"0.06em" }}>KITHULGALA</h1>
+          <h1 className="text-white font-black text-4xl leading-none" style={{ fontFamily:"'Bebas Neue','Impact',sans-serif", letterSpacing:"0.06em" }}>THELIGAMA VALLEY</h1>
           <p className="text-cyan-400 text-xs font-bold tracking-[0.3em] uppercase mt-1" style={{ fontFamily:"'Syne',sans-serif" }}>Admin Panel</p>
         </div>
 

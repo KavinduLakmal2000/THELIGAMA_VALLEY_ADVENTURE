@@ -86,7 +86,7 @@ function PublicSite() {
       <ParallaxDivider {...PARALLAX.river} />
 
       <Activities />
-      <Schedule />
+      {/* <Schedule /> */}
 
       {/* ② Jungle — between Schedule and Reviews */}
       <ParallaxDivider {...PARALLAX.jungle} />

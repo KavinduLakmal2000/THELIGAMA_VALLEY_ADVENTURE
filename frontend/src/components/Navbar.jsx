@@ -11,18 +11,35 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const scrollToSection = (e, href) => {
+    e.preventDefault();
+    const id = href.replace("#", "");
+    const element = document.getElementById(id);
+    if (element) {
+      const offset = 80; // Height of your fixed navbar
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
+    }
+    setMenuOpen(false);
+  };
+
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
       scrolled
         ? "bg-white/95 backdrop-blur-md shadow-lg shadow-stone-200/60 py-3 border-b border-stone-100"
         : "bg-transparent py-5"
     }`}>
-      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+      <div className="max-w-8xl mx-auto px-6 flex items-center justify-between">
         {/* Logo */}
-        <a href="#home" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-500 to-teal-600 flex items-center justify-center text-xl shadow-md shadow-cyan-500/30">🌊</div>
+        <a href="#home" onClick={(e) => scrollToSection(e, "#home")} className="flex items-center gap-3 group">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-500 to-teal-600 flex items-center justify-center text-2xl shadow-md shadow-cyan-500/30">🌊</div>
           <span className="font-black text-xl tracking-tight" style={{ fontFamily:"'Bebas Neue','Impact',sans-serif", letterSpacing:"0.05em", color: scrolled ? "#0c0a09" : "#ffffff" }}>
-            KithulGala<span className="text-cyan-500"> Adventures</span>
+            Theligama Valley<span className="text-cyan-500"> Adventures</span>
           </span>
         </a>
 
@@ -31,6 +48,7 @@ export default function Navbar() {
           {navLinks.map(link => (
             <li key={link.label}>
               <a href={link.href}
+                onClick={(e) => scrollToSection(e, link.href)}
                 className={`text-sm font-semibold tracking-widest uppercase transition-colors duration-200 relative group ${scrolled ? "text-stone-600 hover:text-cyan-600" : "text-white/90 hover:text-white"}`}
                 style={{ fontFamily:"'Syne',sans-serif" }}>
                 {link.label}
@@ -39,8 +57,8 @@ export default function Navbar() {
             </li>
           ))}
           <li>
-            <a href="#booking"
-              className="ml-4 px-5 py-2 bg-cyan-500 hover:bg-cyan-600 text-white font-black text-sm tracking-widest uppercase rounded-full transition-all shadow-md shadow-cyan-500/30 hover:shadow-cyan-600/40 hover:scale-105"
+            <a href="#booking" onClick={(e) => scrollToSection(e, "#booking")}
+            className="ml-4 px-4 py-1.5 bg-cyan-500 hover:bg-cyan-600 text-white font-black text-sm tracking-widest uppercase rounded-full transition-all shadow-md shadow-cyan-500/30 hover:shadow-cyan-600/40 hover:scale-105"
               style={{ fontFamily:"'Syne',sans-serif" }}>
               Book Now
             </a>
@@ -60,7 +78,7 @@ export default function Navbar() {
         <ul className="flex flex-col px-6 py-4 gap-4">
           {navLinks.map(link => (
             <li key={link.label}>
-              <a href={link.href} onClick={() => setMenuOpen(false)}
+              <a href={link.href} onClick={(e) => scrollToSection(e, link.href)}
                 className="text-stone-600 hover:text-cyan-600 text-sm font-semibold tracking-widest uppercase transition-colors block"
                 style={{ fontFamily:"'Syne',sans-serif" }}>
                 {link.label}
@@ -68,8 +86,8 @@ export default function Navbar() {
             </li>
           ))}
           <li>
-            <a href="#booking" onClick={() => setMenuOpen(false)}
-              className="inline-block px-5 py-2 bg-cyan-500 text-white font-black text-sm tracking-widest uppercase rounded-full mt-2">
+            <a href="#booking" onClick={(e) => scrollToSection(e, "#booking")}
+            className="inline-block px-4 py-1.5 bg-cyan-500 text-white font-black text-xs tracking-widest uppercase rounded-full mt-2">
               Book Now
             </a>
           </li>

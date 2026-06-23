@@ -363,7 +363,7 @@ export default function AdminLayout({ children, page, setPage, pendingCount }) {
         <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-400 to-teal-600 flex items-center justify-center text-lg flex-shrink-0">🌊</div>
         {!collapsed && (
           <div>
-            <p className="text-white font-black text-sm leading-tight" style={{ fontFamily: "'Syne', sans-serif" }}>KithulGala</p>
+            <p className="text-white font-black text-sm leading-tight" style={{ fontFamily: "'Syne', sans-serif" }}>Theligama Valley</p>
             <p className="text-cyan-400 text-xs font-semibold" style={{ fontFamily: "'Syne', sans-serif" }}>Admin Panel</p>
           </div>
         )}

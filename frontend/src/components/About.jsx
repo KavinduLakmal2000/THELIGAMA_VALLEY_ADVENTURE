@@ -5,6 +5,10 @@ export default function About() {
   const scrollRef = useRef(null);
   const [isPaused, setIsPaused] = useState(false);
   const [selectedFeat, setSelectedFeat] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const [hasMoved, setHasMoved] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -28,6 +32,28 @@ export default function About() {
     scrollRef.current.scrollBy({ left: amount, behavior: "smooth" });
   };
 
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    setHasMoved(false);
+    setIsPaused(true);
+    setStartX(e.pageX - scrollRef.current.offsetLeft);
+    setScrollLeft(scrollRef.current.scrollLeft);
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    setIsPaused(false);
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    setHasMoved(true);
+    e.preventDefault();
+    const x = e.pageX - scrollRef.current.offsetLeft;
+    const walk = (x - startX) * 1.5; // Adjust scroll sensitivity here
+    scrollRef.current.scrollLeft = scrollLeft - walk;
+  };
+
   return (
     <section id="about" className="bg-white py-28 px-6 relative overflow-hidden">
       <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-50 rounded-full blur-3xl opacity-60" />
@@ -35,9 +61,9 @@ export default function About() {
 
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-center mb-20">
-          <span className="inline-block text-cyan-600 text-xs font-bold tracking-[0.35em] uppercase mb-4" style={{ fontFamily:"'Syne',sans-serif" }}>— {about.badge} —</span>
+          <span className="inline-block text-cyan-600 text-xl font-bold tracking-[0.35em] uppercase mb-4" style={{ fontFamily:"'Bebas Neue', 'Impact', sans-serif" }}>— {about.badge} —</span>
           <h2 className="text-stone-900 font-black leading-none mb-6" style={{ fontFamily:"'Bebas Neue','Impact',sans-serif", fontSize:"clamp(2.8rem,6vw,5rem)" }}>
-            KITHULGALA <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-teal-500">RIVER</span> ADVENTURES
+            THELIGAMA <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-teal-500">VALLEY</span> ADVENTURES
           </h2>
           <p className="text-stone-500 text-xl max-w-2xl mx-auto leading-relaxed" style={{ fontFamily:"'DM Sans',sans-serif" }}>{about.description}</p>
         </div>
@@ -61,16 +87,19 @@ export default function About() {
           {/* Scrolling Container */}
           <div 
             ref={scrollRef}
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => setIsPaused(false)}
-            className="flex gap-10 overflow-x-auto no-scrollbar scroll-smooth snap-x snap-mandatory pt-6 pb-8 px-2"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            onMouseEnter={() => !isDragging && setIsPaused(true)}
+            onMouseLeave={() => { setIsDragging(false); setIsPaused(false); }}
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
+            onMouseMove={handleMouseMove}
+            className={`flex gap-10 overflow-x-auto no-scrollbar pt-6 pb-8 px-2 ${isDragging ? "cursor-grabbing select-none" : "snap-x snap-mandatory cursor-grab"}`}
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', scrollBehavior: isDragging ? "auto" : "smooth", scrollSnapStop: isDragging ? "none" : "always" }}
           >
             {about.features.map((feat, i) => (
               <div 
                 key={i} 
-                onClick={() => setSelectedFeat(feat)}
-                className="flex-shrink-0 w-[320px] md:w-[450px] snap-center group relative bg-white border border-stone-200 hover:border-cyan-300 rounded-[2rem] p-10 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-cyan-100/50 overflow-hidden cursor-pointer"
+                onClick={() => !hasMoved && setSelectedFeat(feat)}
+                className="flex-shrink-0 w-[320px] md:w-[450px] snap-center group relative bg-white border border-stone-200 hover:border-cyan-300 rounded-[2rem] p-10 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-cyan-100/50 overflow-hidden"
               >
             <div 
             className="absolute inset-0 opacity-[0.3] pointer-events-none transition-opacity duration-500 group-hover:opacity-[0.06]"
@@ -87,7 +116,7 @@ export default function About() {
             <div className="relative z-10">
               <div className="text-5xl mb-6">{feat.icon}</div>
               <h3 className="text-stone-900 font-black text-3xl uppercase mb-4" style={{ fontFamily:"'Bebas Neue', 'Impact', sans-serif", letterSpacing: "0.05em" }}>{feat.title}</h3>
-              <p className="text-stone-500 text-xl leading-relaxed" style={{ fontFamily:"'DM Sans',sans-serif" }}>{feat.text}</p>
+              <p className="text-stone-500 text-xl leading-relaxed text-center" style={{ fontFamily:"'DM Sans',sans-serif" }}>{feat.text}</p>
             </div>
               </div>
             ))}
@@ -98,7 +127,7 @@ export default function About() {
           {[{ value:"10+", label:"Activities" },{ value:"5000+", label:"Happy Adventurers" },{ value:"100%", label:"Safety Record" },{ value:"365", label:"Days Open" }].map((stat,i) => (
             <div key={i} className="text-center p-6 bg-stone-50 rounded-2xl border border-stone-100">
               <div className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-teal-500 mb-1" style={{ fontFamily:"'Bebas Neue','Impact',sans-serif", fontSize:"3rem" }}>{stat.value}</div>
-              <div className="text-stone-500 text-xs tracking-widest uppercase font-semibold" style={{ fontFamily:"'Syne',sans-serif" }}>{stat.label}</div>
+              <div className="text-stone-500 text-xl tracking-widest uppercase font-semibold" style={{ fontFamily:"'Bebas Neue', 'Impact', sans-serif" }}>{stat.label}</div>
             </div>
           ))}
         </div>

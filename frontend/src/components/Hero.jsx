@@ -50,8 +50,8 @@ export default function Hero() {
           <div className="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/30 rounded-full px-4 py-1.5 mb-6 backdrop-blur-sm">
             <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
             <span
-              className="text-cyan-400 text-xs font-bold tracking-[0.2em] uppercase"
-              style={{ fontFamily: "'Syne', sans-serif" }}
+              className="text-cyan-400 text-xl font-bold tracking-[0.2em] uppercase"
+              style={{ fontFamily: "'Bebas Neue', 'Impact', sans-serif" }}
             >
               Sri Lanka's Premier Adventure
             </span>
@@ -96,16 +96,16 @@ export default function Hero() {
           <div className="flex flex-wrap gap-4 mb-12">
             <a
               href={hero.cta.href}
-              className="group px-8 py-4 bg-cyan-500 hover:bg-cyan-400 text-stone-950 font-black text-sm tracking-widest uppercase rounded-full transition-all duration-200 shadow-xl shadow-cyan-500/40 hover:shadow-cyan-400/60 hover:scale-105 flex items-center gap-2"
-              style={{ fontFamily: "'Syne', sans-serif" }}
+              className="group px-8 py-4 bg-cyan-500 hover:bg-cyan-400 text-stone-950 font-black text-3xl tracking-widest uppercase rounded-full transition-all duration-200 shadow-xl shadow-cyan-500/40 hover:shadow-cyan-400/60 hover:scale-105 flex items-center gap-2"
+              style={{ fontFamily: "'Bebas Neue', 'Impact', sans-serif" }}
             >
               {hero.cta.label}
               <span className="group-hover:translate-x-1 transition-transform duration-200">→</span>
             </a>
             <a
               href="#booking"
-              className="px-8 py-4 border border-white/30 hover:border-cyan-400/60 text-white hover:text-cyan-400 font-bold text-sm tracking-widest uppercase rounded-full transition-all duration-200 backdrop-blur-sm hover:bg-cyan-400/5"
-              style={{ fontFamily: "'Syne', sans-serif" }}
+              className="px-8 py-4 border border-white/30 hover:border-cyan-400/60 text-white hover:text-cyan-400 font-bold text-2xl tracking-widest uppercase rounded-full transition-all duration-200 backdrop-blur-sm hover:bg-cyan-400/5"
+              style={{ fontFamily: "'Bebas Neue', 'Impact', sans-serif" }}
             >
               Book Now
             </a>

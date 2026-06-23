@@ -7,7 +7,7 @@ export default function Contact() {
 
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <span className="inline-block text-cyan-600 text-xs font-bold tracking-[0.35em] uppercase mb-4" style={{ fontFamily:"'Syne',sans-serif" }}>— Get In Touch —</span>
+          <span className="inline-block text-cyan-600 text-xl font-bold tracking-[0.35em] uppercase mb-4" style={{ fontFamily:"'Bebas Neue', 'Impact', sans-serif" }}>— Get In Touch —</span>
           <h2 className="text-stone-900 font-black mb-4" style={{ fontFamily:"'Bebas Neue','Impact',sans-serif", fontSize:"clamp(2.8rem,6vw,5rem)" }}>
             LET'S PLAN YOUR <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-teal-500">ADVENTURE</span>
           </h2>
@@ -21,7 +21,7 @@ export default function Contact() {
           ].map((item,i) => (
             <div key={i} className="bg-stone-50 border border-stone-200 hover:border-cyan-300 rounded-2xl p-8 transition-all hover:shadow-lg hover:shadow-cyan-50 text-center group">
               <div className="text-5xl mb-4">{item.icon}</div>
-              <p className="text-stone-400 text-xs tracking-widest uppercase font-semibold mb-2" style={{ fontFamily:"'Syne',sans-serif" }}>{item.label}</p>
+              <p className="text-stone-400 text-xl tracking-widest uppercase font-semibold mb-2" style={{ fontFamily:"'Syne',sans-serif" }}>{item.label}</p>
               <p className="text-stone-900 font-bold text-lg group-hover:text-cyan-600 transition-colors" style={{ fontFamily:"'DM Sans',sans-serif" }}>{item.value}</p>
               <p className="text-stone-500 text-sm mt-1" style={{ fontFamily:"'DM Sans',sans-serif" }}>{item.sub}</p>
             </div>

@@ -3,7 +3,7 @@ export const navLinks = [
   { label: "Home", href: "#home" },
   { label: "About", href: "#about" },
   { label: "Activities", href: "#activities" },
-  { label: "Schedule", href: "#schedule" },
+  // { label: "Schedule", href: "#schedule" },
   { label: "Reviews", href: "#reviews" },
   { label: "Guidelines", href: "#guidelines" },
   { label: "Contact", href: "#contact" },
@@ -22,55 +22,76 @@ export const hero = {
 
 // ─── ABOUT ─────────────────────────────────────────────────────────────────────
 export const about = {
-  badge: "Adventure Awaits",
-  title: "Theligama Valley Adventure Lodge",
+  badge: "Nature • Adventure • Culture",
+  title: "Why Choose Theligama Valley Adventure Lodge",
   description:
-    "Experience thrilling outdoor adventures in the heart of Sri Lanka. From white water rafting on the Kelani River to jungle canyoning and waterfall abseiling, Theligama Valley offers unforgettable moments surrounded by lush rainforests and flowing rivers.",
+    "Nestled in the heart of Kithulgala, Theligama Valley Adventure Lodge offers the perfect blend of adventure, nature, culture, and authentic Sri Lankan hospitality. Explore rainforests, waterfalls, caves, tea estates, and thrilling outdoor activities while enjoying comfortable accommodation and delicious local cuisine.",
+
   features: [
     {
-      icon: "🌊",
-      title: "White Water Rafting",
-      text: "Paddle through exciting rapids on the Kelani River with professional guides and full safety equipment. Perfect for beginners and adventure lovers.",
-      image: "https://media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/09/ca/10/17.jpg",
-      longText: "Experience the ultimate adrenaline rush as you navigate through the Grade II and III rapids of the Kelani River. Our expert guides provide comprehensive safety briefings and top-tier equipment, ensuring a safe yet thrilling journey through one of Sri Lanka's most iconic waterways. This activity covers approximately 5km of the river and includes the famous 'Virgin's Breast' and 'Killer Falls' rapids.",
+      icon: "🌿",
+      title: "Makandawa Rainforest Trekking",
+      text: "Discover the biodiversity of the Makandawa Rainforest through guided trekking experiences.",
+      image: "/THELIGAMA_VALLEY_ADVENTURE/about_img/Makandawa_Rainforest_Trekking.jpg",
+      longText:
+        "Explore one of Sri Lanka's most beautiful rainforest reserves. Trek through lush jungle trails, observe exotic birds and wildlife, cross streams, and experience the natural beauty of Kithulgala's tropical ecosystem."
     },
     {
-      icon: "🏔️",
-      title: "Canyoning",
-      text: "Explore natural rock formations, jungle streams, and hidden pools while climbing, sliding, and jumping through scenic canyons.",
-      image: "https://www.madeira-harmonyinnature.com/media/yootheme/cache/96/Canyoning%20L3%20-96cad636.jpg",
-      longText: "Dive into the heart of the rainforest with our canyoning expedition. This adventure combines trekking, sliding down natural rock water-slides, and jumping into crystal clear rock pools. It's a physical and rewarding way to explore the hidden vertical world of Kithulgala's jungle streams, suitable for anyone with a basic level of fitness and a love for water.",
+      icon: "🏞️",
+      title: "Marvel Canyon & Manna Kathi Ella",
+      text: "Enjoy thrilling canyoning adventures through waterfalls, natural pools, and rocky canyons.",
+      image: "/THELIGAMA_VALLEY_ADVENTURE/about_img/Marvel_Canyon_Manna_Kathi_Ella.jpg",
+      longText:
+        "Experience one of Kithulgala's most exciting adventures. Slide down natural rock formations, jump into crystal-clear pools, and navigate scenic canyons surrounded by rainforest landscapes."
     },
+
     {
-      icon: "🪂",
-      title: "Zip Lining",
-      text: "Fly above the river and rainforest on an adrenaline-filled zip line experience with breathtaking aerial views of Kithulgala.",
-      image: "https://gomahabaleshwar.com/wp-content/uploads/2024/10/Zip-Line-2.jpg",
-      longText: "Soar like an eagle across the Kelani River! Our dual-wire zip line system takes you 200 meters across the valley at significant heights. You'll catch a bird's-eye view of the white water rafters below and the lush canopy of the surrounding rainforest. Our certified riggers ensure a safe take-off and a smooth landing every time.",
+      icon: "🚣",
+      title: "Water Sports & Kayaking",
+      text: "Experience white water rafting, kayaking, paddle boarding, and river adventures.",
+      image: "/THELIGAMA_VALLEY_ADVENTURE/about_img/Water_Sports_Kayaking.jpg",
+      longText:
+        "Kithulgala is Sri Lanka's adventure capital. Enjoy rafting on the Kelani River, kayaking through scenic waterways, and a variety of water-based activities suitable for both beginners and experienced adventurers."
     },
+
     {
-      icon: "💧",
-      title: "Waterfall Abseiling",
-      text: "Descend stunning waterfalls using professional climbing equipment under expert supervision for a thrilling vertical adventure.",
-      image: "https://ecotrac-adventure.com/wp-content/uploads/2023/12/Waterfall-abseiling-Sg-Pisang.jpg",
-      longText: "Test your nerves with a controlled descent down the face of a roaring waterfall. Using high-quality static ropes and harnesses, you'll lower yourself down a 105ft vertical drop as water crashes around you. This is an intense experience that provides a unique perspective of Kithulgala's natural beauty and a massive sense of achievement.",
+      icon: "🗺️",
+      title: "Nearby Attractions",
+      text: "Stay close to Sri Lanka's most famous natural and cultural destinations.",
+      image: "/THELIGAMA_VALLEY_ADVENTURE/about_img/Nearby_Attractions.jpg",
+      longText:
+        "Our lodge provides easy access to Belilena Cave, Sri Pada (Adam's Peak), Lakshapana Waterfall, Ballehala Rock, and ancient cave temples. Guests can also visit forest monks and explore the rich history of the region."
     },
+
     {
-      icon: "🏄‍♂️",
-      title: "Stand Up Paddle Boarding",
-      text: "Glide across calm waters and take in the breathtaking natural scenery while enjoying a relaxing stand up paddle boarding experience in Kithulgala.",
-      image: "https://www.discoverqatar.qa/images/img_0376/dq_hotel_slides/?m=nbf",
-      longText: "For those looking for a more tranquil connection with the water, our SUP sessions on the flatter sections of the river are perfect. It's a great core workout and a peaceful way to spot local wildlife like kingfishers and monitor lizards along the riverbanks. No prior experience is necessary as our instructors will have you standing in minutes.",
+      icon: "🍃",
+      title: "Tea, Spice & Plantation Tours",
+      text: "Visit tea factories and explore Sri Lanka's famous plantations.",
+      image: "/THELIGAMA_VALLEY_ADVENTURE/about_img/Plantation_Tours.jpg",
+      longText:
+        "Explore tea estates, rubber plantations, cinnamon gardens, coconut plantations, and black pepper farms. Learn how world-famous Ceylon tea is produced and purchase fresh tea directly from local producers."
     },
+
     {
-      icon: "🏕️",
-      title: "Camping & Day Out",
-      text: "Relax under the stars with riverside camping and day-out packages that combine adventure, nature, and local cuisine.",
-      image: "https://assets3.thrillist.com/v1/image/2698226/792x528/scale;webp=auto;jpeg_quality=60;progressive.jpg",
-      longText: "Unwind at our eco-friendly riverside campsite. Our 'Day Out' packages include a mix of light adventure activities followed by a traditional Sri Lankan rice and curry lunch served by the water. For the full experience, stay overnight in our comfortable tents, enjoy a BBQ dinner by a campfire, and wake up to the sounds of the jungle and the rushing river.",
+      icon: "💎",
+      title: "Gem & Cultural Experiences",
+      text: "Discover Sri Lanka's gemstone heritage and local traditions.",
+      image: "/THELIGAMA_VALLEY_ADVENTURE/about_img/Gem_Cultural_Experiences.jpg",
+      longText:
+        "Visit local gem centers, learn about Sri Lanka's precious and semi-precious stones, and purchase authentic natural gemstones directly from trusted local sources."
     },
-  ],
+
+    {
+      icon: "🍛",
+      title: "Authentic Sri Lankan Cuisine",
+      text: "Taste traditional Sri Lankan food prepared with fresh local ingredients.",
+      image: "/THELIGAMA_VALLEY_ADVENTURE/about_img/Authentic_Sri_Lankan_Cuisine.jpg",
+      longText:
+        "Enjoy authentic rice and curry, seasonal fruits, traditional village-style meals, and famous Kithul treacle and jaggery produced by local communities."
+    }
+  ]
 };
+
 
 // ─── ACTIVITIES ────────────────────────────────────────────────────────────────
 export const activities = [
@@ -236,7 +257,7 @@ export const guidelines = [
     text: "All helmets, life jackets, paddles, and rafts are internationally certified and inspected daily before every expedition.",
   },
   {
-    icon: "🧑‍✈️",
+    icon: "🚣",
     title: "Professional Guides",
     text: "Our rafting guides are professionally trained, river-certified, and experienced in handling all rapid levels safely.",
   },
@@ -274,7 +295,7 @@ export const contact = {
 
 // ─── FOOTER ────────────────────────────────────────────────────────────────────
 export const footer = {
-  brand: "KithulGala Adventures",
+  brand: "Theligama Valley Adventures",
   about:
     "We offer safe, guided white water rafting and outdoor adventure experiences in the heart of Kitulgala, Sri Lanka. Perfect for beginners, families, and thrill-seekers alike.",
   quickLinks: [

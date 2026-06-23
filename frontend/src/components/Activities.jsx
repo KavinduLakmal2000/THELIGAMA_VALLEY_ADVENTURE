@@ -1,9 +1,34 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { activitiesApi, imgUrl } from "../api/client";
 
 export default function Activities() {
   const [activities, setActivities] = useState([]);
   const [loading,    setLoading]    = useState(true);
+  const scrollRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const [hasMoved, setHasMoved] = useState(false);
+
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    setHasMoved(false);
+    setStartX(e.pageX - scrollRef.current.offsetLeft);
+    setScrollLeft(scrollRef.current.scrollLeft);
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    setHasMoved(true);
+    e.preventDefault();
+    const x = e.pageX - scrollRef.current.offsetLeft;
+    const walk = (x - startX) * 1.5; // Drag sensitivity
+    scrollRef.current.scrollLeft = scrollLeft - walk;
+  };
 
   useEffect(() => {
     activitiesApi.getAll().then(r => setActivities(r.data)).catch(() => {}).finally(() => setLoading(false));
@@ -15,7 +40,7 @@ export default function Activities() {
 
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-20">
-          <span className="inline-block text-cyan-600 text-xs font-bold tracking-[0.35em] uppercase mb-4" style={{ fontFamily:"'Syne',sans-serif" }}>— Outdoor Adventure —</span>
+          <span className="inline-block text-cyan-600 text-xl font-bold tracking-[0.35em] uppercase mb-4" style={{ fontFamily:"'Bebas Neue', 'Impact', sans-serif" }}>— Outdoor Adventure —</span>
           <h2 className="text-stone-900 font-black leading-none mb-6" style={{ fontFamily:"'Bebas Neue','Impact',sans-serif", fontSize:"clamp(2.8rem,6vw,5rem)" }}>
             ADVENTURE <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-teal-500">ACTIVITIES</span>
           </h2>
@@ -25,9 +50,9 @@ export default function Activities() {
         </div>
 
         {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          <div className="flex gap-5 overflow-hidden">
             {[...Array(8)].map((_,i) => (
-              <div key={i} className="bg-white rounded-2xl overflow-hidden border border-stone-200 animate-pulse">
+              <div key={i} className="flex-shrink-0 w-[300px] bg-white rounded-2xl overflow-hidden border border-stone-200 animate-pulse">
                 <div className="h-52 bg-stone-100" />
                 <div className="p-5 space-y-3">
                   <div className="h-4 bg-stone-100 rounded w-3/4" />
@@ -38,9 +63,17 @@ export default function Activities() {
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          <div 
+            ref={scrollRef}
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={() => setIsDragging(false)}
+            className={`flex gap-5 overflow-x-auto no-scrollbar snap-x snap-mandatory pt-2 pb-8 px-1 ${isDragging ? "cursor-grabbing select-none" : "cursor-grab"}`}
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', scrollBehavior: isDragging ? "auto" : "smooth" }}
+          >
             {activities.map(act => (
-              <div key={act._id} className="group relative bg-white rounded-2xl overflow-hidden border border-stone-200 hover:border-cyan-300 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-cyan-100 cursor-pointer">
+              <div key={act._id} className="flex-shrink-0 w-[300px] snap-center group relative bg-white rounded-2xl overflow-hidden border border-stone-200 hover:border-cyan-300 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-cyan-100 cursor-pointer">
                 <div className="relative h-52 overflow-hidden">
                   {imgUrl(act.image)
                     ? <img src={imgUrl(act.image)} alt={act.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
@@ -48,7 +81,7 @@ export default function Activities() {
                   }
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
                   <div className="absolute top-3 left-3">
-                    <span className="bg-cyan-500 text-white text-xs font-black tracking-widest uppercase px-3 py-1 rounded-full shadow" style={{ fontFamily:"'Syne',sans-serif" }}>{act.tag}</span>
+                    <span className="bg-cyan-500 text-white text-xl font-black tracking-widest uppercase px-3 py-1 rounded-full shadow" style={{ fontFamily:"'Bebas Neue', 'Impact', sans-serif" }}>{act.tag}</span>
                   </div>
                 </div>
                 <div className="p-5">
@@ -59,8 +92,8 @@ export default function Activities() {
                     <span>⏱ {act.duration}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-cyan-600 font-black text-lg" style={{ fontFamily:"'Syne',sans-serif" }}>LKR {act.price?.toLocaleString()}</span>
-                    <a href="#booking" className="text-xs font-black tracking-widest uppercase text-stone-400 hover:text-cyan-600 transition-colors" style={{ fontFamily:"'Syne',sans-serif" }}>Book →</a>
+                    <span className="text-cyan-600 font-black text-4xl" style={{ fontFamily:"'Bebas Neue', 'Impact', sans-serif" }}>LKR {act.price?.toLocaleString()}</span>
+                    <a href="#booking" onClick={(e) => hasMoved && e.preventDefault()} className="text-xl font-black tracking-widest uppercase text-stone-400 hover:text-cyan-600 transition-colors" style={{ fontFamily:"'Bebas Neue', 'Impact', sans-serif" }}>Book →</a>
                   </div>
                 </div>
               </div>
