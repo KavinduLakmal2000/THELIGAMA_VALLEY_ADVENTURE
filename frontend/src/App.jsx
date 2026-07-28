@@ -1,20 +1,23 @@
 import { useEffect } from "react";
 import { BrowserRouter, HashRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 
-import Navbar          from "./components/Navbar";
-import Hero            from "./components/Hero";
-import About           from "./components/About";
-import Activities      from "./components/Activities";
-import Schedule        from "./components/Schedule";
-import Reviews         from "./components/Reviews";
-import Guidelines      from "./components/Guidelines";
-import Booking         from "./components/Booking";
-import Contact         from "./components/Contact";
-import Footer          from "./components/Footer";
+import Navbar from "./components/Navbar";
+import Hero from "./components/Hero";
+import About from "./components/About";
+import Activities from "./components/Activities";
+import Schedule from "./components/Schedule";
+import Reviews from "./components/Reviews";
+import Guidelines from "./components/Guidelines";
+import SummerCampTeaser from "./components/SummerCampTeaser";
+import Booking from "./components/Booking";
+import Contact from "./components/Contact";
+import Footer from "./components/Footer";
 import ParallaxDivider from "./components/ParallaxDivider";
 
-import AdminApp       from "./admin/AdminApp";
-import AdminLogin     from "./AdminLogin";
+import SummerCampPage from "./pages/SummerCampPage";
+
+import AdminApp from "./admin/AdminApp";
+import AdminLogin from "./AdminLogin";
 import ProtectedRoute from "./ProtectedRoute";
 
 // ─── Parallax image config ────────────────────────────────────────────────────
@@ -22,41 +25,41 @@ import ProtectedRoute from "./ProtectedRoute";
 const PARALLAX = {
   // Between About → Activities : aerial river shot
   river: {
-    image:      "https://lakpura.com/cdn/shop/files/LK94009714-08-E.webp?v=1765351503&width=3200",
-    quote:      "WHERE THE RIVER TAKES CONTROL",
+    image: "https://lakpura.com/cdn/shop/files/LK94009714-08-E.webp?v=1765351503&width=3200",
+    quote: "WHERE THE RIVER TAKES CONTROL",
     quoteSmall: "Kelani River · Kithulgala, Sri Lanka",
-    speed:      0.35,
-    overlay:    0.50,
-    height:     "480px",
+    speed: 0.35,
+    overlay: 0.50,
+    height: "480px",
   },
   // Between Schedule → Reviews : jungle canopy / rainforest
   jungle: {
-    image:      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1800&q=85",
-    quote:      "SURROUNDED BY NATURE, GUIDED BY EXPERTS",
+    image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1800&q=85",
+    quote: "SURROUNDED BY NATURE, GUIDED BY EXPERTS",
     quoteSmall: "Kithulgala Rainforest · Est. adventures since 2010",
-    speed:      0.30,
-    overlay:    0.45,
-    height:     "440px",
-    position:   "center 30%",
+    speed: 0.30,
+    overlay: 0.45,
+    height: "440px",
+    position: "center 30%",
   },
   // Between Reviews → Guidelines : rafting action shot
   raft: {
-    image:      "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=1800&q=85",
-    quote:      "EVERY RAPID, A NEW STORY",
+    image: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=1800&q=85",
+    quote: "EVERY RAPID, A NEW STORY",
     quoteSmall: "White Water Rafting · Grade III – IV Rapids",
-    speed:      0.40,
-    overlay:    0.48,
-    height:     "460px",
+    speed: 0.40,
+    overlay: 0.48,
+    height: "460px",
   },
   // Between Guidelines → Booking : waterfall / calm water
   waterfall: {
-    image:      "https://images.unsplash.com/photo-1478827387698-1527781a4887?w=1800&q=85",
-    quote:      "YOUR ADVENTURE STARTS WITH ONE BOOKING",
+    image: "https://images.unsplash.com/photo-1478827387698-1527781a4887?w=1800&q=85",
+    quote: "YOUR ADVENTURE STARTS WITH ONE BOOKING",
     quoteSmall: "Safe · Guided · Unforgettable",
-    speed:      0.35,
-    overlay:    0.42,
-    height:     "440px",
-    position:   "center 60%",
+    speed: 0.35,
+    overlay: 0.42,
+    height: "440px",
+    position: "center 60%",
   },
 };
 
@@ -75,12 +78,26 @@ function BodyTheme() {
 
 // ─── Public site ──────────────────────────────────────────────────────────────
 function PublicSite() {
+  const location = useLocation();
+
+  // Lets other pages (e.g. the Summer Camp page) navigate home and land on a
+  // specific section, by passing state={{ scrollTo: "booking" }} to <Link>/navigate.
+  useEffect(() => {
+    if (location.state?.scrollTo) {
+      const el = document.getElementById(location.state.scrollTo);
+      if (el) {
+        setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 120);
+      }
+    }
+  }, [location]);
+
   return (
     <div className="bg-white min-h-screen">
       <Navbar />
 
       <Hero />
       <About />
+      <SummerCampTeaser />
 
       {/* ① River — between About and Activities */}
       <ParallaxDivider {...PARALLAX.river} />
@@ -98,6 +115,7 @@ function PublicSite() {
 
       <Guidelines />
 
+
       {/* ④ Waterfall — between Guidelines and Booking */}
       <ParallaxDivider {...PARALLAX.waterfall} />
 
@@ -112,10 +130,11 @@ function PublicSite() {
 export default function App() {
   return (
     // </BrowserRouter> chnage it to this
-    <HashRouter> 
+    <HashRouter>
       <BodyTheme />
       <Routes>
-        <Route path="/"            element={<PublicSite />} />
+        <Route path="/" element={<PublicSite />} />
+        <Route path="/summer-camp" element={<SummerCampPage />} />
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route
           path="/admin/*"

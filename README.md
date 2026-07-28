@@ -312,6 +312,7 @@ if (!res.ok) navigate("/admin/login");
 4. Use MongoDB Atlas instead of local MongoDB
 5. Consider putting Nginx in front of Express to serve `/uploads` efficiently
 
+
 ```
 rafting_frontend
 ├─ README.md
@@ -346,6 +347,14 @@ rafting_frontend
    ├─ package.json
    ├─ postcss.config.js
    ├─ public
+   │  ├─ about_img
+   │  │  ├─ Authentic_Sri_Lankan_Cuisine.jpg
+   │  │  ├─ Gem_Cultural_Experiences.jpg
+   │  │  ├─ Makandawa_Rainforest_Trekking.jpg
+   │  │  ├─ Marvel_Canyon_Manna_Kathi_Ella.jpg
+   │  │  ├─ Nearby_Attractions.jpg
+   │  │  ├─ Plantation_Tours.jpg
+   │  │  └─ Water_Sports_Kayaking.jpg
    │  └─ hero_vid.mp4
    ├─ src
    │  ├─ AdminLogin.jsx
