@@ -39,7 +39,7 @@ export default function Navbar() {
         <a href="#home" onClick={(e) => scrollToSection(e, "#home")} className="flex items-center gap-3 group">
           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-500 to-teal-600 flex items-center justify-center text-2xl shadow-md shadow-cyan-500/30">🌊</div>
           <span className="font-black text-xl tracking-tight" style={{ fontFamily:"'Bebas Neue','Impact',sans-serif", letterSpacing:"0.05em", color: scrolled ? "#0c0a09" : "#ffffff" }}>
-            Theligama Valley<span className="text-cyan-500"> Adventures</span>
+            Alpine To Island<span className="text-cyan-500"> Adventures</span>
           </span>
         </a>
 

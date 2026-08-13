@@ -75,7 +75,7 @@ export default function Hero() {
               textShadow: "0 4px 40px rgba(0,0,0,0.5)",
             }}
           >
-            THELIGAMA VALLEY
+            Alpine To Island
             <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-300">
               ADVENTURE

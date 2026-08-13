@@ -45,7 +45,7 @@ export default function Activities() {
             ADVENTURE <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-teal-500">ACTIVITIES</span>
           </h2>
           <p className="text-stone-500 text-xl max-w-xl mx-auto leading-relaxed" style={{ fontFamily:"'DM Sans',sans-serif" }}>
-            Discover thrilling outdoor experiences in Kithulgala — designed for nature lovers, adrenaline seekers, and first-time explorers.
+            Discover thrilling outdoor experiences in Theligama — designed for nature lovers, adrenaline seekers, and first-time explorers.
           </p>
         </div>
 

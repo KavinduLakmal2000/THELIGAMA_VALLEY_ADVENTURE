@@ -31,13 +31,14 @@ export default function SummerCampTeaser() {
 
               <div className="absolute bottom-6 left-6 right-6 flex gap-2">
                 {summerCamp.pillars.map((p) => (
-                  <span
+                  <Link
                     key={p.key}
-                    className="flex-1 text-center bg-white/90 backdrop-blur-sm rounded-xl py-2 text-xl"
+                    to="/summer-camp"
+                    className="flex-1 text-center bg-white/90 backdrop-blur-sm rounded-xl py-2 text-xl hover:bg-white hover:scale-105 transition-all cursor-pointer"
                     title={p.title}
                   >
                     {p.icon}
-                  </span>
+                  </Link>
                 ))}
               </div>
             </div>

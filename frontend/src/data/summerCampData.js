@@ -65,7 +65,7 @@ export const summerCamp = {
     {
       icon: "🎒",
       title: "International Travellers",
-      text: "Teens and young adults from the UK, Switzerland, Slovenia, Germany and the Netherlands, here for adventure, culture, and a safe way to see the real Sri Lanka.",
+      text: "Teens and young adults from around the world, here for adventure, culture, and a safe way to experience the real Sri Lanka.",
     },
     {
       icon: "🏫",

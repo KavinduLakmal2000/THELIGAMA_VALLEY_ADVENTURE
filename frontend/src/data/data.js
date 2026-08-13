@@ -13,7 +13,7 @@ export const navLinks = [
 export const hero = {
   video: "hero_vid.mp4",
   tagline: "Experience the Thrill",
-  title: "Theligama Valley Adventure Lodge",
+  title: "Alpine To Island Adventure Lodge",
   subtitle:
     "Discover Sri Lanka's most exciting river adventures surrounded by lush rainforest, guided by certified professionals and built for unforgettable memories.",
   cta: { label: "Explore Adventures", href: "#activities" },
@@ -23,9 +23,9 @@ export const hero = {
 // ─── ABOUT ─────────────────────────────────────────────────────────────────────
 export const about = {
   badge: "Nature • Adventure • Culture",
-  title: "Why Choose Theligama Valley Adventure Lodge",
+  title: "Why Choose Alpine To Island Adventure Lodge",
   description:
-    "Nestled in the heart of Kithulgala, Theligama Valley Adventure Lodge offers the perfect blend of adventure, nature, culture, and authentic Sri Lankan hospitality. Explore rainforests, waterfalls, caves, tea estates, and thrilling outdoor activities while enjoying comfortable accommodation and delicious local cuisine.",
+    "Nestled in the heart of Theligama, Alpine To Island Adventure Lodge offers the perfect blend of adventure, nature, culture, and authentic Sri Lankan hospitality. Explore rainforests, waterfalls, caves, tea estates, and thrilling outdoor activities while enjoying comfortable accommodation and delicious local cuisine.",
 
   features: [
     {
@@ -34,7 +34,7 @@ export const about = {
       text: "Discover the biodiversity of the Makandawa Rainforest through guided trekking experiences.",
       image: "/THELIGAMA_VALLEY_ADVENTURE/about_img/Makandawa_Rainforest_Trekking.jpg",
       longText:
-        "Explore one of Sri Lanka's most beautiful rainforest reserves. Trek through lush jungle trails, observe exotic birds and wildlife, cross streams, and experience the natural beauty of Kithulgala's tropical ecosystem."
+        "Explore one of Sri Lanka's most beautiful rainforest reserves. Trek through lush jungle trails, observe exotic birds and wildlife, cross streams, and experience the natural beauty of Theligama's tropical ecosystem."
     },
     {
       icon: "🏞️",
@@ -42,16 +42,16 @@ export const about = {
       text: "Enjoy thrilling canyoning adventures through waterfalls, natural pools, and rocky canyons.",
       image: "/THELIGAMA_VALLEY_ADVENTURE/about_img/Marvel_Canyon_Manna_Kathi_Ella.jpg",
       longText:
-        "Experience one of Kithulgala's most exciting adventures. Slide down natural rock formations, jump into crystal-clear pools, and navigate scenic canyons surrounded by rainforest landscapes."
+        "Experience one of Theligama's most exciting adventures. Slide down natural rock formations, jump into crystal-clear pools, and navigate scenic canyons surrounded by rainforest landscapes."
     },
 
     {
       icon: "🚣",
-      title: "Water Sports & Kayaking",
+      title: "White water sports",
       text: "Experience white water rafting, kayaking, paddle boarding, and river adventures.",
-      image: "/THELIGAMA_VALLEY_ADVENTURE/about_img/Water_Sports_Kayaking.jpg",
+      image: "/THELIGAMA_VALLEY_ADVENTURE/about_img/paddleboard.jpg",
       longText:
-        "Kithulgala is Sri Lanka's adventure capital. Enjoy rafting on the Kelani River, kayaking through scenic waterways, and a variety of water-based activities suitable for both beginners and experienced adventurers."
+        "Theligama is Sri Lanka's adventure capital. Enjoy rafting on the Kelani River, kayaking through scenic waterways, and a variety of water-based activities suitable for both beginners and experienced adventurers."
     },
 
     {
@@ -192,7 +192,7 @@ export const schedule = {
   badge: "Plan Your Adventure",
   title: "Schedule & Operating Times",
   subtitle:
-    "Our adventure activities in Kithulgala operate daily with flexible time slots to suit your travel plans. Morning sessions are recommended for the best river conditions.",
+    "Our adventure activities in Theligama operate daily with flexible time slots to suit your travel plans. Morning sessions are recommended for the best river conditions.",
   operatingDays: "Monday – Sunday · Open All Year Round",
   slots: [
     { label: "Morning", time: "8:00 AM – 11:00 AM", icon: "🌅" },
@@ -285,26 +285,25 @@ export const guidelines = [
 
 // ─── CONTACT ───────────────────────────────────────────────────────────────────
 export const contact = {
-  address: "Kitulgala, Sri Lanka",
+  address: "Theligama, Sri Lanka",
   phone: "+94 XX XXX XXXX",
-  email: "info@kithulgalaadventures.com",
+  email: "info@Theligamaadventures.com",
   hours: "Opening: 7:30 AM — Closing: 9:00 PM",
   mapEmbed:
-    "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31690.8!2d80.4!3d6.99!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae381b8b1234567%3A0xabc123!2sKitulgala%2C+Sri+Lanka!5e0!3m2!1sen!2slk!4v1700000000000!5m2!1sen!2slk",
+    "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31690.8!2d80.4!3d6.99!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae381b8b1234567%3A0xabc123!2sTheligama%2C+Sri+Lanka!5e0!3m2!1sen!2slk!4v1700000000000!5m2!1sen!2slk",
 };
 
 // ─── FOOTER ────────────────────────────────────────────────────────────────────
 export const footer = {
   brand: "Theligama Valley Adventures",
   about:
-    "We offer safe, guided white water rafting and outdoor adventure experiences in the heart of Kitulgala, Sri Lanka. Perfect for beginners, families, and thrill-seekers alike.",
+    "We offer safe, guided white water rafting and outdoor adventure experiences in the heart of Theligama, Sri Lanka. Perfect for beginners, families, and thrill-seekers alike.",
   quickLinks: [
     { label: "Home", href: "#home" },
     { label: "Adventure Activities", href: "#activities" },
-    { label: "Schedule & Times", href: "#schedule" },
     { label: "Safety & Guidelines", href: "#guidelines" },
     { label: "Reviews", href: "#reviews" },
     { label: "Contact", href: "#contact" },
   ],
-  copyright: "© KithulGala River Adventures. All Rights Reserved.",
+  copyright: "© Alpine To Island ADVENTURE LODGE. All Rights Reserved.",
 };
