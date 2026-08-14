@@ -129,8 +129,7 @@ function PublicSite() {
 // ─── Router ───────────────────────────────────────────────────────────────────
 export default function App() {
   return (
-    // </BrowserRouter> chnage it to this
-    <HashRouter>
+     <BrowserRouter> 
       <BodyTheme />
       <Routes>
         <Route path="/" element={<PublicSite />} />
@@ -142,6 +141,7 @@ export default function App() {
         />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </HashRouter>
+    </BrowserRouter>
+
   );
 }
