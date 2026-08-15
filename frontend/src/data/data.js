@@ -32,7 +32,7 @@ export const about = {
       icon: "🌿",
       title: "Makandawa Rainforest Trekking",
       text: "Discover the biodiversity of the Makandawa Rainforest through guided trekking experiences.",
-      image: "/THELIGAMA_VALLEY_ADVENTURE/about_img/Makandawa_Rainforest_Trekking.jpg",
+      image: "/about_img/Makandawa_Rainforest_Trekking.jpg",
       longText:
         "Explore one of Sri Lanka's most beautiful rainforest reserves. Trek through lush jungle trails, observe exotic birds and wildlife, cross streams, and experience the natural beauty of Theligama's tropical ecosystem."
     },
@@ -40,7 +40,7 @@ export const about = {
       icon: "🏞️",
       title: "Marvel Canyon & Manna Kathi Ella",
       text: "Enjoy thrilling canyoning adventures through waterfalls, natural pools, and rocky canyons.",
-      image: "/THELIGAMA_VALLEY_ADVENTURE/about_img/Marvel_Canyon_Manna_Kathi_Ella.jpg",
+      image: "/about_img/Marvel_Canyon_Manna_Kathi_Ella.jpg",
       longText:
         "Experience one of Theligama's most exciting adventures. Slide down natural rock formations, jump into crystal-clear pools, and navigate scenic canyons surrounded by rainforest landscapes."
     },
@@ -49,7 +49,7 @@ export const about = {
       icon: "🚣",
       title: "White water sports",
       text: "Experience white water rafting, kayaking, paddle boarding, and river adventures.",
-      image: "/THELIGAMA_VALLEY_ADVENTURE/about_img/paddleboard.jpg",
+      image: "/about_img/paddleboard.jpg",
       longText:
         "Theligama is Sri Lanka's adventure capital. Enjoy rafting on the Kelani River, kayaking through scenic waterways, and a variety of water-based activities suitable for both beginners and experienced adventurers."
     },
@@ -58,7 +58,7 @@ export const about = {
       icon: "🗺️",
       title: "Nearby Attractions",
       text: "Stay close to Sri Lanka's most famous natural and cultural destinations.",
-      image: "/THELIGAMA_VALLEY_ADVENTURE/about_img/Nearby_Attractions.jpg",
+      image: "/about_img/Nearby_Attractions.jpg",
       longText:
         "Our lodge provides easy access to Belilena Cave, Sri Pada (Adam's Peak), Lakshapana Waterfall, Ballehala Rock, and ancient cave temples. Guests can also visit forest monks and explore the rich history of the region."
     },
@@ -67,7 +67,7 @@ export const about = {
       icon: "🍃",
       title: "Tea, Spice & Plantation Tours",
       text: "Visit tea factories and explore Sri Lanka's famous plantations.",
-      image: "/THELIGAMA_VALLEY_ADVENTURE/about_img/Plantation_Tours.jpg",
+      image: "/about_img/Plantation_Tours.jpg",
       longText:
         "Explore tea estates, rubber plantations, cinnamon gardens, coconut plantations, and black pepper farms. Learn how world-famous Ceylon tea is produced and purchase fresh tea directly from local producers."
     },
@@ -76,7 +76,7 @@ export const about = {
       icon: "💎",
       title: "Gem & Cultural Experiences",
       text: "Discover Sri Lanka's gemstone heritage and local traditions.",
-      image: "/THELIGAMA_VALLEY_ADVENTURE/about_img/Gem_Cultural_Experiences.jpg",
+      image: "/about_img/Gem_Cultural_Experiences.jpg",
       longText:
         "Visit local gem centers, learn about Sri Lanka's precious and semi-precious stones, and purchase authentic natural gemstones directly from trusted local sources."
     },
@@ -85,7 +85,7 @@ export const about = {
       icon: "🍛",
       title: "Authentic Sri Lankan Cuisine",
       text: "Taste traditional Sri Lankan food prepared with fresh local ingredients.",
-      image: "/THELIGAMA_VALLEY_ADVENTURE/about_img/Authentic_Sri_Lankan_Cuisine.jpg",
+      image: "/about_img/Authentic_Sri_Lankan_Cuisine.jpg",
       longText:
         "Enjoy authentic rice and curry, seasonal fruits, traditional village-style meals, and famous Kithul treacle and jaggery produced by local communities."
     }

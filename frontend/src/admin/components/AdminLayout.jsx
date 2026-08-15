@@ -5,29 +5,29 @@ import { authApi, removeToken } from "../../api/client";
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 const INACTIVITY_MINUTES = 30;           // auto-logout after this many idle minutes
-const WARNING_SECONDS    = 60;           // show warning this many seconds before logout
-const INACTIVITY_MS  = INACTIVITY_MINUTES * 60 * 1000;
-const WARNING_MS     = INACTIVITY_MS - WARNING_SECONDS * 1000;
-const EVENTS         = ["mousemove", "mousedown", "keydown", "touchstart", "scroll", "click"];
+const WARNING_SECONDS = 60;           // show warning this many seconds before logout
+const INACTIVITY_MS = INACTIVITY_MINUTES * 60 * 1000;
+const WARNING_MS = INACTIVITY_MS - WARNING_SECONDS * 1000;
+const EVENTS = ["mousemove", "mousedown", "keydown", "touchstart", "scroll", "click"];
 
 // ─── Nav items ────────────────────────────────────────────────────────────────
 const NAV = [
-  { id: "dashboard",  label: "Dashboard",  icon: "▦"  },
-  { id: "bookings",   label: "Bookings",   icon: "📋" },
-  { id: "calendar",   label: "Calendar",   icon: "📅" },
+  { id: "dashboard", label: "Dashboard", icon: "▦" },
+  { id: "bookings", label: "Bookings", icon: "📋" },
+  { id: "calendar", label: "Calendar", icon: "📅" },
   { id: "activities", label: "Activities", icon: "🏄" },
-  { id: "schedule",   label: "Schedule",   icon: "⏱" },
-  { id: "reviews",    label: "Reviews",    icon: "⭐" },
+  { id: "schedule", label: "Schedule", icon: "⏱" },
+  { id: "reviews", label: "Reviews", icon: "⭐" },
 ];
 
 // ─── Change Password Modal ────────────────────────────────────────────────────
 function ChangePasswordModal({ onClose }) {
-  const [form, setForm]       = useState({ current: "", next: "", confirm: "" });
-  const [errors, setErrors]   = useState({});
+  const [form, setForm] = useState({ current: "", next: "", confirm: "" });
+  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [apiError, setApiError] = useState("");
-  const [showPw, setShowPw]   = useState({ current: false, next: false, confirm: false });
+  const [showPw, setShowPw] = useState({ current: false, next: false, confirm: false });
 
   const set = (k, v) => {
     setForm(f => ({ ...f, [k]: v }));
@@ -39,10 +39,10 @@ function ChangePasswordModal({ onClose }) {
 
   const validate = () => {
     const e = {};
-    if (!form.current)           e.current = "Current password is required.";
-    if (!form.next)              e.next    = "New password is required.";
-    else if (form.next.length < 8) e.next  = "New password must be at least 8 characters.";
-    if (!form.confirm)           e.confirm = "Please confirm your new password.";
+    if (!form.current) e.current = "Current password is required.";
+    if (!form.next) e.next = "New password is required.";
+    else if (form.next.length < 8) e.next = "New password must be at least 8 characters.";
+    if (!form.confirm) e.confirm = "Please confirm your new password.";
     else if (form.next !== form.confirm) e.confirm = "Passwords do not match.";
     if (form.current && form.next && form.current === form.next)
       e.next = "New password must be different from current password.";
@@ -68,7 +68,7 @@ function ChangePasswordModal({ onClose }) {
     const p = form.next;
     if (!p) return 0;
     let score = 0;
-    if (p.length >= 8)  score++;
+    if (p.length >= 8) score++;
     if (p.length >= 12) score++;
     if (/[A-Z]/.test(p)) score++;
     if (/[0-9]/.test(p)) score++;
@@ -171,12 +171,14 @@ function ChangePasswordModal({ onClose }) {
                 {form.next && (
                   <div className="mt-2">
                     <div className="flex gap-1 mb-1">
-                      {[1,2,3,4,5].map(i => (
+                      {[1, 2, 3, 4, 5].map(i => (
                         <div key={i} className={`h-1 flex-1 rounded-full transition-all duration-300 ${i <= strength ? strengthColor : "bg-stone-700"}`} />
                       ))}
                     </div>
-                    <p className="text-xs" style={{ fontFamily: "'DM Sans', sans-serif",
-                      color: ["","#ef4444","#f97316","#eab308","#22c55e","#06b6d4"][strength] }}>
+                    <p className="text-xs" style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      color: ["", "#ef4444", "#f97316", "#eab308", "#22c55e", "#06b6d4"][strength]
+                    }}>
                       {strengthLabel}
                     </p>
                   </div>
@@ -238,8 +240,8 @@ function ChangePasswordModal({ onClose }) {
                   {loading ? (
                     <span className="flex items-center justify-center gap-2">
                       <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
                       </svg>
                       Updating...
                     </span>
@@ -282,18 +284,18 @@ function TimeoutWarning({ secondsLeft, onStayLoggedIn }) {
 
 // ─── Main Layout ──────────────────────────────────────────────────────────────
 export default function AdminLayout({ children, page, setPage, pendingCount }) {
-  const [collapsed,    setCollapsed]    = useState(false);
-  const [mobileOpen,   setMobileOpen]   = useState(false);
-  const [showPwModal,  setShowPwModal]  = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [showPwModal, setShowPwModal] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [showWarning,  setShowWarning]  = useState(false);
-  const [secondsLeft,  setSecondsLeft]  = useState(WARNING_SECONDS);
+  const [showWarning, setShowWarning] = useState(false);
+  const [secondsLeft, setSecondsLeft] = useState(WARNING_SECONDS);
 
-  const navigate      = useNavigate();
-  const warningTimer  = useRef(null);
-  const logoutTimer   = useRef(null);
-  const countdownRef  = useRef(null);
-  const userMenuRef   = useRef(null);
+  const navigate = useNavigate();
+  const warningTimer = useRef(null);
+  const logoutTimer = useRef(null);
+  const countdownRef = useRef(null);
+  const userMenuRef = useRef(null);
 
   // ── Logout ──────────────────────────────────────────────────────────────────
   const handleLogout = useCallback(() => {
@@ -363,7 +365,7 @@ export default function AdminLayout({ children, page, setPage, pendingCount }) {
         <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-400 to-teal-600 flex items-center justify-center text-lg flex-shrink-0">🌊</div>
         {!collapsed && (
           <div>
-            <p className="text-white font-black text-sm leading-tight" style={{ fontFamily: "'Syne', sans-serif" }}>Theligama Valley</p>
+            <p className="text-white font-black text-xl leading-tight" style={{ fontFamily: "'Bebas Neue', 'Impact', sans-serif" }}>Alpine To Island Adventure</p>
             <p className="text-cyan-400 text-xs font-semibold" style={{ fontFamily: "'Syne', sans-serif" }}>Admin Panel</p>
           </div>
         )}
@@ -377,11 +379,10 @@ export default function AdminLayout({ children, page, setPage, pendingCount }) {
             <button
               key={item.id}
               onClick={() => { setPage(item.id); setMobileOpen(false); }}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all duration-150 relative group ${
-                isActive
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all duration-150 relative group ${isActive
                   ? "bg-cyan-500/15 text-cyan-400 border border-cyan-500/25"
                   : "text-stone-400 hover:text-stone-200 hover:bg-stone-800/60"
-              } ${collapsed ? "justify-center" : ""}`}
+                } ${collapsed ? "justify-center" : ""}`}
               style={{ fontFamily: "'Syne', sans-serif" }}
             >
               <span className="text-base flex-shrink-0">{item.icon}</span>
@@ -482,7 +483,7 @@ export default function AdminLayout({ children, page, setPage, pendingCount }) {
             <div>
               <h1 className="text-white font-black text-lg capitalize" style={{ fontFamily: "'Syne', sans-serif" }}>{page}</h1>
               <p className="text-stone-500 text-xs" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                {new Date().toLocaleDateString("en-GB", { weekday:"long", year:"numeric", month:"long", day:"numeric" })}
+                {new Date().toLocaleDateString("en-GB", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
               </p>
             </div>
           </div>
