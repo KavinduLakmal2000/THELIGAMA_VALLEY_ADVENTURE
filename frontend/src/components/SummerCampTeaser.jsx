@@ -34,6 +34,7 @@ export default function SummerCampTeaser() {
                   <Link
                     key={p.key}
                     to="/summer-camp"
+                    state={{ scrollTo: "pillars" }}
                     className="flex-1 text-center bg-white/90 backdrop-blur-sm rounded-xl py-2 text-xl hover:bg-white hover:scale-105 transition-all cursor-pointer"
                     title={p.title}
                   >

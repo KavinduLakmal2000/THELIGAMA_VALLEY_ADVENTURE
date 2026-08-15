@@ -2,13 +2,13 @@
 // Content for the Summer Camp teaser (home page) and the full Summer Camp page.
 // Images reuse existing assets in /public/about_img so no new uploads are required.
 
-const IMG = "/about_img/Marvel_Canyon_Manna_Kathi_Ella.jpg";
+const IMG = "/about_img/";
 
 export const summerCamp = {
   eyebrow: "New This Season",
   title: "SUMMER CAMP",
   tagline: "Adventure, Cuisine, Craftsmanship & Nature",
-  heroImage: IMG,
+  heroImage: IMG + "Marvel_Canyon_Manna_Kathi_Ella.jpg", 
 
   intro:
     "One camp, four worlds. Theligama Summer Camp brings together white-water rafting and rainforest trekking, real Sri Lankan cooking and tea, hands-on gem and jewellery-making, and village life with the island's gentle giants — all in one guided, safety-first experience in the Kelani River valley.",

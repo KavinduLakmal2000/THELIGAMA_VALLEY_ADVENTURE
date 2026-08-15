@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { summerCamp } from "../data/summerCampData";
 import Footer from "../components/Footer";
 
@@ -92,7 +92,23 @@ function TrailLine() {
 
 export default function SummerCampPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
+
+    useEffect(() => {
+    if (location.state?.scrollTo === "pillars") {
+      const element = document.getElementById("pillars");
+
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }, 100);
+      }
+    }
+  }, [location, navigate]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -111,9 +127,8 @@ export default function SummerCampPage() {
     <div className="bg-white min-h-screen">
       {/* ── Minimal page header ─────────────────────────────────────────── */}
       <header
-        className={`fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md py-4 px-6 transition-shadow duration-300 ${
-          scrolled ? "shadow-lg shadow-stone-200/60 border-b border-stone-100" : "border-b border-transparent"
-        }`}
+        className={`fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md py-4 px-6 transition-shadow duration-300 ${scrolled ? "shadow-lg shadow-stone-200/60 border-b border-stone-100" : "border-b border-transparent"
+          }`}
       >
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 text-stone-600 hover:text-cyan-600 transition-colors group">
