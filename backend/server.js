@@ -13,6 +13,7 @@ const bookingRoutes   = require("./routes/bookings");
 const activityRoutes  = require("./routes/activities");
 const reviewRoutes    = require("./routes/reviews");
 const scheduleRoutes  = require("./routes/schedule");
+const { verifySmtpConnection } = require("./services/emailService");
 const errorHandler    = require("./middleware/errorHandler");
 
 const app  = express();
@@ -21,7 +22,16 @@ const PORT = process.env.PORT || 5000;
 // ─── Database ─────────────────────────────────────────────────────────────────
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ MongoDB connected"))
+  .then(async () => {
+    console.log("✅ MongoDB connected");
+
+    if (process.env.NODE_ENV !== "production") {
+      const smtpReady = await verifySmtpConnection();
+      if (!smtpReady) {
+        console.log("ℹ️ SMTP check skipped or failed because Gmail SMTP env values are missing or invalid.");
+      }
+    }
+  })
   .catch((err) => {
     console.error("❌ MongoDB connection failed:", err.message);
     process.exit(1);

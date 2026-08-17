@@ -1,6 +1,17 @@
 const express = require("express");
+const crypto = require("crypto");
 const Booking = require("../models/Booking");
 const { protect } = require("../middleware/auth");
+const {
+  isValidEmail,
+  generateVerificationToken,
+  hashVerificationToken,
+  sendEmailVerification,
+  sendBookingConfirmedEmail,
+  sendBookingRejectedEmail,
+  sendBookingReceivedEmail,
+  sendNewBookingNotification,
+} = require("../services/emailService");
 
 const router = express.Router();
 
@@ -13,15 +24,74 @@ router.post("/", async (req, res, next) => {
   try {
     const { name, email, phone, activity, date, slot, guests, total, message } = req.body;
 
+    const cleanEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
+
+    if (!isValidEmail(cleanEmail)) {
+      return res.status(400).json({ success: false, message: "Please provide a valid email address." });
+    }
+
+    const verificationToken = generateVerificationToken();
     const booking = await Booking.create({
-      name, email, phone, activity, date, slot,
+      name, email: cleanEmail, phone, activity, date, slot,
       guests: parseInt(guests) || 1,
       total:  parseInt(total)  || 0,
       message,
       status: "pending",
+      emailVerified: false,
+      emailVerificationTokenHash: hashVerificationToken(verificationToken),
+      emailVerificationExpires: new Date(Date.now() + 24 * 60 * 60 * 1000),
     });
 
+    try {
+      await sendEmailVerification(booking, verificationToken);
+    } catch (emailErr) {
+      console.error("Booking verification email failed:", emailErr.message);
+    }
+
+    // Send immediate post-booking notifications (do not block booking creation on failure)
+    try {
+      await sendBookingReceivedEmail(booking);
+    } catch (custErr) {
+      console.error("Booking received email failed:", custErr.message);
+    }
+
+    try {
+      await sendNewBookingNotification(booking);
+    } catch (compErr) {
+      console.error("Company booking notification failed:", compErr.message);
+    }
+
     res.status(201).json({ success: true, data: booking });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// GET /api/bookings/verify-email
+router.get("/verify-email", async (req, res, next) => {
+  try {
+    const { token } = req.query;
+
+    if (!token || typeof token !== "string") {
+      return res.status(400).json({ success: false, message: "Verification token is missing." });
+    }
+
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+    const booking = await Booking.findOne({
+      emailVerificationTokenHash: hashedToken,
+      emailVerificationExpires: { $gt: new Date() },
+    }).exec();
+
+    if (!booking) {
+      return res.status(400).json({ success: false, message: "Verification link is invalid or has expired." });
+    }
+
+    booking.emailVerified = true;
+    booking.emailVerificationTokenHash = null;
+    booking.emailVerificationExpires = null;
+    await booking.save();
+
+    return res.json({ success: true, message: "Email verified successfully." });
   } catch (err) {
     next(err);
   }
@@ -146,13 +216,24 @@ router.patch("/admin/:id/status", protect, async (req, res, next) => {
       return res.status(400).json({ success: false, message: "Invalid status value." });
     }
 
-    const booking = await Booking.findByIdAndUpdate(
-      req.params.id,
-      { status },
-      { new: true, runValidators: true }
-    );
-
+    const booking = await Booking.findById(req.params.id);
     if (!booking) return res.status(404).json({ success: false, message: "Booking not found." });
+
+    booking.status = status;
+    await booking.save();
+
+    try {
+      if (status === "confirmed") {
+        await sendBookingConfirmedEmail(booking);
+      }
+
+      if (status === "cancelled") {
+        await sendBookingRejectedEmail(booking);
+      }
+    } catch (emailErr) {
+      console.error("Booking status email failed:", emailErr.message);
+    }
+
     res.json({ success: true, data: booking });
   } catch (err) {
     next(err);
