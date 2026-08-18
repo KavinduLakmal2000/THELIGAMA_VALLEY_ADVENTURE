@@ -1,12 +1,8 @@
 const express = require("express");
-const crypto = require("crypto");
 const Booking = require("../models/Booking");
 const { protect } = require("../middleware/auth");
 const {
   isValidEmail,
-  generateVerificationToken,
-  hashVerificationToken,
-  sendEmailVerification,
   sendBookingConfirmedEmail,
   sendBookingRejectedEmail,
   sendBookingReceivedEmail,
@@ -30,23 +26,14 @@ router.post("/", async (req, res, next) => {
       return res.status(400).json({ success: false, message: "Please provide a valid email address." });
     }
 
-    const verificationToken = generateVerificationToken();
     const booking = await Booking.create({
       name, email: cleanEmail, phone, activity, date, slot,
       guests: parseInt(guests) || 1,
       total:  parseInt(total)  || 0,
       message,
       status: "pending",
-      emailVerified: false,
-      emailVerificationTokenHash: hashVerificationToken(verificationToken),
-      emailVerificationExpires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      adminNote: "",
     });
-
-    try {
-      await sendEmailVerification(booking, verificationToken);
-    } catch (emailErr) {
-      console.error("Booking verification email failed:", emailErr.message);
-    }
 
     // Send immediate post-booking notifications (do not block booking creation on failure)
     try {
@@ -62,36 +49,6 @@ router.post("/", async (req, res, next) => {
     }
 
     res.status(201).json({ success: true, data: booking });
-  } catch (err) {
-    next(err);
-  }
-});
-
-// GET /api/bookings/verify-email
-router.get("/verify-email", async (req, res, next) => {
-  try {
-    const { token } = req.query;
-
-    if (!token || typeof token !== "string") {
-      return res.status(400).json({ success: false, message: "Verification token is missing." });
-    }
-
-    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
-    const booking = await Booking.findOne({
-      emailVerificationTokenHash: hashedToken,
-      emailVerificationExpires: { $gt: new Date() },
-    }).exec();
-
-    if (!booking) {
-      return res.status(400).json({ success: false, message: "Verification link is invalid or has expired." });
-    }
-
-    booking.emailVerified = true;
-    booking.emailVerificationTokenHash = null;
-    booking.emailVerificationExpires = null;
-    await booking.save();
-
-    return res.json({ success: true, message: "Email verified successfully." });
   } catch (err) {
     next(err);
   }
@@ -210,7 +167,7 @@ router.get("/admin/:id", protect, async (req, res, next) => {
 // Body: { status }
 router.patch("/admin/:id/status", protect, async (req, res, next) => {
   try {
-    const { status } = req.body;
+    const { status, adminNote } = req.body;
     const allowed = ["pending", "confirmed", "completed", "cancelled"];
     if (!allowed.includes(status)) {
       return res.status(400).json({ success: false, message: "Invalid status value." });
@@ -220,6 +177,7 @@ router.patch("/admin/:id/status", protect, async (req, res, next) => {
     if (!booking) return res.status(404).json({ success: false, message: "Booking not found." });
 
     booking.status = status;
+    booking.adminNote = typeof adminNote === "string" ? adminNote.trim() : "";
     await booking.save();
 
     try {

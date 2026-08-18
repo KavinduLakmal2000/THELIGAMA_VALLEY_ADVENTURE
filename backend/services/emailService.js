@@ -1,4 +1,3 @@
-const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const validator = require("validator");
 
@@ -70,22 +69,6 @@ function isValidEmail(value) {
   return validator.isEmail(email);
 }
 
-function generateVerificationToken() {
-  return crypto.randomBytes(32).toString("hex");
-}
-
-function hashVerificationToken(token) {
-  return crypto.createHash("sha256").update(String(token)).digest("hex");
-}
-
-function getBaseUrl() {
-  return (process.env.APP_URL || "http://localhost:5000").replace(/\/$/, "");
-}
-
-function buildVerificationUrl(token) {
-  return `${getBaseUrl()}/api/bookings/verify-email?token=${encodeURIComponent(token)}`;
-}
-
 async function sendEmail({ to, subject, text, html }) {
   const mailTransporter = createTransporter();
 
@@ -105,53 +88,6 @@ async function sendEmail({ to, subject, text, html }) {
   return mailTransporter.sendMail(mailOptions);
 }
 
-async function sendEmailVerification(booking, token) {
-  if (!booking || !booking.email) {
-    throw new Error("Booking email is required for verification email.");
-  }
-
-  const verificationUrl = buildVerificationUrl(token);
-  const customerName = sanitizeText(booking.name || "Guest");
-  const safeName = escapeHtml(customerName);
-  const safeUrl = escapeHtml(verificationUrl);
-  const companyEmail = process.env.COMPANY_EMAIL ? sanitizeText(process.env.COMPANY_EMAIL) : "";
-
-  const text = [
-    `Hi ${customerName},`,
-    "",
-    "Please verify your email address for your booking request.",
-    "",
-    `Verification link: ${verificationUrl}`,
-    "",
-    "If you did not request this booking, you can ignore this email.",
-    companyEmail ? `Questions? Contact ${companyEmail}.` : "",
-  ].join("\n");
-
-  const html = `
-    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #1f2937; max-width: 600px; margin: 0 auto;">
-      <h2 style="margin-bottom: 12px; color: #0f172a;">Verify your booking email</h2>
-      <p>Hi <strong>${safeName}</strong>,</p>
-      <p>Please verify your email address for your rafting booking request.</p>
-      <p style="margin: 20px 0;">
-        <a href="${safeUrl}" style="background: #0891b2; color: #ffffff; text-decoration: none; padding: 12px 18px; border-radius: 8px; display: inline-block;">
-          Verify email address
-        </a>
-      </p>
-      <p>If the button does not work, copy and paste this link into your browser:</p>
-      <p style="word-break: break-all; color: #0f172a;">${safeUrl}</p>
-      <p style="margin-top: 20px;">If you did not request this booking, you can ignore this email.</p>
-      ${companyEmail ? `<p>Questions? Contact <a href="mailto:${escapeHtml(companyEmail)}">${escapeHtml(companyEmail)}</a>.</p>` : ""}
-    </div>
-  `;
-
-  return sendEmail({
-    to: booking.email,
-    subject: "Verify your booking email",
-    text,
-    html,
-  });
-}
-
 async function sendBookingConfirmedEmail(booking) {
   if (!booking || !booking.email) {
     throw new Error("Booking email is required for confirmation email.");
@@ -164,6 +100,7 @@ async function sendBookingConfirmedEmail(booking) {
   const guests = Number(booking.guests || 1);
   const total = Number(booking.total || 0);
   const companyEmail = process.env.COMPANY_EMAIL ? sanitizeText(process.env.COMPANY_EMAIL) : "";
+  const adminNote = sanitizeText(booking.adminNote || "");
 
   const text = [
     `Hi ${customerName},`,
@@ -176,10 +113,11 @@ async function sendBookingConfirmedEmail(booking) {
     `Guests: ${guests}`,
     `Total: LKR ${total.toLocaleString()}`,
     booking.message ? `Notes: ${sanitizeText(booking.message)}` : "Notes: None",
+    adminNote ? `Additional note: ${adminNote}` : "",
     "",
     "Our team will contact you with more details soon.",
     companyEmail ? `Questions? Contact ${companyEmail}.` : "",
-  ].join("\n");
+  ].filter(Boolean).join("\n");
 
   const html = `
     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #1f2937; max-width: 600px; margin: 0 auto;">
@@ -194,6 +132,7 @@ async function sendBookingConfirmedEmail(booking) {
         <p><strong>Total:</strong> LKR ${escapeHtml(String(total.toLocaleString()))}</p>
       </div>
       <p><strong>Notes:</strong> ${escapeHtml(booking.message || "No additional notes provided.")}</p>
+      ${adminNote ? `<p><strong>Additional note:</strong> ${escapeHtml(adminNote)}</p>` : ""}
       <p>Our team will contact you with more details soon.</p>
       ${companyEmail ? `<p>Questions? Contact <a href="mailto:${escapeHtml(companyEmail)}">${escapeHtml(companyEmail)}</a>.</p>` : ""}
     </div>
@@ -219,6 +158,7 @@ async function sendBookingRejectedEmail(booking) {
   const guests = Number(booking.guests || 1);
   const total = Number(booking.total || 0);
   const companyEmail = process.env.COMPANY_EMAIL ? sanitizeText(process.env.COMPANY_EMAIL) : "";
+  const adminNote = sanitizeText(booking.adminNote || "");
 
   const text = [
     `Hi ${customerName},`,
@@ -231,10 +171,11 @@ async function sendBookingRejectedEmail(booking) {
     `Guests: ${guests}`,
     `Total: LKR ${total.toLocaleString()}`,
     booking.message ? `Notes: ${sanitizeText(booking.message)}` : "Notes: None",
+    adminNote ? `Additional note: ${adminNote}` : "",
     "",
     "If you would like to discuss alternatives, please contact us directly.",
     companyEmail ? `Questions? Contact ${companyEmail}.` : "",
-  ].join("\n");
+  ].filter(Boolean).join("\n");
 
   const html = `
     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #1f2937; max-width: 600px; margin: 0 auto;">
@@ -249,6 +190,7 @@ async function sendBookingRejectedEmail(booking) {
         <p><strong>Total:</strong> LKR ${escapeHtml(String(total.toLocaleString()))}</p>
       </div>
       <p><strong>Notes:</strong> ${escapeHtml(booking.message || "No additional notes provided.")}</p>
+      ${adminNote ? `<p><strong>Additional note:</strong> ${escapeHtml(adminNote)}</p>` : ""}
       <p>If you would like to discuss alternatives, please contact us directly.</p>
       ${companyEmail ? `<p>Questions? Contact <a href="mailto:${escapeHtml(companyEmail)}">${escapeHtml(companyEmail)}</a>.</p>` : ""}
     </div>
@@ -380,11 +322,7 @@ module.exports = {
   createTransporter,
   verifySmtpConnection,
   isValidEmail,
-  generateVerificationToken,
-  hashVerificationToken,
-  buildVerificationUrl,
   sendEmail,
-  sendEmailVerification,
   sendBookingConfirmedEmail,
   sendBookingRejectedEmail,
   sendNewBookingNotification,

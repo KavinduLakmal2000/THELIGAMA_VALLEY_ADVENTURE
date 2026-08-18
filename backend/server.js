@@ -92,11 +92,10 @@ const apiLimiter = rateLimit({
 app.use("/api/auth/login", authLimiter);
 app.use("/api", apiLimiter);
 
-// ─── Static files — uploaded images ──────────────────────────────────────────
-// Images are served at: GET /uploads/<filename>
-// e.g. http://localhost:5000/uploads/1720000000000-abc123.jpg
+// ─── Static files — legacy local uploads remain available for compatibility ─
+// Old database records may still point to a filename served from /uploads/<filename>
 app.use("/uploads", express.static(path.join(__dirname, "uploads"), {
-  maxAge: "7d", // browser caches images for 7 days
+  maxAge: "7d",
 }));
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
@@ -125,6 +124,6 @@ app.use("/api/*", (req, res) => {
 app.use(errorHandler);
 
 // ─── Start ────────────────────────────────────────────────────────────────────
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT} [${process.env.NODE_ENV}]`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`🚀 Server running on http://0.0.0.0:${PORT} [${process.env.NODE_ENV}]`);
 });

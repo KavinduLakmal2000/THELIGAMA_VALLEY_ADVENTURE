@@ -11,19 +11,7 @@ const bookingSchema = new mongoose.Schema(
     guests:   { type: Number, required: true, min: 1, max: 50 },
     total:    { type: Number, default: 0 },
     message:  { type: String, default: "" },
-    emailVerified: {
-      type: Boolean,
-      default: false,
-    },
-    emailVerificationTokenHash: {
-      type: String,
-      default: null,
-      select: false,
-    },
-    emailVerificationExpires: {
-      type: Date,
-      default: null,
-    },
+    adminNote: { type: String, default: "" },
     status: {
       type:    String,
       enum:    ["pending", "confirmed", "completed", "cancelled"],

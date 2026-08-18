@@ -7,9 +7,11 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "seed": "node scripts/seedAdmin.js",
+    "migrate:r2": "node scripts/migrateLocalUploadsToR2.js",
     "test:smtp": "node -e \"const { verifySmtpConnection } = require('./services/emailService'); verifySmtpConnection().then((ok) => { process.exit(ok ? 0 : 1); }).catch(() => process.exit(1));\""
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.864.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",

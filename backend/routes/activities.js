@@ -1,9 +1,13 @@
 const express  = require("express");
-const fs       = require("fs");
-const path     = require("path");
 const Activity = require("../models/Activity");
 const { protect } = require("../middleware/auth");
 const upload   = require("../middleware/upload");
+const {
+  uploadActivityImageToR2,
+  deleteR2Image,
+  normalizeActivityImageUrl,
+  isR2ImageUrl,
+} = require("../services/r2Service");
 
 const router = express.Router();
 
@@ -53,18 +57,35 @@ router.post("/admin", protect, upload.single("image"), async (req, res, next) =>
   try {
     const { title, location, duration, price, tag, minAge, maxGuests, active, order } = req.body;
 
-    const activity = await Activity.create({
-      title, location, duration,
-      price:     parseFloat(price)    || 0,
-      tag:       tag || "",
-      minAge:    parseInt(minAge)     || 6,
-      maxGuests: parseInt(maxGuests)  || 20,
-      active:    active !== "false",
-      order:     parseInt(order)      || 0,
-      image:     req.file ? req.file.filename : "",
-    });
+    let uploadedImageUrl = "";
 
-    res.status(201).json({ success: true, data: activity });
+    if (req.file) {
+      uploadedImageUrl = await uploadActivityImageToR2(req.file);
+    }
+
+    try {
+      const activity = await Activity.create({
+        title, location, duration,
+        price:     parseFloat(price)    || 0,
+        tag:       tag || "",
+        minAge:    parseInt(minAge)     || 6,
+        maxGuests: parseInt(maxGuests)  || 20,
+        active:    active !== "false",
+        order:     parseInt(order)      || 0,
+        image:     normalizeActivityImageUrl(uploadedImageUrl),
+      });
+
+      res.status(201).json({ success: true, data: activity });
+    } catch (createErr) {
+      if (uploadedImageUrl && isR2ImageUrl(uploadedImageUrl)) {
+        try {
+          await deleteR2Image(uploadedImageUrl);
+        } catch (cleanupErr) {
+          console.error("❌ Failed to clean up uploaded R2 image after create failure:", cleanupErr.message);
+        }
+      }
+      throw createErr;
+    }
   } catch (err) {
     next(err);
   }
@@ -77,31 +98,52 @@ router.put("/admin/:id", protect, upload.single("image"), async (req, res, next)
     if (!activity) return res.status(404).json({ success: false, message: "Activity not found." });
 
     const { title, location, duration, price, tag, minAge, maxGuests, active, order } = req.body;
+    const previousImageValue = activity.image || "";
+    let uploadedImageUrl = "";
 
-    // If a new image was uploaded, delete the old one from disk
-    if (req.file && activity.image) {
-      const oldPath = path.join(__dirname, "../uploads", activity.image);
-      if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+    if (req.file) {
+      uploadedImageUrl = await uploadActivityImageToR2(req.file);
     }
 
-    const updates = {
-      ...(title     !== undefined && { title }),
-      ...(location  !== undefined && { location }),
-      ...(duration  !== undefined && { duration }),
-      ...(price     !== undefined && { price: parseFloat(price) }),
-      ...(tag       !== undefined && { tag }),
-      ...(minAge    !== undefined && { minAge: parseInt(minAge) }),
-      ...(maxGuests !== undefined && { maxGuests: parseInt(maxGuests) }),
-      ...(active    !== undefined && { active: active !== "false" }),
-      ...(order     !== undefined && { order: parseInt(order) }),
-      ...(req.file  && { image: req.file.filename }),
-    };
+    try {
+      const nextImageValue = req.file ? normalizeActivityImageUrl(uploadedImageUrl) : previousImageValue;
 
-    const updated = await Activity.findByIdAndUpdate(
-      req.params.id, updates, { new: true, runValidators: true }
-    );
+      const updates = {
+        ...(title     !== undefined && { title }),
+        ...(location  !== undefined && { location }),
+        ...(duration  !== undefined && { duration }),
+        ...(price     !== undefined && { price: parseFloat(price) }),
+        ...(tag       !== undefined && { tag }),
+        ...(minAge    !== undefined && { minAge: parseInt(minAge) }),
+        ...(maxGuests !== undefined && { maxGuests: parseInt(maxGuests) }),
+        ...(active    !== undefined && { active: active !== "false" }),
+        ...(order     !== undefined && { order: parseInt(order) }),
+        ...(req.file  && { image: nextImageValue }),
+      };
 
-    res.json({ success: true, data: updated });
+      const updated = await Activity.findByIdAndUpdate(
+        req.params.id, updates, { new: true, runValidators: true }
+      );
+
+      if (req.file && previousImageValue && isR2ImageUrl(previousImageValue)) {
+        try {
+          await deleteR2Image(previousImageValue);
+        } catch (deleteErr) {
+          console.error("❌ Failed to delete previous R2 image on activity update:", deleteErr.message);
+        }
+      }
+
+      res.json({ success: true, data: updated });
+    } catch (updateErr) {
+      if (uploadedImageUrl && isR2ImageUrl(uploadedImageUrl)) {
+        try {
+          await deleteR2Image(uploadedImageUrl);
+        } catch (cleanupErr) {
+          console.error("❌ Failed to clean up new uploaded R2 image after update failure:", cleanupErr.message);
+        }
+      }
+      throw updateErr;
+    }
   } catch (err) {
     next(err);
   }
@@ -122,16 +164,18 @@ router.patch("/admin/:id/toggle", protect, async (req, res, next) => {
   }
 });
 
-// DELETE /api/activities/admin/:id  — delete + remove image from disk
+// DELETE /api/activities/admin/:id  — delete + remove R2 object when applicable
 router.delete("/admin/:id", protect, async (req, res, next) => {
   try {
     const activity = await Activity.findById(req.params.id);
     if (!activity) return res.status(404).json({ success: false, message: "Activity not found." });
 
-    // Remove image file
-    if (activity.image) {
-      const imgPath = path.join(__dirname, "../uploads", activity.image);
-      if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
+    if (activity.image && isR2ImageUrl(activity.image)) {
+      try {
+        await deleteR2Image(activity.image);
+      } catch (deleteErr) {
+        console.error("❌ Failed to delete R2 image on activity delete:", deleteErr.message);
+      }
     }
 
     await activity.deleteOne();
