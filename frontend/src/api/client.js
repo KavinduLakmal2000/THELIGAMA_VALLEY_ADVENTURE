@@ -69,7 +69,7 @@ export const bookingsApi = {
   },
 
   getStats:     ()          => get("/api/bookings/admin/stats"),
-  updateStatus: (id, status) => patch(`/api/bookings/admin/${id}/status`, { status }),
+  updateStatus: (id, status, adminNote = "") => patch(`/api/bookings/admin/${id}/status`, { status, adminNote }),
   delete:       (id)         => del(`/api/bookings/admin/${id}`),
 };
 

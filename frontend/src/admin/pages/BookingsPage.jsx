@@ -8,8 +8,42 @@ const STATUS_COLOR = {
   completed: "bg-stone-600/40 text-stone-400 border-stone-600/40",
 };
 
+function StatusModal({ action, onClose, onSubmit, initialNote = "" }) {
+  const [note, setNote] = useState(initialNote);
+  const actionText = action === "confirmed" ? "Confirm Booking" : "Reject Booking";
+  const title = action === "confirmed" ? "Confirm Booking" : "Reject Booking";
+
+  return (
+    <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4" onClick={onClose}>
+      <div className="bg-stone-900 border border-stone-700 rounded-2xl w-full max-w-lg p-5 shadow-2xl" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-xl font-bold text-white" style={{ fontFamily: "'Syne', sans-serif" }}>{title}</h3>
+          <button onClick={onClose} className="text-stone-400 hover:text-white text-xl">×</button>
+        </div>
+
+        <label className="block text-sm text-stone-300 mb-2">Additional note</label>
+        <textarea
+          rows={4}
+          value={note}
+          onChange={e => setNote(e.target.value)}
+          placeholder="Optional admin note"
+          className="w-full bg-stone-800 border border-stone-700 rounded-xl px-3 py-2.5 text-stone-200 placeholder-stone-500 focus:outline-none focus:border-cyan-500 resize-none"
+        />
+
+        <div className="mt-5 flex justify-end gap-3">
+          <button onClick={onClose} className="px-4 py-2 rounded-xl border border-stone-700 text-stone-300 hover:bg-stone-800">Cancel</button>
+          <button onClick={() => onSubmit(note)} className={`px-4 py-2 rounded-xl font-bold text-white ${action === "confirmed" ? "bg-green-600 hover:bg-green-500" : "bg-red-600 hover:bg-red-500"}`}>
+            {actionText}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function BookingRow({ b, onStatus, onDelete, delConfirm, setDelConfirm }) {
   const [expanded, setExpanded] = useState(false);
+  const [statusAction, setStatusAction] = useState(null);
   const id = b._id;
 
   return (
@@ -28,9 +62,9 @@ function BookingRow({ b, onStatus, onDelete, delConfirm, setDelConfirm }) {
         <td className="py-3 px-4"><span className={`px-2.5 py-1 rounded-full text-xs font-bold border ${STATUS_COLOR[b.status]}`} style={{ fontFamily: "'Syne', sans-serif" }}>{b.status}</span></td>
         <td className="py-3 px-4">
           <div className="flex items-center gap-1" onClick={e => e.stopPropagation()}>
-            {b.status === "pending"   && <button onClick={() => onStatus(id,"confirmed")} className="px-2 py-1 bg-green-500/10 border border-green-500/25 text-green-400 rounded-lg text-xs font-bold hover:bg-green-500/20">✓</button>}
+            {b.status === "pending"   && <button onClick={() => setStatusAction("confirmed")} className="px-2 py-1 bg-green-500/10 border border-green-500/25 text-green-400 rounded-lg text-xs font-bold hover:bg-green-500/20">✓</button>}
             {b.status === "confirmed" && <button onClick={() => onStatus(id,"completed")} className="px-2 py-1 bg-stone-600/30 border border-stone-600/40 text-stone-400 rounded-lg text-xs font-bold hover:bg-stone-600/50">Done</button>}
-            {(b.status==="pending"||b.status==="confirmed") && <button onClick={() => onStatus(id,"cancelled")} className="px-2 py-1 bg-red-500/10 border border-red-500/25 text-red-400 rounded-lg text-xs font-bold hover:bg-red-500/20">✗</button>}
+            {(b.status==="pending"||b.status==="confirmed") && <button onClick={() => setStatusAction("cancelled")} className="px-2 py-1 bg-red-500/10 border border-red-500/25 text-red-400 rounded-lg text-xs font-bold hover:bg-red-500/20">✗</button>}
             <button onClick={() => { if(delConfirm===id){onDelete(id);setDelConfirm(null);}else{setDelConfirm(id);setTimeout(()=>setDelConfirm(null),3000);} }} className={`px-2 py-1 text-xs rounded-lg border font-bold transition-colors ${delConfirm===id?"bg-red-500/30 border-red-500/50 text-red-300":"text-stone-700 hover:text-red-400 bg-transparent border-transparent"}`}>{delConfirm===id?"⚠️":"🗑"}</button>
           </div>
         </td>
@@ -50,11 +84,23 @@ function BookingRow({ b, onStatus, onDelete, delConfirm, setDelConfirm }) {
               <div>
                 <p className="text-stone-600 text-xs uppercase tracking-widest font-bold mb-1">Notes</p>
                 <p className="text-stone-400 italic">{b.message||"None"}</p>
+                {b.adminNote && <p className="text-cyan-400 mt-2">Admin note: {b.adminNote}</p>}
                 <p className="text-stone-600 text-xs mt-1">Created: {new Date(b.createdAt).toLocaleDateString()}</p>
               </div>
             </div>
           </td>
         </tr>
+      )}
+
+      {statusAction && (
+        <StatusModal
+          action={statusAction}
+          onClose={() => setStatusAction(null)}
+          onSubmit={(note) => {
+            onStatus(id, statusAction, note);
+            setStatusAction(null);
+          }}
+        />
       )}
     </>
   );
@@ -91,9 +137,9 @@ export default function BookingsPage({ onCountChange }) {
 
   useEffect(() => { load(); }, [load]);
 
-  const handleStatus = async (id, status) => {
+  const handleStatus = async (id, status, adminNote = "") => {
     try {
-      await bookingsApi.updateStatus(id, status);
+      await bookingsApi.updateStatus(id, status, adminNote);
       load();
     } catch (err) { setError(err.message); }
   };
