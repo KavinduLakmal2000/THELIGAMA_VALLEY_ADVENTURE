@@ -21,7 +21,6 @@ const app = express();
 app.set("trust proxy", 1);
 const PORT = process.env.PORT || 5000;
 
-const dns = require("dns");
 
 dns.resolve4("smtp.gmail.com", (err, addresses) => {
   if (err) {
