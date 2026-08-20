@@ -25,18 +25,39 @@ function getGmailUser() {
   return process.env.GMAIL_USER ? sanitizeText(process.env.GMAIL_USER) : "";
 }
 
-function createTransporter() {
+async function createTransporter() {
   if (transporter) return transporter;
 
   const gmailUser = getGmailUser();
-  const gmailAppPassword = process.env.GMAIL_APP_PASSWORD ? sanitizeText(process.env.GMAIL_APP_PASSWORD) : "";
+
+  const gmailAppPassword = process.env.GMAIL_APP_PASSWORD
+    ? sanitizeText(process.env.GMAIL_APP_PASSWORD)
+    : "";
 
   if (!gmailUser || !gmailAppPassword) {
     return null;
   }
 
+  const addresses = await new Promise((resolve, reject) => {
+    dns.resolve4("smtp.gmail.com", (err, addresses) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(addresses);
+      }
+    });
+  });
+
+  if (!addresses.length) {
+    throw new Error("No IPv4 address found for smtp.gmail.com");
+  }
+
+  const gmailIp = addresses[0];
+
+  console.log("📧 Gmail IPv4:", gmailIp);
+
   transporter = nodemailer.createTransport({
-    host: "142.250.125.108",
+    host: gmailIp,
     port: 587,
     secure: false,
     family: 4,
@@ -62,7 +83,7 @@ function createTransporter() {
 async function verifySmtpConnection() {
   console.log("📡 Creating SMTP transporter...");
 
-  const mailTransporter = createTransporter();
+  const mailTransporter = await createTransporter();
 
   if (!mailTransporter) {
     console.error(
@@ -98,7 +119,7 @@ function isValidEmail(value) {
 }
 
 async function sendEmail({ to, subject, text, html }) {
-  const mailTransporter = createTransporter();
+  const mailTransporter = await createTransporter();
 
   if (!mailTransporter) {
     throw new Error("Gmail SMTP is not configured. Set GMAIL_USER and GMAIL_APP_PASSWORD.");
