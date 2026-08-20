@@ -36,7 +36,7 @@ function createTransporter() {
   }
 
   transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
+    host: "142.250.125.108",
     port: 587,
     secure: false,
     family: 4,
@@ -47,13 +47,13 @@ function createTransporter() {
     },
 
     tls: {
+      servername: "smtp.gmail.com",
       rejectUnauthorized: true,
     },
 
     connectionTimeout: 10000,
     greetingTimeout: 10000,
     socketTimeout: 15000,
-
   });
 
   return transporter;
