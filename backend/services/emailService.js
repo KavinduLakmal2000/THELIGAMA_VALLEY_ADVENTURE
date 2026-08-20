@@ -71,7 +71,7 @@ async function verifySmtpConnection() {
     return false;
   }
 
-  console.log("📡 Connecting to smtp.gmail.com:465...");
+  console.log("📡 Connecting to smtp.gmail.com:587...");
 
   try {
     await mailTransporter.verify();
