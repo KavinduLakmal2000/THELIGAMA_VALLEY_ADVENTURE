@@ -45,25 +45,38 @@ function createTransporter() {
     tls: {
       rejectUnauthorized: true,
     },
+
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 15000,
+
   });
 
   return transporter;
 }
 
 async function verifySmtpConnection() {
+  console.log("📡 Creating SMTP transporter...");
+
   const mailTransporter = createTransporter();
 
   if (!mailTransporter) {
-    console.error("SMTP connection failed: Gmail SMTP credentials are not configured.");
+    console.error(
+      "❌ SMTP credentials are missing."
+    );
     return false;
   }
 
+  console.log("📡 Connecting to smtp.gmail.com:465...");
+
   try {
     await mailTransporter.verify();
-    console.log("SMTP connection successful");
+
+    console.log("✅ SMTP connection successful");
+
     return true;
   } catch (error) {
-    console.error("SMTP connection failed:", {
+    console.error("❌ SMTP connection failed:", {
       code: error.code,
       command: error.command,
       response: error.response,

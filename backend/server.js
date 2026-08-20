@@ -26,14 +26,19 @@ mongoose
   .then(async () => {
     console.log("✅ MongoDB connected");
 
-    if (process.env.NODE_ENV !== "production") {
-      const smtpReady = await verifySmtpConnection();
-      if (smtpReady) {
-        console.log("✅ SMTP verification successful");
-      } else {
-        console.log("❌ SMTP verification failed");
-      }
+    console.log("🔍 Starting SMTP verification...");
+    console.log("📧 Gmail user configured:", !!process.env.GMAIL_USER);
+    console.log("🔑 Gmail App Password configured:", !!process.env.GMAIL_APP_PASSWORD);
+
+    const smtpReady = await verifySmtpConnection();
+
+    if (smtpReady) {
+      console.log("✅ SMTP verification successful");
+    } else {
+      console.log("❌ SMTP verification failed");
     }
+
+    console.log("🏁 SMTP verification finished");
   })
   .catch((err) => {
     console.error("❌ MongoDB connection failed:", err.message);
