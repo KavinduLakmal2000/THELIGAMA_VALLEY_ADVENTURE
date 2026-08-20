@@ -1,22 +1,22 @@
 require("dotenv").config();
-const express      = require("express");
-const mongoose     = require("mongoose");
-const cors         = require("cors");
-const helmet       = require("helmet");
-const morgan       = require("morgan");
-const rateLimit    = require("express-rate-limit");
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const helmet = require("helmet");
+const morgan = require("morgan");
+const rateLimit = require("express-rate-limit");
 const mongoSanitize = require("express-mongo-sanitize");
-const path         = require("path");
+const path = require("path");
 
-const authRoutes      = require("./routes/auth");
-const bookingRoutes   = require("./routes/bookings");
-const activityRoutes  = require("./routes/activities");
-const reviewRoutes    = require("./routes/reviews");
-const scheduleRoutes  = require("./routes/schedule");
+const authRoutes = require("./routes/auth");
+const bookingRoutes = require("./routes/bookings");
+const activityRoutes = require("./routes/activities");
+const reviewRoutes = require("./routes/reviews");
+const scheduleRoutes = require("./routes/schedule");
 const { verifySmtpConnection } = require("./services/emailService");
-const errorHandler    = require("./middleware/errorHandler");
+const errorHandler = require("./middleware/errorHandler");
 
-const app  = express();
+const app = express();
 app.set("trust proxy", 1);
 const PORT = process.env.PORT || 5000;
 
@@ -28,8 +28,10 @@ mongoose
 
     if (process.env.NODE_ENV !== "production") {
       const smtpReady = await verifySmtpConnection();
-      if (!smtpReady) {
-        console.log("ℹ️ SMTP check skipped or failed because Gmail SMTP env values are missing or invalid.");
+      if (smtpReady) {
+        console.log("✅ SMTP verification successful");
+      } else {
+        console.log("❌ SMTP verification failed");
       }
     }
   })
@@ -100,19 +102,19 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads"), {
 }));
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
-app.use("/api/auth",       authRoutes);
-app.use("/api/bookings",   bookingRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/bookings", bookingRoutes);
 app.use("/api/activities", activityRoutes);
-app.use("/api/reviews",    reviewRoutes);
-app.use("/api/schedule",   scheduleRoutes);
+app.use("/api/reviews", reviewRoutes);
+app.use("/api/schedule", scheduleRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => {
   res.json({
     success: true,
-    status:  "OK",
-    env:     process.env.NODE_ENV,
-    time:    new Date().toISOString(),
+    status: "OK",
+    env: process.env.NODE_ENV,
+    time: new Date().toISOString(),
   });
 });
 
