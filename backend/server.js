@@ -7,6 +7,7 @@ const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
 const mongoSanitize = require("express-mongo-sanitize");
 const path = require("path");
+const dns = require("dns");
 
 const authRoutes = require("./routes/auth");
 const bookingRoutes = require("./routes/bookings");
@@ -19,6 +20,16 @@ const errorHandler = require("./middleware/errorHandler");
 const app = express();
 app.set("trust proxy", 1);
 const PORT = process.env.PORT || 5000;
+
+const dns = require("dns");
+
+dns.resolve4("smtp.gmail.com", (err, addresses) => {
+  if (err) {
+    console.error("❌ Gmail IPv4 DNS failed:", err);
+  } else {
+    console.log("✅ Gmail IPv4 addresses:", addresses);
+  }
+});
 
 // ─── Database ─────────────────────────────────────────────────────────────────
 mongoose
