@@ -32,11 +32,16 @@ function createTransporter() {
   }
 
   transporter = nodemailer.createTransport({
-    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    family: 4,
+
     auth: {
       user: gmailUser,
       pass: gmailAppPassword,
     },
+
     tls: {
       rejectUnauthorized: true,
     },
@@ -58,7 +63,13 @@ async function verifySmtpConnection() {
     console.log("SMTP connection successful");
     return true;
   } catch (error) {
-    console.error("SMTP connection failed");
+    console.error("SMTP connection failed:", {
+      code: error.code,
+      command: error.command,
+      response: error.response,
+      message: error.message,
+    });
+
     return false;
   }
 }
