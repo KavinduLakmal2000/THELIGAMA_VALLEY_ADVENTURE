@@ -1,11 +1,15 @@
-const dns = require("dns");
-
-dns.setDefaultResultOrder("ipv4first");
-
-const nodemailer = require("nodemailer");
 const validator = require("validator");
+const { Resend } = require("resend");
 
-let transporter = null;
+function getResendClient() {
+  const apiKey = process.env.RESEND_API_KEY ? sanitizeText(process.env.RESEND_API_KEY) : "";
+
+  if (!apiKey) {
+    return null;
+  }
+
+  return new Resend(apiKey);
+}
 
 function sanitizeText(value) {
   if (value === null || value === undefined) return "";
@@ -21,95 +25,8 @@ function escapeHtml(value) {
     .replace(/'/g, "&#039;");
 }
 
-function getGmailUser() {
-  return process.env.GMAIL_USER ? sanitizeText(process.env.GMAIL_USER) : "";
-}
-
-async function createTransporter() {
-  if (transporter) return transporter;
-
-  const gmailUser = getGmailUser();
-
-  const gmailAppPassword = process.env.GMAIL_APP_PASSWORD
-    ? sanitizeText(process.env.GMAIL_APP_PASSWORD)
-    : "";
-
-  if (!gmailUser || !gmailAppPassword) {
-    return null;
-  }
-
-  const addresses = await new Promise((resolve, reject) => {
-    dns.resolve4("smtp.gmail.com", (err, addresses) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(addresses);
-      }
-    });
-  });
-
-  if (!addresses.length) {
-    throw new Error("No IPv4 address found for smtp.gmail.com");
-  }
-
-  const gmailIp = addresses[0];
-
-  console.log("📧 Gmail IPv4:", gmailIp);
-
-  transporter = nodemailer.createTransport({
-    host: gmailIp,
-    port: 587,
-    secure: false,
-    family: 4,
-
-    auth: {
-      user: gmailUser,
-      pass: gmailAppPassword,
-    },
-
-    tls: {
-      servername: "smtp.gmail.com",
-      rejectUnauthorized: true,
-    },
-
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
-    socketTimeout: 15000,
-  });
-
-  return transporter;
-}
-
-async function verifySmtpConnection() {
-  console.log("📡 Creating SMTP transporter...");
-
-  const mailTransporter = await createTransporter();
-
-  if (!mailTransporter) {
-    console.error(
-      "❌ SMTP credentials are missing."
-    );
-    return false;
-  }
-
-  console.log("📡 Connecting to smtp.gmail.com:587...");
-
-  try {
-    await mailTransporter.verify();
-
-    console.log("✅ SMTP connection successful");
-
-    return true;
-  } catch (error) {
-    console.error("❌ SMTP connection failed:", {
-      code: error.code,
-      command: error.command,
-      response: error.response,
-      message: error.message,
-    });
-
-    return false;
-  }
+function getEmailFrom() {
+  return process.env.EMAIL_FROM ? sanitizeText(process.env.EMAIL_FROM) : "";
 }
 
 function isValidEmail(value) {
@@ -119,22 +36,51 @@ function isValidEmail(value) {
 }
 
 async function sendEmail({ to, subject, text, html }) {
-  const mailTransporter = await createTransporter();
+  const emailFrom = getEmailFrom();
 
-  if (!mailTransporter) {
-    throw new Error("Gmail SMTP is not configured. Set GMAIL_USER and GMAIL_APP_PASSWORD.");
+  if (!emailFrom) {
+    throw new Error("Email sender is not configured. Set EMAIL_FROM.");
   }
 
-  const fromAddress = getGmailUser();
-  const mailOptions = {
-    from: fromAddress,
-    to: sanitizeText(to),
-    subject,
-    text,
-    html,
+  const resend = getResendClient();
+  if (!resend) {
+    throw new Error("Resend API key is missing. Set RESEND_API_KEY.");
+  }
+
+  const recipient = sanitizeText(to);
+  if (!recipient || !isValidEmail(recipient)) {
+    throw new Error("A valid recipient email is required.");
+  }
+
+  const payload = {
+    from: emailFrom,
+    to: [recipient],
+    subject: sanitizeText(subject || ""),
+    text: typeof text === "string" ? text : "",
+    html: typeof html === "string" ? html : "",
   };
 
-  return mailTransporter.sendMail(mailOptions);
+  console.log("📧 Sending email via Resend...");
+
+  try {
+    const response = await resend.emails.send(payload);
+
+    if (response && response.error) {
+      const errorMessage = response.error?.message || "Unknown Resend error";
+      throw new Error(`Resend email failed: ${errorMessage}`);
+    }
+
+    if (!response || !response.data || !response.data.id) {
+      throw new Error("Resend email failed: no response data returned.");
+    }
+
+    console.log("✅ Resend email queued successfully");
+    return response;
+  } catch (error) {
+    const message = error && error.message ? error.message : "Unknown Resend send error";
+    console.error("❌ Resend email send failed:", message);
+    throw new Error(`Resend email failed: ${message}`);
+  }
 }
 
 async function sendBookingConfirmedEmail(booking) {
@@ -368,8 +314,6 @@ async function sendBookingReceivedEmail(booking) {
 }
 
 module.exports = {
-  createTransporter,
-  verifySmtpConnection,
   isValidEmail,
   sendEmail,
   sendBookingConfirmedEmail,

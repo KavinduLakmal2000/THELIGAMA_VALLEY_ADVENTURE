@@ -7,48 +7,23 @@ const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
 const mongoSanitize = require("express-mongo-sanitize");
 const path = require("path");
-const dns = require("dns");
 
 const authRoutes = require("./routes/auth");
 const bookingRoutes = require("./routes/bookings");
 const activityRoutes = require("./routes/activities");
 const reviewRoutes = require("./routes/reviews");
 const scheduleRoutes = require("./routes/schedule");
-const { verifySmtpConnection } = require("./services/emailService");
 const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
 app.set("trust proxy", 1);
 const PORT = process.env.PORT || 5000;
 
-
-dns.resolve4("smtp.gmail.com", (err, addresses) => {
-  if (err) {
-    console.error("❌ Gmail IPv4 DNS failed:", err);
-  } else {
-    console.log("✅ Gmail IPv4 addresses:", addresses);
-  }
-});
-
 // ─── Database ─────────────────────────────────────────────────────────────────
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(async () => {
+  .then(() => {
     console.log("✅ MongoDB connected");
-
-    console.log("🔍 Starting SMTP verification...");
-    console.log("📧 Gmail user configured:", !!process.env.GMAIL_USER);
-    console.log("🔑 Gmail App Password configured:", !!process.env.GMAIL_APP_PASSWORD);
-
-    const smtpReady = await verifySmtpConnection();
-
-    if (smtpReady) {
-      console.log("✅ SMTP verification successful");
-    } else {
-      console.log("❌ SMTP verification failed");
-    }
-
-    console.log("🏁 SMTP verification finished");
   })
   .catch((err) => {
     console.error("❌ MongoDB connection failed:", err.message);
