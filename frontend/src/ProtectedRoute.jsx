@@ -10,12 +10,33 @@ import { authApi, getToken, removeToken } from "./api/client";
 export default function ProtectedRoute({ children }) {
   const [status, setStatus] = useState("checking"); // "checking" | "ok" | "fail"
 
-  useEffect(() => {
-    if (!getToken()) { setStatus("fail"); return; }
+  const checkAuth = async () => {
+    const token = getToken();
 
-    authApi.me()
-      .then(() => setStatus("ok"))
-      .catch(() => { removeToken(); setStatus("fail"); });
+    if (!token) {
+      removeToken();
+      setStatus("fail");
+      return;
+    }
+
+    try {
+      await authApi.me();
+      setStatus("ok");
+    } catch {
+      removeToken();
+      setStatus("fail");
+    }
+  };
+
+  useEffect(() => {
+    checkAuth();
+
+    const handlePageShow = () => {
+      checkAuth();
+    };
+
+    window.addEventListener("pageshow", handlePageShow);
+    return () => window.removeEventListener("pageshow", handlePageShow);
   }, []);
 
   if (status === "checking") {

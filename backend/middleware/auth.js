@@ -3,6 +3,10 @@ const Admin = require("../models/Admin");
 
 const protect = async (req, res, next) => {
   try {
+    res.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    res.set("Pragma", "no-cache");
+    res.set("Expires", "0");
+
     // Accept token from Authorization header OR httpOnly cookie
     let token;
 

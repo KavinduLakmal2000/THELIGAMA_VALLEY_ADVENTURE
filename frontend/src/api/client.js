@@ -10,10 +10,25 @@ export const imgUrl = (filename) => {
 };
 
 // ─── Token helpers ────────────────────────────────────────────────────────────
+// Store the admin JWT in sessionStorage so it survives refreshes in the same tab
+// but is cleared when the tab/window is closed. This keeps the current JWT-based
+// backend auth intact while preventing a stale token from auto-signing in a new tab.
 const TOKEN_KEY = "adminToken";
-export const getToken    = ()      => localStorage.getItem(TOKEN_KEY);
-export const setToken    = (token) => localStorage.setItem(TOKEN_KEY, token);
-export const removeToken = ()      => localStorage.removeItem(TOKEN_KEY);
+export const getToken = () => {
+  try { return sessionStorage.getItem(TOKEN_KEY); } catch { return null; }
+};
+
+export const setToken = (token) => {
+  try {
+    sessionStorage.setItem(TOKEN_KEY, token);
+    localStorage.removeItem(TOKEN_KEY);
+  } catch {}
+};
+
+export const removeToken = () => {
+  try { sessionStorage.removeItem(TOKEN_KEY); } catch {}
+  try { localStorage.removeItem(TOKEN_KEY); } catch {}
+};
 
 // ─── Core fetch wrapper ───────────────────────────────────────────────────────
 export async function request(path, options = {}) {
