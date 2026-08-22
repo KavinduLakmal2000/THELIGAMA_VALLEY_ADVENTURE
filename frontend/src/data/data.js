@@ -13,7 +13,7 @@ export const navLinks = [
 export const hero = {
   video: "hero_vid.mp4",
   tagline: "Experience the Thrill",
-  title: "Alpine To Island Adventure Lodge",
+  title: "Alpine To Island",
   subtitle:
     "Discover Sri Lanka's most exciting river adventures surrounded by lush rainforest, guided by certified professionals and built for unforgettable memories.",
   cta: { label: "Explore Adventures", href: "#activities" },
@@ -23,9 +23,9 @@ export const hero = {
 // ─── ABOUT ─────────────────────────────────────────────────────────────────────
 export const about = {
   badge: "Nature • Adventure • Culture",
-  title: "Why Choose Alpine To Island Adventure Lodge",
+  title: "Why Choose Alpine To Island",
   description:
-    "Nestled in the heart of Theligama, Alpine To Island Adventure Lodge offers the perfect blend of adventure, nature, culture, and authentic Sri Lankan hospitality. Explore rainforests, waterfalls, caves, tea estates, and thrilling outdoor activities while enjoying comfortable accommodation and delicious local cuisine.",
+    "Nestled in the heart of Theligama, Alpine To Island offers the perfect blend of adventure, nature, culture, and authentic Sri Lankan hospitality. Explore rainforests, waterfalls, caves, tea estates, and thrilling outdoor activities while enjoying comfortable accommodation and delicious local cuisine.",
 
   features: [
     {
@@ -47,11 +47,11 @@ export const about = {
 
     {
       icon: "🚣",
-      title: "White water sports",
+      title: "Water Sports",
       text: "Experience white water rafting, kayaking, paddle boarding, and river adventures.",
       image: "/about_img/paddleboard.jpg",
       longText:
-        "Theligama is Sri Lanka's adventure capital. Enjoy rafting on the Kelani River, kayaking through scenic waterways, and a variety of water-based activities suitable for both beginners and experienced adventurers."
+        "Enjoy rafting on the Kelani River, Stand-up paddleboarding through scenic waterways, and a variety of water-based activities suitable for both beginners and experienced adventurers."
     },
 
     {
@@ -102,7 +102,7 @@ export const activities = [
     duration: "1 – 2 Hours",
     image: "https://deepcreekinns.com/wp-content/uploads/2025/06/shutterstock_114911380.jpg",
     tag: "Most Popular",
-    price: "LKR 3,500",
+    price: "$ 3,500",
   },
   {
     id: 2,
@@ -111,7 +111,7 @@ export const activities = [
     duration: "2 – 3 Hours",
     image: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=600&q=80",
     tag: "Thrilling",
-    price: "LKR 4,000",
+    price: "$ 4,000",
   },
   {
     id: 3,
@@ -120,7 +120,7 @@ export const activities = [
     duration: "30 Minutes",
     image: "https://images.unsplash.com/photo-1577563908411-5077b6dc7624?w=600&q=80",
     tag: "Family Friendly",
-    price: "LKR 2,500",
+    price: "$ 2,500",
   },
   {
     id: 4,
@@ -129,7 +129,7 @@ export const activities = [
     duration: "1 – 2 Hours",
     image: "https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600&q=80",
     tag: "Beginner Friendly",
-    price: "LKR 2,800",
+    price: "$ 2,800",
   },
   {
     id: 5,
@@ -138,7 +138,7 @@ export const activities = [
     duration: "Overnight",
     image: "https://images.unsplash.com/photo-1478827387698-1527781a4887?w=600&q=80",
     tag: "Relaxing",
-    price: "LKR 6,500",
+    price: "$ 6,500",
   },
   {
     id: 6,
@@ -147,7 +147,7 @@ export const activities = [
     duration: "1 – 2 Hours",
     image: "https://images.unsplash.com/photo-1544551763-92ab472cad5d?w=600&q=80",
     tag: "Extreme",
-    price: "LKR 4,500",
+    price: "$ 4,500",
   },
   {
     id: 7,
@@ -156,7 +156,7 @@ export const activities = [
     duration: "30 Minutes",
     image: "https://images.unsplash.com/photo-1519046904884-53103b34b206?w=600&q=80",
     tag: "Brave",
-    price: "LKR 1,800",
+    price: "$ 1,800",
   },
   {
     id: 8,
@@ -165,7 +165,7 @@ export const activities = [
     duration: "2 – 4 Hours",
     image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&q=80",
     tag: "Nature",
-    price: "LKR 2,200",
+    price: "$ 2,200",
   },
   {
     id: 9,
@@ -174,7 +174,7 @@ export const activities = [
     duration: "Full Day",
     image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80",
     tag: "Best Value",
-    price: "LKR 8,000",
+    price: "$ 8,000",
   },
   {
     id: 10,
@@ -183,7 +183,7 @@ export const activities = [
     duration: "Flexible Duration",
     image: "https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?w=600&q=80",
     tag: "Family",
-    price: "LKR 12,000",
+    price: "$ 12,000",
   },
 ];
 
@@ -286,8 +286,8 @@ export const guidelines = [
 // ─── CONTACT ───────────────────────────────────────────────────────────────────
 export const contact = {
   address: "Theligama, Sri Lanka",
-  phone: "+94 XX XXX XXXX",
-  email: "info@Theligamaadventures.com",
+  phone: "+41 764728380",
+  email: "alpinetoisland@gmail.com",
   hours: "Opening: 7:30 AM — Closing: 9:00 PM",
   mapEmbed:
     "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31690.8!2d80.4!3d6.99!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae381b8b1234567%3A0xabc123!2sTheligama%2C+Sri+Lanka!5e0!3m2!1sen!2slk!4v1700000000000!5m2!1sen!2slk",
@@ -305,5 +305,5 @@ export const footer = {
     { label: "Reviews", href: "#reviews" },
     { label: "Contact", href: "#contact" },
   ],
-  copyright: "© Alpine To Island ADVENTURE LODGE. All Rights Reserved.",
+  copyright: "© Alpine To Island. All Rights Reserved.",
 };

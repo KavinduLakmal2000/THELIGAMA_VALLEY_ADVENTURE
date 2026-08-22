@@ -65,13 +65,7 @@ export default function Activities() {
           </div>
         ) : (
           <div
-            ref={scrollRef}
-            onMouseDown={handleMouseDown}
-            onMouseUp={handleMouseUp}
-            onMouseMove={handleMouseMove}
-            onMouseLeave={() => setIsDragging(false)}
-            className={`flex gap-5 overflow-x-auto no-scrollbar snap-x snap-mandatory pt-2 pb-8 px-1 ${isDragging ? "cursor-grabbing select-none" : "cursor-grab"}`}
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', scrollBehavior: isDragging ? "auto" : "smooth" }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 pt-2 pb-8 px-1"
           >
             {activities.map(act => (
               <div
@@ -80,7 +74,9 @@ export default function Activities() {
                   if (hasMoved) return;
                   setSelectedActivity(act);
                 }}
-                className="flex-shrink-0 w-[300px] snap-center group relative bg-white rounded-2xl overflow-hidden border border-stone-200 hover:border-cyan-300 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-cyan-100 cursor-pointer"              >
+                className="group relative bg-white rounded-2xl overflow-hidden border border-stone-200 hover:border-cyan-300 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-cyan-100 cursor-pointer"
+              >
+
                 <div className="relative h-52 overflow-hidden">
                   {imgUrl(act.image)
                     ? <img src={imgUrl(act.image)} alt={act.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
@@ -98,7 +94,7 @@ export default function Activities() {
                     <span>⏱ {act.duration}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-cyan-600 font-black text-4xl" style={{ fontFamily: "'Bebas Neue', 'Impact', sans-serif" }}>LKR {act.price?.toLocaleString()}</span>
+                    <span className="text-cyan-600 font-black text-4xl" style={{ fontFamily: "'Bebas Neue', 'Impact', sans-serif" }}>$ {act.price?.toLocaleString()}</span>
                     <a
                       href="#booking"
                       onClick={(e) => e.stopPropagation()}
@@ -224,14 +220,14 @@ export default function Activities() {
                   {/* Maximum guests */}
                   <div className="bg-stone-50 rounded-2xl p-5 border border-stone-200">
                     <div className="text-stone-400 text-sm uppercase tracking-widest mb-1">
-                      Maximum Guests
+                      Minimum People
                     </div>
 
                     <div
                       className="text-stone-900 text-xl font-bold"
                       style={{ fontFamily: "'DM Sans', sans-serif" }}
                     >
-                      👥 {selectedActivity.maxGuests} Guests
+                      👥 {selectedActivity.maxGuests} PEOPLE
                     </div>
                   </div>
 
@@ -253,7 +249,7 @@ export default function Activities() {
                         fontFamily: "'Bebas Neue', 'Impact', sans-serif"
                       }}
                     >
-                      LKR {selectedActivity.price?.toLocaleString()}
+                      $ {selectedActivity.price?.toLocaleString()}
                     </div>
                   </div>
 

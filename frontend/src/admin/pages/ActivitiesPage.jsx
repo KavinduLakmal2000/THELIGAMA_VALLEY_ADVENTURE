@@ -114,7 +114,7 @@ function NewActivityModal({ onClose, onCreated }) {
 
             {/* Price */}
             <div>
-              <label className="text-stone-500 text-xs font-bold tracking-widest uppercase block mb-2" style={{ fontFamily:"'Syne',sans-serif" }}>Price (LKR) *</label>
+              <label className="text-stone-500 text-xs font-bold tracking-widest uppercase block mb-2" style={{ fontFamily:"'Syne',sans-serif" }}>Price ($) *</label>
               <input className={inputCls} type="number" placeholder="3500" value={draft.price} onChange={e=>set("price",e.target.value)} style={{ fontFamily:"'DM Sans',sans-serif" }} />
             </div>
 
@@ -134,7 +134,7 @@ function NewActivityModal({ onClose, onCreated }) {
 
             {/* Max Guests */}
             <div>
-              <label className="text-stone-500 text-xs font-bold tracking-widest uppercase block mb-2" style={{ fontFamily:"'Syne',sans-serif" }}>Max Guests</label>
+              <label className="text-stone-500 text-xs font-bold tracking-widest uppercase block mb-2" style={{ fontFamily:"'Syne',sans-serif" }}>Minimum People</label>
               <input className={inputCls} type="number" min="1" placeholder="20" value={draft.maxGuests} onChange={e=>set("maxGuests",e.target.value)} style={{ fontFamily:"'DM Sans',sans-serif" }} />
             </div>
 
@@ -255,7 +255,7 @@ function ActivityCard({ act, onToggle, onSave, onDelete }) {
           <div className="space-y-3">
             <input className="w-full bg-stone-800 border border-stone-700 rounded-lg px-3 py-2 text-stone-200 text-sm focus:outline-none focus:border-cyan-500/50" value={draft.title} onChange={e=>setDraft(d=>({...d,title:e.target.value}))} placeholder="Title" />
             <div className="grid grid-cols-2 gap-2">
-              {[["price","Price (LKR)","number"],["duration","Duration","text"],["minAge","Min Age","number"],["maxGuests","Max Guests","number"]].map(([k,label,type])=>(
+              {[["price","Price ($)","number"],["duration","Duration","text"],["minAge","Min Age","number"],["maxGuests","Minimum People","number"]].map(([k,label,type])=>(
                 <div key={k}>
                   <label className="text-stone-600 text-xs mb-1 block" style={{ fontFamily:"'Syne',sans-serif" }}>{label}</label>
                   <input type={type} className="w-full bg-stone-800 border border-stone-700 rounded-lg px-3 py-2 text-stone-200 text-sm focus:outline-none focus:border-cyan-500/50" value={draft[k]} onChange={e=>setDraft(d=>({...d,[k]:e.target.value}))} />
@@ -285,7 +285,7 @@ function ActivityCard({ act, onToggle, onSave, onDelete }) {
               <p>👶 Min age: {act.minAge} · 👥 Max: {act.maxGuests}</p>
             </div>
             <div className="flex items-center justify-between pt-3 border-t border-stone-800">
-              <span className="text-cyan-400 font-black text-lg" style={{ fontFamily:"'Syne',sans-serif" }}>LKR {act.price?.toLocaleString()}</span>
+              <span className="text-cyan-400 font-black text-lg" style={{ fontFamily:"'Syne',sans-serif" }}>$ {act.price?.toLocaleString()}</span>
               <span className="text-stone-600 text-xs">per person</span>
             </div>
           </>

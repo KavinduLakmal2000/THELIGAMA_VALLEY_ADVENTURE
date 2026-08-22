@@ -121,8 +121,8 @@ export default function CalendarPage() {
                       <span className={`px-2 py-0.5 rounded-full text-xs font-bold border flex-shrink-0 ${STATUS_TEXT[b.status]}`}>{b.status}</span>
                     </div>
                     <div className="flex gap-3 text-xs text-stone-500">
-                      <span>⏱ {b.slot}</span><span>👥 {b.guests}</span><span>💰 LKR {b.total?.toLocaleString()}</span>
-                    </div>
+                        <span>⏱ {b.slot}</span><span>👥 {b.guests}</span><span>💰 $ {b.total?.toLocaleString()}</span>
+                      </div>
                   </div>
                 ))}
                 {selBookings.length===0 && !selBlocked && <p className="text-stone-600 text-sm">No bookings.</p>}

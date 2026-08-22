@@ -58,7 +58,7 @@ function BookingRow({ b, onStatus, onDelete, delConfirm, setDelConfirm }) {
         <td className="py-3 px-4 text-stone-300 text-sm whitespace-nowrap hidden sm:table-cell">{b.date}</td>
         <td className="py-3 px-4 text-stone-400 text-sm hidden lg:table-cell">{b.slot}</td>
         <td className="py-3 px-4 text-stone-400 text-sm hidden lg:table-cell">{b.guests}</td>
-        <td className="py-3 px-4 text-cyan-400 font-bold text-sm whitespace-nowrap hidden xl:table-cell" style={{ fontFamily: "'Syne', sans-serif" }}>LKR {b.total?.toLocaleString()}</td>
+        <td className="py-3 px-4 text-cyan-400 font-bold text-sm whitespace-nowrap hidden xl:table-cell" style={{ fontFamily: "'Syne', sans-serif" }}>$ {b.total?.toLocaleString()}</td>
         <td className="py-3 px-4"><span className={`px-2.5 py-1 rounded-full text-xs font-bold border ${STATUS_COLOR[b.status]}`} style={{ fontFamily: "'Syne', sans-serif" }}>{b.status}</span></td>
         <td className="py-3 px-4">
           <div className="flex items-center gap-1" onClick={e => e.stopPropagation()}>

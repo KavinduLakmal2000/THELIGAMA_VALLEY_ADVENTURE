@@ -27,7 +27,7 @@ const PARALLAX = {
   river: {
     image: "https://lakpura.com/cdn/shop/files/LK94009714-08-E.webp?v=1765351503&width=3200",
     quote: "WHERE THE RIVER TAKES CONTROL",
-    quoteSmall: "Kelani River · Kithulgala, Sri Lanka",
+    quoteSmall: "Kelani River · Theligama, Sri Lanka",
     speed: 0.35,
     overlay: 0.50,
     height: "480px",

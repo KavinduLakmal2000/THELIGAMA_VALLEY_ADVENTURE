@@ -124,7 +124,7 @@ export default function About() {
         </div>
 
         <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-6">
-          {[{ value:"10+", label:"Activities" },{ value:"5000+", label:"Happy Adventurers" },{ value:"100%", label:"Safety Record" },{ value:"365", label:"Days Open" }].map((stat,i) => (
+          {[{ value:"10+", label:"Activities" },{ value:"100+", label:"Happy Adventurers" },{ value:"100%", label:"Safety Record" },{ value:"365", label:"Days Open" }].map((stat,i) => (
             <div key={i} className="text-center p-6 bg-stone-50 rounded-2xl border border-stone-100">
               <div className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-teal-500 mb-1" style={{ fontFamily:"'Bebas Neue','Impact',sans-serif", fontSize:"3rem" }}>{stat.value}</div>
               <div className="text-stone-500 text-xl tracking-widest uppercase font-semibold" style={{ fontFamily:"'Bebas Neue', 'Impact', sans-serif" }}>{stat.label}</div>

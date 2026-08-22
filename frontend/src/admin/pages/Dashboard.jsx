@@ -32,7 +32,7 @@ function RevenueChart({ monthlyRevenue }) {
         return (
           <div key={_id} className="flex-1 flex flex-col items-center gap-1 group">
             <div className="relative w-full" style={{ height: "120px" }}>
-              <div className="absolute -top-7 left-1/2 -translate-x-1/2 bg-stone-700 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">LKR {revenue.toLocaleString()}</div>
+              <div className="absolute -top-7 left-1/2 -translate-x-1/2 bg-stone-700 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">$ {revenue.toLocaleString()}</div>
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-cyan-500 to-teal-400 rounded-t-lg opacity-80 group-hover:opacity-100 transition-all" style={{ height: `${pct}%` }} />
             </div>
             <span className="text-stone-500 text-xs">{months[parseInt(m) - 1]}</span>
@@ -102,7 +102,7 @@ export default function Dashboard({ setPage }) {
         <StatCard icon="📋" label="Total Bookings"  value={stats.total}          sub="All time"            color="cyan"   onClick={() => setPage("bookings")} />
         <StatCard icon="⏳" label="Pending"         value={stats.pending}        sub="Needs confirmation"  color="amber"  onClick={() => setPage("bookings")} />
         <StatCard icon="✅" label="Confirmed"        value={stats.confirmed}      sub="Ready to go"         color="green"  onClick={() => setPage("bookings")} />
-        <StatCard icon="💰" label="Total Revenue"   value={`LKR ${Math.round((stats.totalRevenue||0)/1000)}K`} sub="Excl. cancelled" color="purple" />
+        <StatCard icon="💰" label="Total Revenue"   value={`$ ${Math.round((stats.totalRevenue||0)/1000)}K`} sub="Excl. cancelled" color="purple" />
       </div>
 
       <div className="grid lg:grid-cols-3 gap-5">
@@ -110,9 +110,9 @@ export default function Dashboard({ setPage }) {
           <div className="flex items-center justify-between mb-6">
             <div>
               <h2 className="text-white font-black text-lg" style={{ fontFamily: "'Syne', sans-serif" }}>Revenue Overview</h2>
-              <p className="text-stone-500 text-xs" style={{ fontFamily: "'DM Sans', sans-serif" }}>Last 6 months · LKR</p>
+              <p className="text-stone-500 text-xs" style={{ fontFamily: "'DM Sans', sans-serif" }}>Last 6 months · $</p>
             </div>
-            <span className="text-cyan-400 font-black text-xl" style={{ fontFamily: "'Bebas Neue', 'Impact', sans-serif" }}>LKR {(stats.totalRevenue||0).toLocaleString()}</span>
+            <span className="text-cyan-400 font-black text-xl" style={{ fontFamily: "'Bebas Neue', 'Impact', sans-serif" }}>$ {(stats.totalRevenue||0).toLocaleString()}</span>
           </div>
           <RevenueChart monthlyRevenue={stats.monthlyRevenue} />
         </div>

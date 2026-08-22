@@ -106,7 +106,7 @@ async function sendBookingConfirmedEmail(booking) {
     `Date: ${date}`,
     `Time: ${slot}`,
     `Guests: ${guests}`,
-    `Total: LKR ${total.toLocaleString()}`,
+    `Total: $ ${total.toLocaleString()}`,
     booking.message ? `Notes: ${sanitizeText(booking.message)}` : "Notes: None",
     adminNote ? `Additional note: ${adminNote}` : "",
     "",
@@ -124,7 +124,7 @@ async function sendBookingConfirmedEmail(booking) {
         <p><strong>Date:</strong> ${escapeHtml(date)}</p>
         <p><strong>Time:</strong> ${escapeHtml(slot)}</p>
         <p><strong>Guests:</strong> ${escapeHtml(String(guests))}</p>
-        <p><strong>Total:</strong> LKR ${escapeHtml(String(total.toLocaleString()))}</p>
+        <p><strong>Total:</strong> $ ${escapeHtml(String(total.toLocaleString()))}</p>
       </div>
       <p><strong>Notes:</strong> ${escapeHtml(booking.message || "No additional notes provided.")}</p>
       ${adminNote ? `<p><strong>Additional note:</strong> ${escapeHtml(adminNote)}</p>` : ""}
@@ -164,7 +164,7 @@ async function sendBookingRejectedEmail(booking) {
     `Date: ${date}`,
     `Time: ${slot}`,
     `Guests: ${guests}`,
-    `Total: LKR ${total.toLocaleString()}`,
+    `Total: $ ${total.toLocaleString()}`,
     booking.message ? `Notes: ${sanitizeText(booking.message)}` : "Notes: None",
     adminNote ? `Additional note: ${adminNote}` : "",
     "",
@@ -182,7 +182,7 @@ async function sendBookingRejectedEmail(booking) {
         <p><strong>Date:</strong> ${escapeHtml(date)}</p>
         <p><strong>Time:</strong> ${escapeHtml(slot)}</p>
         <p><strong>Guests:</strong> ${escapeHtml(String(guests))}</p>
-        <p><strong>Total:</strong> LKR ${escapeHtml(String(total.toLocaleString()))}</p>
+        <p><strong>Total:</strong> $ ${escapeHtml(String(total.toLocaleString()))}</p>
       </div>
       <p><strong>Notes:</strong> ${escapeHtml(booking.message || "No additional notes provided.")}</p>
       ${adminNote ? `<p><strong>Additional note:</strong> ${escapeHtml(adminNote)}</p>` : ""}
@@ -225,7 +225,7 @@ async function sendNewBookingNotification(booking) {
     `Date: ${date}`,
     `Time: ${slot}`,
     `Guests: ${guests}`,
-    `Total: LKR ${total.toLocaleString()}`,
+    `Total: $ ${total.toLocaleString()}`,
     booking.message ? `Notes: ${sanitizeText(booking.message)}` : "Notes: None",
   ].filter(Boolean).join("\n");
 
@@ -244,7 +244,7 @@ async function sendNewBookingNotification(booking) {
         <p>Date: ${escapeHtml(date)}</p>
         <p>Time: ${escapeHtml(slot)}</p>
         <p>Guests: ${escapeHtml(String(guests))}</p>
-        <p>Total: LKR ${escapeHtml(String(total.toLocaleString()))}</p>
+        <p>Total: $ ${escapeHtml(String(total.toLocaleString()))}</p>
       </div>
       <p><strong>Notes:</strong> ${escapeHtml(booking.message || "No additional notes provided.")}</p>
       <p>Please open the admin dashboard to review and confirm or reject the booking.</p>
@@ -281,7 +281,7 @@ async function sendBookingReceivedEmail(booking) {
     `Date: ${date}`,
     `Time: ${slot}`,
     `Guests: ${guests}`,
-    `Total: LKR ${total.toLocaleString()}`,
+    `Total: $ ${total.toLocaleString()}`,
     booking.message ? `Notes: ${sanitizeText(booking.message)}` : "Notes: None",
     "",
     companyEmail ? `Questions? Contact ${companyEmail}.` : "",
@@ -298,7 +298,7 @@ async function sendBookingReceivedEmail(booking) {
         <p><strong>Date:</strong> ${escapeHtml(date)}</p>
         <p><strong>Time:</strong> ${escapeHtml(slot)}</p>
         <p><strong>Guests:</strong> ${escapeHtml(String(guests))}</p>
-        <p><strong>Total:</strong> LKR ${escapeHtml(String(total.toLocaleString()))}</p>
+        <p><strong>Total:</strong> $ ${escapeHtml(String(total.toLocaleString()))}</p>
       </div>
       <p><strong>Notes:</strong> ${escapeHtml(booking.message || "No additional notes provided.")}</p>
       ${companyEmail ? `<p>Questions? Contact <a href="mailto:${escapeHtml(companyEmail)}">${escapeHtml(companyEmail)}</a>.</p>` : ""}

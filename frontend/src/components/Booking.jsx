@@ -130,7 +130,7 @@ export default function Booking() {
               {[["🏄", "Activity", form.activity], ["📅", "Date", form.date?.toLocaleDateString("en-GB", { weekday: "long", year: "numeric", month: "long", day: "numeric" })], ["⏱", "Time", form.slot], ["👥", "Guests", form.guests]].map(([e, l, v]) => (
                 <p key={l} className="text-stone-700 text-sm">{e} <strong>{l}:</strong> {v}</p>
               ))}
-              {priceEst && <p className="text-stone-700 text-sm">💰 <strong>Estimated:</strong> LKR {priceEst.toLocaleString()}</p>}
+              {priceEst && <p className="text-stone-700 text-sm">💰 <strong>Estimated:</strong> $ {priceEst.toLocaleString()}</p>}
             </div>
             <p className="text-stone-400 text-xs mt-5">
               A confirmation email has been sent to{" "}
@@ -177,7 +177,7 @@ export default function Booking() {
                         className={`text-left px-4 py-3 rounded-xl border text-sm transition-all ${form.activity === act.title ? "bg-cyan-50 border-cyan-400 text-cyan-700" : "bg-white border-stone-200 text-stone-600 hover:border-stone-300 hover:bg-stone-50"}`}
                         style={{ fontFamily: "'DM Sans',sans-serif" }}>
                         <span className="font-semibold block">{act.title}</span>
-                        <span className="text-xs opacity-70">{act.duration} · LKR {act.price?.toLocaleString()}</span>
+                        <span className="text-xs opacity-70">{act.duration} · $ {act.price?.toLocaleString()}</span>
                       </button>
                     ))}
                   </div>
@@ -238,7 +238,7 @@ export default function Booking() {
                     <div className="mt-4 pt-3 border-t border-stone-300">
                       <div className="flex justify-between items-center">
                         <span className="text-stone-500">Estimated Total</span>
-                        <span className="text-cyan-600 font-black text-xl" style={{ fontFamily: "'Bebas Neue', 'Impact', sans-serif", letterSpacing: "0.05em" }}>LKR {priceEst.toLocaleString()}</span>
+                        <span className="text-cyan-600 font-black text-xl" style={{ fontFamily: "'Bebas Neue', 'Impact', sans-serif", letterSpacing: "0.05em" }}>$ {priceEst.toLocaleString()}</span>
                       </div>
                       <p className="text-stone-400 text-xs mt-1">*Final price confirmed at booking</p>
                     </div>

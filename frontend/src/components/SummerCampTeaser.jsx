@@ -20,14 +20,14 @@ export default function SummerCampTeaser() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent" />
 
               {/* Passport-stamp style badge */}
-              <div
+              {/* <div
                 className="absolute top-6 left-6 w-24 h-24 rounded-full border-2 border-dashed border-white/80 flex items-center justify-center text-center p-2 rotate-[-12deg]"
                 style={{ fontFamily: "'Bebas Neue','Impact',sans-serif" }}
               >
                 <span className="text-white text-xs leading-tight tracking-widest uppercase">
                   Est. Camp<br />Sri Lanka
                 </span>
-              </div>
+              </div> */}
 
               <div className="absolute bottom-6 left-6 right-6 flex gap-2">
                 {summerCamp.pillars.map((p) => (
