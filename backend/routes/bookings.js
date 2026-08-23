@@ -1,5 +1,6 @@
 const express = require("express");
 const Booking = require("../models/Booking");
+const { isValidBookingTransition, normalizeBookingStatus } = require("../models/Booking");
 const { protect } = require("../middleware/auth");
 const {
   isValidEmail,
@@ -7,7 +8,13 @@ const {
   sendBookingRejectedEmail,
   sendBookingReceivedEmail,
   sendNewBookingNotification,
+  sendPaymentInstructionsEmail,
 } = require("../services/emailService");
+
+function sanitizeMultilineText(value) {
+  if (value === null || value === undefined) return "";
+  return String(value).replace(/\r\n/g, "\n").replace(/\r/g, "\n").trim();
+}
 
 const router = express.Router();
 
@@ -96,11 +103,13 @@ router.get("/admin", protect, async (req, res, next) => {
 // GET /api/bookings/admin/stats  — dashboard numbers
 router.get("/admin/stats", protect, async (req, res, next) => {
   try {
-    const [total, pending, confirmed, completed, cancelled] = await Promise.all([
+    const [total, pending, paymentPending, confirmed, completed, rejected, cancelled] = await Promise.all([
       Booking.countDocuments(),
       Booking.countDocuments({ status: "pending" }),
+      Booking.countDocuments({ status: "payment_pending" }),
       Booking.countDocuments({ status: "confirmed" }),
       Booking.countDocuments({ status: "completed" }),
+      Booking.countDocuments({ status: "rejected" }),
       Booking.countDocuments({ status: "cancelled" }),
     ]);
 
@@ -143,7 +152,7 @@ router.get("/admin/stats", protect, async (req, res, next) => {
     res.json({
       success: true,
       data: {
-        total, pending, confirmed, completed, cancelled,
+        total, pending, paymentPending, confirmed, completed, rejected, cancelled,
         totalRevenue, monthlyRevenue, activityStats, upcoming,
       },
     });
@@ -163,29 +172,108 @@ router.get("/admin/:id", protect, async (req, res, next) => {
   }
 });
 
+// POST /api/bookings/admin/:id/payment-instructions
+router.post("/admin/:id/payment-instructions", protect, async (req, res, next) => {
+  try {
+    const { paymentInstructions } = req.body;
+    const booking = await Booking.findById(req.params.id);
+    if (!booking) return res.status(404).json({ success: false, message: "Booking not found." });
+
+    if (!isValidBookingTransition(booking.status, "payment_pending")) {
+      return res.status(409).json({ success: false, message: "Booking is not in a valid state to send payment instructions." });
+    }
+
+    const nextInstructions = sanitizeMultilineText(paymentInstructions);
+    const previousStatus = booking.status;
+    const previousInstructions = booking.paymentInstructions;
+
+    booking.status = "payment_pending";
+    booking.paymentInstructions = nextInstructions;
+    booking.paymentInstructionsSentAt = new Date();
+    await booking.save();
+
+    try {
+      await sendPaymentInstructionsEmail(booking);
+      return res.json({ success: true, data: booking });
+    } catch (emailErr) {
+      booking.status = previousStatus;
+      booking.paymentInstructions = previousInstructions;
+      booking.paymentInstructionsSentAt = null;
+      await booking.save();
+      console.error("Payment instruction email failed:", emailErr.message);
+      return res.status(500).json({ success: false, message: "Failed to send payment instructions email. The booking was not changed." });
+    }
+  } catch (err) {
+    next(err);
+  }
+});
+
+// POST /api/bookings/admin/:id/confirm
+router.post("/admin/:id/confirm", protect, async (req, res, next) => {
+  try {
+    const { adminNote } = req.body;
+    const booking = await Booking.findById(req.params.id);
+    if (!booking) return res.status(404).json({ success: false, message: "Booking not found." });
+
+    if (!isValidBookingTransition(booking.status, "confirmed")) {
+      return res.status(409).json({ success: false, message: "Booking is not in a valid state to be confirmed." });
+    }
+
+    const previousStatus = booking.status;
+    const previousAdminNote = booking.adminNote;
+    const normalizedNote = sanitizeMultilineText(adminNote);
+
+    booking.status = "confirmed";
+    booking.adminNote = normalizedNote;
+    booking.confirmedAt = new Date();
+    await booking.save();
+
+    try {
+      await sendBookingConfirmedEmail(booking);
+      return res.json({ success: true, data: booking });
+    } catch (emailErr) {
+      booking.status = previousStatus;
+      booking.adminNote = previousAdminNote;
+      booking.confirmedAt = null;
+      await booking.save();
+      console.error("Booking confirmation email failed:", emailErr.message);
+      return res.status(500).json({ success: false, message: "Failed to send booking confirmation email. The booking was not changed." });
+    }
+  } catch (err) {
+    next(err);
+  }
+});
+
 // PATCH /api/bookings/admin/:id/status
 // Body: { status }
 router.patch("/admin/:id/status", protect, async (req, res, next) => {
   try {
-    const { status, adminNote } = req.body;
-    const allowed = ["pending", "confirmed", "completed", "cancelled"];
-    if (!allowed.includes(status)) {
+    const requestedStatus = normalizeBookingStatus(req.body.status);
+    const { adminNote } = req.body;
+    const allowed = ["pending", "payment_pending", "confirmed", "completed", "rejected", "cancelled"];
+    if (!allowed.includes(requestedStatus)) {
       return res.status(400).json({ success: false, message: "Invalid status value." });
     }
 
     const booking = await Booking.findById(req.params.id);
     if (!booking) return res.status(404).json({ success: false, message: "Booking not found." });
 
-    booking.status = status;
-    booking.adminNote = typeof adminNote === "string" ? adminNote.trim() : "";
+    if (!isValidBookingTransition(booking.status, requestedStatus) && !["rejected", "cancelled"].includes(requestedStatus)) {
+      return res.status(409).json({ success: false, message: "This booking cannot transition to the requested status." });
+    }
+
+    booking.status = requestedStatus;
+    booking.adminNote = typeof adminNote === "string" ? sanitizeMultilineText(adminNote) : "";
+    if (requestedStatus === "rejected") booking.rejectedAt = new Date();
+    if (requestedStatus === "confirmed") booking.confirmedAt = new Date();
     await booking.save();
 
     try {
-      if (status === "confirmed") {
+      if (requestedStatus === "confirmed") {
         await sendBookingConfirmedEmail(booking);
       }
 
-      if (status === "cancelled") {
+      if (requestedStatus === "rejected") {
         await sendBookingRejectedEmail(booking);
       }
     } catch (emailErr) {

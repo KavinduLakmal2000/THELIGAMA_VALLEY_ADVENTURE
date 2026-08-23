@@ -16,6 +16,11 @@ function sanitizeText(value) {
   return String(value).replace(/\s+/g, " ").trim();
 }
 
+function sanitizeMultilineText(value) {
+  if (value === null || value === undefined) return "";
+  return String(value).replace(/\r\n/g, "\n").replace(/\r/g, "\n").trim();
+}
+
 function escapeHtml(value) {
   return sanitizeText(value)
     .replace(/&/g, "&amp;")
@@ -23,6 +28,10 @@ function escapeHtml(value) {
     .replace(/>/g, "&gt;")
     .replace(/\"/g, "&quot;")
     .replace(/'/g, "&#039;");
+}
+
+function escapeHtmlMultiline(value) {
+  return escapeHtml(sanitizeMultilineText(value)).replace(/\n/g, "<br>");
 }
 
 function getEmailFrom() {
@@ -95,7 +104,7 @@ async function sendBookingConfirmedEmail(booking) {
   const guests = Number(booking.guests || 1);
   const total = Number(booking.total || 0);
   const companyEmail = process.env.COMPANY_EMAIL ? sanitizeText(process.env.COMPANY_EMAIL) : "";
-  const adminNote = sanitizeText(booking.adminNote || "");
+  const adminNote = sanitizeMultilineText(booking.adminNote || "");
 
   const text = [
     `Hi ${customerName},`,
@@ -153,7 +162,7 @@ async function sendBookingRejectedEmail(booking) {
   const guests = Number(booking.guests || 1);
   const total = Number(booking.total || 0);
   const companyEmail = process.env.COMPANY_EMAIL ? sanitizeText(process.env.COMPANY_EMAIL) : "";
-  const adminNote = sanitizeText(booking.adminNote || "");
+  const adminNote = sanitizeMultilineText(booking.adminNote || "");
 
   const text = [
     `Hi ${customerName},`,
@@ -194,6 +203,66 @@ async function sendBookingRejectedEmail(booking) {
   return sendEmail({
     to: booking.email,
     subject: "Your booking was rejected",
+    text,
+    html,
+  });
+}
+
+async function sendPaymentInstructionsEmail(booking) {
+  if (!booking || !booking.email) {
+    throw new Error("Booking email is required for payment instructions email.");
+  }
+
+  const customerName = sanitizeText(booking.name || "Guest");
+  const activity = sanitizeText(booking.activity || "Your booking");
+  const date = sanitizeText(booking.date || "");
+  const slot = sanitizeText(booking.slot || "");
+  const guests = Number(booking.guests || 1);
+  const total = Number(booking.total || 0);
+  const companyEmail = process.env.COMPANY_EMAIL ? sanitizeText(process.env.COMPANY_EMAIL) : "";
+  const paymentInstructions = sanitizeMultilineText(booking.paymentInstructions || "");
+
+  const text = [
+    `Hi ${customerName},`,
+    "",
+    "Your booking is now ready for payment.",
+    "Please review the payment instructions below and complete your payment to secure your booking.",
+    "",
+    `Activity: ${activity}`,
+    `Date: ${date}`,
+    `Time: ${slot}`,
+    `Guests: ${guests}`,
+    `Total: $ ${total.toLocaleString()}`,
+    paymentInstructions ? `Payment Instructions:\n${paymentInstructions}` : "Payment Instructions: None provided.",
+    booking.message ? `Notes: ${sanitizeMultilineText(booking.message)}` : "Notes: None",
+    "",
+    companyEmail ? `Questions? Contact ${companyEmail}.` : "",
+  ].filter(Boolean).join("\n");
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #1f2937; max-width: 600px; margin: 0 auto;">
+      <h2 style="margin-bottom: 12px; color: #0f172a;">Payment Instructions for Your Booking</h2>
+      <p>Hi <strong>${escapeHtml(customerName)}</strong>,</p>
+      <p>Your booking is now ready for payment. Please review the payment instructions below and complete your payment to secure your booking.</p>
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; margin: 20px 0;">
+        <p><strong>Activity:</strong> ${escapeHtml(activity)}</p>
+        <p><strong>Date:</strong> ${escapeHtml(date)}</p>
+        <p><strong>Time:</strong> ${escapeHtml(slot)}</p>
+        <p><strong>Guests:</strong> ${escapeHtml(String(guests))}</p>
+        <p><strong>Total:</strong> $ ${escapeHtml(String(total.toLocaleString()))}</p>
+      </div>
+      <div style="background: #fff7ed; border: 1px solid #fed7aa; border-radius: 10px; padding: 16px; margin: 20px 0;">
+        <p><strong>Payment Instructions:</strong></p>
+        <p>${paymentInstructions ? escapeHtmlMultiline(paymentInstructions) : "No payment instructions were provided."}</p>
+      </div>
+      <p><strong>Notes:</strong> ${escapeHtml(booking.message || "No additional notes provided.")}</p>
+      ${companyEmail ? `<p>Questions? Contact <a href="mailto:${escapeHtml(companyEmail)}">${escapeHtml(companyEmail)}</a>.</p>` : ""}
+    </div>
+  `;
+
+  return sendEmail({
+    to: booking.email,
+    subject: "Payment Instructions for Your Booking",
     text,
     html,
   });
@@ -320,4 +389,7 @@ module.exports = {
   sendBookingRejectedEmail,
   sendNewBookingNotification,
   sendBookingReceivedEmail,
+  sendPaymentInstructionsEmail,
+  sanitizeMultilineText,
+  escapeHtmlMultiline,
 };

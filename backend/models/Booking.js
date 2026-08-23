@@ -1,5 +1,35 @@
 const mongoose = require("mongoose");
 
+const BOOKING_STATUS = [
+  "pending",
+  "payment_pending",
+  "confirmed",
+  "completed",
+  "rejected",
+  "cancelled",
+];
+
+const BOOKING_STATUS_TRANSITIONS = {
+  pending: ["payment_pending", "rejected"],
+  payment_pending: ["confirmed"],
+  confirmed: [],
+  completed: [],
+  rejected: [],
+  cancelled: [],
+};
+
+function normalizeBookingStatus(status) {
+  if (status === "cancelled") return "rejected";
+  return status;
+}
+
+function isValidBookingTransition(fromStatus, toStatus) {
+  const start = normalizeBookingStatus(fromStatus);
+  const end = normalizeBookingStatus(toStatus);
+  const transitions = BOOKING_STATUS_TRANSITIONS[start] || [];
+  return transitions.includes(end);
+}
+
 const bookingSchema = new mongoose.Schema(
   {
     name:     { type: String, required: true, trim: true },
@@ -12,9 +42,13 @@ const bookingSchema = new mongoose.Schema(
     total:    { type: Number, default: 0 },
     message:  { type: String, default: "" },
     adminNote: { type: String, default: "" },
+    paymentInstructions: { type: String, default: "" },
+    paymentInstructionsSentAt: { type: Date, default: null },
+    confirmedAt: { type: Date, default: null },
+    rejectedAt: { type: Date, default: null },
     status: {
       type:    String,
-      enum:    ["pending", "confirmed", "completed", "cancelled"],
+      enum:    BOOKING_STATUS,
       default: "pending",
     },
   },
@@ -27,3 +61,7 @@ bookingSchema.virtual("bookingId").get(function () {
 });
 
 module.exports = mongoose.model("Booking", bookingSchema);
+module.exports.BOOKING_STATUS = BOOKING_STATUS;
+module.exports.BOOKING_STATUS_TRANSITIONS = BOOKING_STATUS_TRANSITIONS;
+module.exports.normalizeBookingStatus = normalizeBookingStatus;
+module.exports.isValidBookingTransition = isValidBookingTransition;

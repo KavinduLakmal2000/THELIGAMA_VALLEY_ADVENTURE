@@ -15,7 +15,7 @@ export default function Contact() {
 
         <div className="grid lg:grid-cols-3 gap-6">
           {[
-            { icon:"📍", label:"Location", value:contact.address,  sub:"Kitulgala, Sri Lanka"   },
+            { icon:"📍", label:"Location", value:contact.address,  sub:"Sri Lanka"   },
             { icon:"📞", label:"Phone",    value:contact.phone,    sub:"Call us anytime"         },
             { icon:"✉️", label:"Email",    value:contact.email,    sub:"We reply within 24hrs"   },
           ].map((item,i) => (

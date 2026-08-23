@@ -285,7 +285,7 @@ export const guidelines = [
 
 // ─── CONTACT ───────────────────────────────────────────────────────────────────
 export const contact = {
-  address: "Theligama, Sri Lanka",
+  address: "Theligama",
   phone: "+41 764728380",
   email: "alpinetoisland@gmail.com",
   hours: "Opening: 7:30 AM — Closing: 9:00 PM",

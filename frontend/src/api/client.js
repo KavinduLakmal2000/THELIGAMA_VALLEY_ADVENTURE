@@ -85,6 +85,8 @@ export const bookingsApi = {
 
   getStats:     ()          => get("/api/bookings/admin/stats"),
   updateStatus: (id, status, adminNote = "") => patch(`/api/bookings/admin/${id}/status`, { status, adminNote }),
+  sendPaymentInstructions: (id, paymentInstructions) => post(`/api/bookings/admin/${id}/payment-instructions`, { paymentInstructions }),
+  confirmBooking: (id, adminNote = "") => post(`/api/bookings/admin/${id}/confirm`, { adminNote }),
   delete:       (id)         => del(`/api/bookings/admin/${id}`),
 };
 
