@@ -23,6 +23,18 @@ router.post("/login", async (req, res, next) => {
       return res.status(400).json({ success: false, message: "Username and password are required." });
     }
 
+    // 🥚 Easter egg
+    if (
+      username.trim().toLowerCase() === "about" &&
+      password === "kavindu"
+    ) {
+      return res.status(200).json({
+        success: true,
+        easterEgg: true,
+        redirect: "/about-secret",
+      });
+    }
+
     // Find admin and explicitly select password (select:false in schema)
     const admin = await Admin.findOne({ username: username.toLowerCase() }).select("+password");
 

@@ -4,12 +4,12 @@ import { authApi, setToken, getToken, removeToken } from "./api/client";
 
 // ─── Auth helpers (used by ProtectedRoute + AdminLayout) ─────────────────────
 export const isAuthenticated = () => !!getToken();
-export const logout          = () => removeToken();
+export const logout = () => removeToken();
 
 // ─── Lockout config ───────────────────────────────────────────────────────────
-const MAX_ATTEMPTS     = 3;   // wrong attempts before lockout
-const LOCKOUT_SECONDS  = 30;  // initial lockout duration (doubles each extra failure)
-const STORAGE_KEY      = "admin_lockout";
+const MAX_ATTEMPTS = 3;   // wrong attempts before lockout
+const LOCKOUT_SECONDS = 30;  // initial lockout duration (doubles each extra failure)
+const STORAGE_KEY = "admin_lockout";
 
 // Persist lockout state in sessionStorage so a refresh doesn't bypass it
 function loadLockout() {
@@ -19,24 +19,24 @@ function loadLockout() {
   } catch { return { attempts: 0, lockedUntil: 0 }; }
 }
 function saveLockout(state) {
-  try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
+  try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch { }
 }
 function clearLockout() {
-  try { sessionStorage.removeItem(STORAGE_KEY); } catch {}
+  try { sessionStorage.removeItem(STORAGE_KEY); } catch { }
 }
 
 export default function AdminLogin() {
   const navigate = useNavigate();
 
-  const [form,      setForm]      = useState({ username: "", password: "" });
-  const [error,     setError]     = useState("");
-  const [loading,   setLoading]   = useState(false);
-  const [showPw,    setShowPw]    = useState(false);
+  const [form, setForm] = useState({ username: "", password: "" });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [showPw, setShowPw] = useState(false);
 
   // Lockout state
-  const [attempts,    setAttempts]    = useState(() => loadLockout().attempts);
+  const [attempts, setAttempts] = useState(() => loadLockout().attempts);
   const [lockedUntil, setLockedUntil] = useState(() => loadLockout().lockedUntil);
-  const [countdown,   setCountdown]   = useState(0);
+  const [countdown, setCountdown] = useState(0);
   const timerRef = useRef(null);
 
   // Already logged in
@@ -66,9 +66,9 @@ export default function AdminLogin() {
 
     if (newAttempts >= MAX_ATTEMPTS) {
       // Exponential back-off: 30s, 60s, 120s, 240s…
-      const factor      = Math.pow(2, newAttempts - MAX_ATTEMPTS);
-      const secs        = LOCKOUT_SECONDS * factor;
-      until             = Date.now() + secs * 1000;
+      const factor = Math.pow(2, newAttempts - MAX_ATTEMPTS);
+      const secs = LOCKOUT_SECONDS * factor;
+      until = Date.now() + secs * 1000;
       setLockedUntil(until);
     }
 
@@ -88,16 +88,24 @@ export default function AdminLogin() {
     setError("");
     try {
       const data = await authApi.login(form.username.trim(), form.password);
+
+      // Easter egg flow: backend returns { success: true, easterEgg: true, redirect }
+      if (data && data.easterEgg) {
+        setLoading(false);
+        navigate(data.redirect || "/about-secret", { replace: true });
+        return;
+      }
+
       setToken(data.token);
       clearLockout();
       navigate("/admin", { replace: true });
     } catch (err) {
       const newAttempts = recordFailure(attempts);
-      const remaining   = MAX_ATTEMPTS - newAttempts;
+      const remaining = MAX_ATTEMPTS - newAttempts;
 
       if (newAttempts >= MAX_ATTEMPTS) {
         const factor = Math.pow(2, newAttempts - MAX_ATTEMPTS);
-        const secs   = LOCKOUT_SECONDS * factor;
+        const secs = LOCKOUT_SECONDS * factor;
         setError(`Too many failed attempts. Locked for ${secs} seconds.`);
       } else {
         setError(
@@ -123,16 +131,36 @@ export default function AdminLogin() {
       {/* Ambient glows */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-cyan-500/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-teal-500/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage:"radial-gradient(circle,#06b6d4 1px,transparent 1px)", backgroundSize:"28px 28px" }} />
+      <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle,#06b6d4 1px,transparent 1px)", backgroundSize: "28px 28px" }} />
 
       <div className="relative z-10 w-full max-w-sm">
         {/* Logo */}
         <div className="text-center mb-10">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-teal-600 flex items-center justify-center text-3xl mx-auto mb-5 shadow-2xl shadow-cyan-500/25 ring-1 ring-cyan-400/20">🌊</div>
-          <h1 className="text-white font-black text-4xl leading-none" style={{ fontFamily:"'Bebas Neue','Impact',sans-serif", letterSpacing:"0.06em" }}>Alpine To Island</h1>
-          <p className="text-cyan-400 text-xs font-bold tracking-[0.3em] uppercase mt-1" style={{ fontFamily:"'Syne',sans-serif" }}>Admin Panel</p>
-        </div>
+          <div className="w-16 h-16 mx-auto mb-5">
+            <img
+              src="/favicon.png"
+              alt="Alpine To Island"
+              className="w-full h-full object-contain drop-shadow-2xl"
+            />
+          </div>
 
+          <h1
+            className="text-white font-black text-4xl leading-none"
+            style={{
+              fontFamily: "'Bebas Neue','Impact',sans-serif",
+              letterSpacing: "0.06em",
+            }}
+          >
+            Alpine To Island
+          </h1>
+
+          <p
+            className="text-cyan-400 text-xs font-bold tracking-[0.3em] uppercase mt-1"
+            style={{ fontFamily: "'Syne',sans-serif" }}
+          >
+            Admin Panel
+          </p>
+        </div>
         {/* Card */}
         <div className="bg-stone-900 border border-stone-800 rounded-2xl overflow-hidden shadow-2xl shadow-black/50">
 
@@ -148,14 +176,14 @@ export default function AdminLogin() {
 
           <div className="p-8">
             <div className="mb-6">
-              <h2 className="text-white font-black text-xl mb-1" style={{ fontFamily:"'Syne',sans-serif" }}>Welcome back</h2>
-              <p className="text-stone-500 text-sm" style={{ fontFamily:"'DM Sans',sans-serif" }}>Sign in to manage bookings and activities.</p>
+              <h2 className="text-white font-black text-xl mb-1" style={{ fontFamily: "'Syne',sans-serif" }}>Welcome back</h2>
+              <p className="text-stone-500 text-sm" style={{ fontFamily: "'DM Sans',sans-serif" }}>Sign in to manage bookings and activities.</p>
             </div>
 
             <div className="space-y-4">
               {/* Username */}
               <div>
-                <label className="text-stone-500 text-xs font-bold tracking-[0.2em] uppercase block mb-2" style={{ fontFamily:"'Syne',sans-serif" }}>Username</label>
+                <label className="text-stone-500 text-xs font-bold tracking-[0.2em] uppercase block mb-2" style={{ fontFamily: "'Syne',sans-serif" }}>Username</label>
                 <input
                   className={`w-full bg-stone-800 border ${isLocked() ? "border-stone-700 opacity-50 cursor-not-allowed" : "border-stone-700 focus:border-cyan-500/60 focus:ring-2 focus:ring-cyan-500/10"} rounded-xl px-4 py-3 text-stone-200 text-sm placeholder-stone-600 outline-none transition-all`}
                   placeholder="admin"
@@ -165,13 +193,13 @@ export default function AdminLogin() {
                   disabled={isLocked()}
                   autoComplete="username"
                   autoFocus
-                  style={{ fontFamily:"'DM Sans',sans-serif" }}
+                  style={{ fontFamily: "'DM Sans',sans-serif" }}
                 />
               </div>
 
               {/* Password */}
               <div>
-                <label className="text-stone-500 text-xs font-bold tracking-[0.2em] uppercase block mb-2" style={{ fontFamily:"'Syne',sans-serif" }}>Password</label>
+                <label className="text-stone-500 text-xs font-bold tracking-[0.2em] uppercase block mb-2" style={{ fontFamily: "'Syne',sans-serif" }}>Password</label>
                 <div className="relative">
                   <input
                     className={`w-full bg-stone-800 border ${isLocked() ? "border-stone-700 opacity-50 cursor-not-allowed" : "border-stone-700 focus:border-cyan-500/60 focus:ring-2 focus:ring-cyan-500/10"} rounded-xl px-4 py-3 pr-12 text-stone-200 text-sm placeholder-stone-600 outline-none transition-all`}
@@ -182,7 +210,7 @@ export default function AdminLogin() {
                     onKeyDown={e => e.key === "Enter" && handleLogin()}
                     disabled={isLocked()}
                     autoComplete="current-password"
-                    style={{ fontFamily:"'DM Sans',sans-serif" }}
+                    style={{ fontFamily: "'DM Sans',sans-serif" }}
                   />
                   <button type="button" onClick={() => setShowPw(s => !s)} tabIndex={-1} disabled={isLocked()}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-600 hover:text-stone-400 transition-colors disabled:cursor-not-allowed">
@@ -194,14 +222,14 @@ export default function AdminLogin() {
               {/* Attempt dots */}
               {attempts > 0 && (
                 <div className="flex items-center gap-2">
-                  <span className="text-stone-600 text-xs" style={{ fontFamily:"'DM Sans',sans-serif" }}>Attempts:</span>
+                  <span className="text-stone-600 text-xs" style={{ fontFamily: "'DM Sans',sans-serif" }}>Attempts:</span>
                   <div className="flex gap-1.5">
                     {dots.map((used, i) => (
                       <div key={i} className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${used ? (i >= MAX_ATTEMPTS - 1 ? "bg-red-500 shadow-sm shadow-red-500/50" : "bg-amber-500") : "bg-stone-700"}`} />
                     ))}
                   </div>
                   {!isLocked() && attempts < MAX_ATTEMPTS && (
-                    <span className="text-stone-600 text-xs ml-1" style={{ fontFamily:"'DM Sans',sans-serif" }}>
+                    <span className="text-stone-600 text-xs ml-1" style={{ fontFamily: "'DM Sans',sans-serif" }}>
                       {MAX_ATTEMPTS - attempts} left
                     </span>
                   )}
@@ -210,19 +238,18 @@ export default function AdminLogin() {
 
               {/* Error / lockout message */}
               {(error || isLocked()) && (
-                <div className={`flex items-start gap-2.5 rounded-xl px-4 py-3 ${
-                  isLocked()
+                <div className={`flex items-start gap-2.5 rounded-xl px-4 py-3 ${isLocked()
                     ? "bg-red-500/10 border border-red-500/30"
                     : "bg-amber-500/10 border border-amber-500/25"
-                }`}>
+                  }`}>
                   <span className="flex-shrink-0 mt-0.5">{isLocked() ? "🔒" : "⚠️"}</span>
-                  <div style={{ fontFamily:"'DM Sans',sans-serif" }}>
+                  <div style={{ fontFamily: "'DM Sans',sans-serif" }}>
                     {isLocked() ? (
                       <>
                         <p className="text-red-400 text-sm font-bold">Account temporarily locked</p>
                         <p className="text-red-400/70 text-xs mt-0.5">
                           Try again in <span className="font-black text-red-300">{countdown}s</span>
-                          {countdown > 60 ? ` (${Math.ceil(countdown/60)} min)` : ""}
+                          {countdown > 60 ? ` (${Math.ceil(countdown / 60)} min)` : ""}
                         </p>
                       </>
                     ) : (
@@ -237,7 +264,7 @@ export default function AdminLogin() {
                 onClick={handleLogin}
                 disabled={loading || isLocked() || !form.username || !form.password}
                 className="w-full py-3.5 mt-2 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-400 hover:to-teal-400 disabled:from-stone-700 disabled:to-stone-700 disabled:cursor-not-allowed text-stone-950 disabled:text-stone-500 font-black text-sm tracking-[0.15em] uppercase rounded-xl transition-all shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/35 hover:scale-[1.02] active:scale-[0.99] disabled:shadow-none disabled:hover:scale-100"
-                style={{ fontFamily:"'Syne',sans-serif" }}
+                style={{ fontFamily: "'Syne',sans-serif" }}
               >
                 {loading ? (
                   <span className="flex items-center justify-center gap-2">
@@ -258,7 +285,7 @@ export default function AdminLogin() {
         </div>
 
         <div className="text-center mt-6">
-          <a href="/" className="text-stone-600 hover:text-stone-400 text-xs transition-colors inline-flex items-center gap-1.5" style={{ fontFamily:"'DM Sans',sans-serif" }}>
+          <a href="/" className="text-stone-600 hover:text-stone-400 text-xs transition-colors inline-flex items-center gap-1.5" style={{ fontFamily: "'DM Sans',sans-serif" }}>
             ← Back to public site
           </a>
         </div>

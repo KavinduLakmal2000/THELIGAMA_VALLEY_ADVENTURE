@@ -361,12 +361,33 @@ export default function AdminLayout({ children, page, setPage, pendingCount }) {
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
       {/* Logo */}
-      <div className={`flex items-center gap-3 px-5 py-5 border-b border-stone-800 ${collapsed ? "justify-center" : ""}`}>
-        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-400 to-teal-600 flex items-center justify-center text-lg flex-shrink-0">🌊</div>
+      <div
+        className={`flex items-center gap-3 px-5 py-5 border-b border-stone-800 ${collapsed ? "justify-center" : ""
+          }`}
+      >
+        <div className="w-9 h-9 flex-shrink-0">
+          <img
+            src="/favicon.png"
+            alt="Alpine To Island"
+            className="w-full h-full object-contain"
+          />
+        </div>
+
         {!collapsed && (
           <div>
-            <p className="text-white font-black text-xl leading-tight" style={{ fontFamily: "'Bebas Neue', 'Impact', sans-serif" }}>Alpine To Island</p>
-            <p className="text-cyan-400 text-xs font-semibold" style={{ fontFamily: "'Syne', sans-serif" }}>Admin Panel</p>
+            <p
+              className="text-white font-black text-xl leading-tight"
+              style={{ fontFamily: "'Bebas Neue', 'Impact', sans-serif" }}
+            >
+              Alpine To Island
+            </p>
+
+            <p
+              className="text-cyan-400 text-xs font-semibold"
+              style={{ fontFamily: "'Syne', sans-serif" }}
+            >
+              Admin Panel
+            </p>
           </div>
         )}
       </div>
@@ -380,8 +401,8 @@ export default function AdminLayout({ children, page, setPage, pendingCount }) {
               key={item.id}
               onClick={() => { setPage(item.id); setMobileOpen(false); }}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all duration-150 relative group ${isActive
-                  ? "bg-cyan-500/15 text-cyan-400 border border-cyan-500/25"
-                  : "text-stone-400 hover:text-stone-200 hover:bg-stone-800/60"
+                ? "bg-cyan-500/15 text-cyan-400 border border-cyan-500/25"
+                : "text-stone-400 hover:text-stone-200 hover:bg-stone-800/60"
                 } ${collapsed ? "justify-center" : ""}`}
               style={{ fontFamily: "'Syne', sans-serif" }}
             >

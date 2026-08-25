@@ -7,9 +7,20 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
           <div>
             <div className="flex items-center gap-3 mb-5">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-400 to-teal-600 flex items-center justify-center text-xl">🌊</div>
-              <span className="font-black text-3xl text-white" style={{ fontFamily: "'Bebas Neue','Impact',sans-serif", letterSpacing: "0.05em" }}>
-                Alpine To <span className="text-cyan-400"> Island</span>
+              <img
+                src="/favicon.png"
+                alt="Alpine To Island"
+                className="w-10 h-10 object-contain"
+              />
+
+              <span
+                className="font-black text-3xl text-white"
+                style={{
+                  fontFamily: "'Bebas Neue','Impact',sans-serif",
+                  letterSpacing: "0.05em",
+                }}
+              >
+                Alpine To <span className="text-cyan-400">Island</span>
               </span>
             </div>
             <p className="text-stone-400 text-lg leading-relaxed" style={{ fontFamily: "'DM Sans',sans-serif" }}>{footer.about}</p>

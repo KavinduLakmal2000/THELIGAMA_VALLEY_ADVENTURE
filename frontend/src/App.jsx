@@ -19,6 +19,7 @@ import SummerCampPage from "./pages/SummerCampPage";
 import AdminApp from "./admin/AdminApp";
 import AdminLogin from "./AdminLogin";
 import ProtectedRoute from "./ProtectedRoute";
+import AboutSecret from "./AboutSecret";
 
 // ─── Parallax image config ────────────────────────────────────────────────────
 // Using Unsplash source URLs — swap for your own photos any time
@@ -135,6 +136,7 @@ export default function App() {
         <Route path="/" element={<PublicSite />} />
         <Route path="/summer-camp" element={<SummerCampPage />} />
         <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/about-secret" element={<AboutSecret />} />
         <Route
           path="/admin/*"
           element={<ProtectedRoute><AdminApp /></ProtectedRoute>}
