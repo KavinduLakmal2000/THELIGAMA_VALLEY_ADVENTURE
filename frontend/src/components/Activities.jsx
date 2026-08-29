@@ -109,7 +109,7 @@ export default function Activities() {
             ))}
           </div>
         )}
-        ```jsx
+
         {selectedActivity && (
           <div
             className="
@@ -357,8 +357,6 @@ export default function Activities() {
             </div>
           </div>
         )}
-        ```
-
       </div>
     </section>
   );
