@@ -154,14 +154,14 @@ export default function SummerCampPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/10" />
 
-        <div
+        {/* <div
           className="absolute top-28 right-6 sm:right-10 w-28 h-28 rounded-full border-2 border-dashed border-white/70 flex items-center justify-center text-center p-3 rotate-[10deg] animate-[float_5s_ease-in-out_infinite]"
           style={display}
         >
           <span className="text-white text-xs leading-tight tracking-widest uppercase">
             Est. Camp<br />Sri Lanka
           </span>
-        </div>
+        </div> */}
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 pb-20 w-full">
           <Reveal>

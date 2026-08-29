@@ -23,7 +23,7 @@ export const summerCamp = {
       step: "01",
       icon: "🌊",
       title: "Adventure",
-      image: IMG + "Water_Sports_Kayaking.jpg",
+      image: IMG + "stand up paddle board.jpg", 
       blurb:
         "The valley at its wildest — rapids, canopy, and cold mountain water.",
       highlights: ["White-water rafting", "Rainforest trekking", "Waterfall hikes", "River water activities"],

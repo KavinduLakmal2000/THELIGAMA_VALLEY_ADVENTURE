@@ -109,19 +109,26 @@ export default function Activities() {
             ))}
           </div>
         )}
+        ```jsx
         {selectedActivity && (
           <div
-            className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-6 bg-black/70 backdrop-blur-sm animate-[fadeIn_.25s_ease-out]"
+            className="
+      fixed inset-0 z-[9999]
+      flex items-center justify-center
+      p-3 sm:p-6
+      bg-black/70 backdrop-blur-sm
+      animate-[fadeIn_.25s_ease-out]
+    "
             onClick={() => setSelectedActivity(null)}
           >
             <div
               className="
-        relative w-full max-w-4xl
-        max-h-[92vh]
-        overflow-y-auto
+        relative
+        w-full max-w-4xl
         bg-white
         rounded-2xl sm:rounded-3xl
         shadow-2xl
+        overflow-hidden
         animate-[modalPop_.3s_ease-out]
       "
               onClick={(e) => e.stopPropagation()}
@@ -132,16 +139,19 @@ export default function Activities() {
                 onClick={() => setSelectedActivity(null)}
                 aria-label="Close"
                 className="
-          absolute top-3 right-3 sm:top-4 sm:right-4
+          absolute
+          top-3 right-3
+          sm:top-4 sm:right-4
           z-50
-          w-12 h-12
+          w-10 h-10
+          sm:w-11 sm:h-11
           rounded-full
-          bg-black/75
+          bg-black/70
           hover:bg-black/90
           active:bg-black
           text-white
           flex items-center justify-center
-          text-3xl
+          text-2xl sm:text-3xl
           leading-none
           shadow-lg
           transition-all
@@ -151,8 +161,15 @@ export default function Activities() {
               </button>
 
               {/* Large image */}
-              <div className="relative h-[240px] sm:h-[400px] overflow-hidden rounded-t-2xl sm:rounded-t-3xl">
-
+              <div
+                className="
+          relative
+          h-[170px]
+          sm:h-[400px]
+          overflow-hidden
+          rounded-t-2xl sm:rounded-t-3xl
+        "
+              >
                 {imgUrl(selectedActivity.image) ? (
                   <img
                     src={imgUrl(selectedActivity.image)}
@@ -169,9 +186,20 @@ export default function Activities() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
 
                 {/* Badge */}
-                <div className="absolute bottom-4 left-4 sm:bottom-5 sm:left-6">
+                <div className="absolute bottom-3 left-4 sm:bottom-5 sm:left-6">
                   <span
-                    className="bg-cyan-500 text-white text-lg sm:text-xl font-black tracking-widest uppercase px-3 sm:px-4 py-2 rounded-full shadow-lg"
+                    className="
+              bg-cyan-500
+              text-white
+              text-base sm:text-xl
+              font-black
+              tracking-widest
+              uppercase
+              px-3 sm:px-4
+              py-1.5 sm:py-2
+              rounded-full
+              shadow-lg
+            "
                     style={{
                       fontFamily: "'Bebas Neue', 'Impact', sans-serif"
                     }}
@@ -182,11 +210,18 @@ export default function Activities() {
               </div>
 
               {/* Content */}
-              <div className="p-5 sm:p-10">
+              <div className="p-4 sm:p-10">
 
                 {/* Title */}
                 <h2
-                  className="text-stone-900 text-4xl sm:text-6xl font-black uppercase leading-none mb-6 sm:mb-8"
+                  className="
+            text-stone-900
+            text-3xl sm:text-6xl
+            font-black
+            uppercase
+            leading-none
+            mb-5 sm:mb-8
+          "
                   style={{
                     fontFamily: "'Bebas Neue', 'Impact', sans-serif",
                     letterSpacing: "0.04em"
@@ -196,16 +231,16 @@ export default function Activities() {
                 </h2>
 
                 {/* Details grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8">
+                <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-5 sm:mb-8">
 
                   {/* Location */}
-                  <div className="bg-stone-50 rounded-2xl p-4 sm:p-5 border border-stone-200">
-                    <div className="text-stone-400 text-sm uppercase tracking-widest mb-1">
+                  <div className="bg-stone-50 rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-stone-200">
+                    <div className="text-stone-400 text-[10px] sm:text-sm uppercase tracking-widest mb-1">
                       Location
                     </div>
 
                     <div
-                      className="text-stone-900 text-lg sm:text-xl font-bold"
+                      className="text-stone-900 text-sm sm:text-xl font-bold truncate"
                       style={{ fontFamily: "'DM Sans', sans-serif" }}
                     >
                       📍 {selectedActivity.location}
@@ -213,13 +248,13 @@ export default function Activities() {
                   </div>
 
                   {/* Duration */}
-                  <div className="bg-stone-50 rounded-2xl p-4 sm:p-5 border border-stone-200">
-                    <div className="text-stone-400 text-sm uppercase tracking-widest mb-1">
+                  <div className="bg-stone-50 rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-stone-200">
+                    <div className="text-stone-400 text-[10px] sm:text-sm uppercase tracking-widest mb-1">
                       Activity Time
                     </div>
 
                     <div
-                      className="text-stone-900 text-lg sm:text-xl font-bold"
+                      className="text-stone-900 text-sm sm:text-xl font-bold truncate"
                       style={{ fontFamily: "'DM Sans', sans-serif" }}
                     >
                       ⏱️ {selectedActivity.duration}
@@ -227,27 +262,27 @@ export default function Activities() {
                   </div>
 
                   {/* Minimum age */}
-                  <div className="bg-stone-50 rounded-2xl p-4 sm:p-5 border border-stone-200">
-                    <div className="text-stone-400 text-sm uppercase tracking-widest mb-1">
+                  <div className="bg-stone-50 rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-stone-200">
+                    <div className="text-stone-400 text-[10px] sm:text-sm uppercase tracking-widest mb-1">
                       Minimum Age
                     </div>
 
                     <div
-                      className="text-stone-900 text-lg sm:text-xl font-bold"
+                      className="text-stone-900 text-sm sm:text-xl font-bold truncate"
                       style={{ fontFamily: "'DM Sans', sans-serif" }}
                     >
-                      👤 {selectedActivity.minAge} Years Old
+                      👤 {selectedActivity.minAge} Years
                     </div>
                   </div>
 
                   {/* Maximum guests */}
-                  <div className="bg-stone-50 rounded-2xl p-4 sm:p-5 border border-stone-200">
-                    <div className="text-stone-400 text-sm uppercase tracking-widest mb-1">
+                  <div className="bg-stone-50 rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-stone-200">
+                    <div className="text-stone-400 text-[10px] sm:text-sm uppercase tracking-widest mb-1">
                       Minimum People
                     </div>
 
                     <div
-                      className="text-stone-900 text-lg sm:text-xl font-bold"
+                      className="text-stone-900 text-sm sm:text-xl font-bold truncate"
                       style={{ fontFamily: "'DM Sans', sans-serif" }}
                     >
                       👥 {selectedActivity.maxGuests} PEOPLE
@@ -257,15 +292,24 @@ export default function Activities() {
                 </div>
 
                 {/* Price + Book */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 pt-6 border-t border-stone-200">
+                <div
+                  className="
+            flex items-center
+            justify-between
+            gap-3
+            pt-4 sm:pt-6
+            border-t border-stone-200
+          "
+                >
 
+                  {/* Price */}
                   <div>
-                    <div className="text-stone-400 uppercase tracking-widest text-sm mb-1">
+                    <div className="text-stone-400 uppercase tracking-widest text-[10px] sm:text-sm mb-1">
                       Price Per Person
                     </div>
 
                     <div
-                      className="text-cyan-600 text-4xl sm:text-5xl font-black"
+                      className="text-cyan-600 text-3xl sm:text-5xl font-black"
                       style={{
                         fontFamily: "'Bebas Neue', 'Impact', sans-serif"
                       }}
@@ -274,15 +318,37 @@ export default function Activities() {
                     </div>
                   </div>
 
+                  {/* Book button */}
                   <a
                     href="#booking"
                     onClick={() => setSelectedActivity(null)}
-                    className="inline-flex items-center justify-center gap-3 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white px-8 py-4 rounded-xl text-xl font-black tracking-widest uppercase shadow-lg hover:shadow-xl transition-all"
+                    className="
+              inline-flex
+              items-center
+              justify-center
+              gap-2
+              bg-gradient-to-r
+              from-cyan-500
+              to-teal-500
+              hover:from-cyan-600
+              hover:to-teal-600
+              text-white
+              px-4 py-3
+              sm:px-8 sm:py-4
+              rounded-xl
+              text-base sm:text-xl
+              font-black
+              tracking-widest
+              uppercase
+              shadow-lg
+              hover:shadow-xl
+              transition-all
+            "
                     style={{
                       fontFamily: "'Bebas Neue', 'Impact', sans-serif"
                     }}
                   >
-                    Book Now →
+                    Book →
                   </a>
 
                 </div>
@@ -291,6 +357,8 @@ export default function Activities() {
             </div>
           </div>
         )}
+        ```
+
       </div>
     </section>
   );
