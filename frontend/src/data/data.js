@@ -295,7 +295,7 @@ export const contact = {
 
 // ─── FOOTER ────────────────────────────────────────────────────────────────────
 export const footer = {
-  brand: "Theligama Valley Adventures",
+  brand: "Alpine To Island",
   about:
     "We offer safe, guided white water rafting and outdoor adventure experiences in the heart of Theligama, Sri Lanka. Perfect for beginners, families, and thrill-seekers alike.",
   quickLinks: [
