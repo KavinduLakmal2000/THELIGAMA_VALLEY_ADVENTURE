@@ -53,7 +53,7 @@ export const summerCamp = {
       step: "04",
       icon: "🐘",
       title: "Culture & Nature",
-      image: IMG + "Nearby_Attractions.jpg",
+      image: IMG + "elephant_orphanage.jpg",
       blurb:
         "Elephants, village life, and campfire nights under the stars.",
       highlights: ["Elephant experience", "Village & community visits", "Campfire storytelling", "Tree planting & conservation"],

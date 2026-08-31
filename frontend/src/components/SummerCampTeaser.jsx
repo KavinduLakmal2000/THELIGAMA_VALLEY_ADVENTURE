@@ -30,7 +30,7 @@ export default function SummerCampTeaser() {
               </div> */}
 
               <div className="absolute bottom-6 left-6 right-6 flex gap-2">
-                {summerCamp.pillars.map((p) => (
+                {/* {summerCamp.pillars.map((p) => (
                   <Link
                     key={p.key}
                     to="/summer-camp"
@@ -40,7 +40,7 @@ export default function SummerCampTeaser() {
                   >
                     {p.icon}
                   </Link>
-                ))}
+                ))} */}
               </div>
             </div>
           </div>
