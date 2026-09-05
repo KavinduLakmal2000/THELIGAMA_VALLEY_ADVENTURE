@@ -52,7 +52,7 @@ function MiniCalendar({ selected, onSelect, minDate, blockedDates = [] }) {
   );
 }
 
-export default function Booking() {
+export default function Booking({ selectedActivities = [], removeActivity = () => {}, clearSelected = () => {}, toggleActivity = () => {} }) {
   const today = new Date(); today.setHours(0, 0, 0, 0);
 
   const [activities, setActivities] = useState([]);
@@ -82,7 +82,7 @@ export default function Booking() {
     if (!form.name.trim()) e.name = "Name is required";
     if (!emailValue || !emailPattern.test(emailValue)) e.email = "Valid email required";
     if (!form.phone.trim()) e.phone = "Phone is required";
-    if (!form.activity) e.activity = "Please select an activity";
+    if ((!selectedActivities || selectedActivities.length === 0) && !form.activity) e.activity = "Please select at least one activity";
     if (!form.date) e.date = "Please select a date";
     if (!form.slot) e.slot = "Please select a time slot";
     return e;
@@ -92,20 +92,31 @@ export default function Booking() {
     const e = validate(); if (Object.keys(e).length) { setErrors(e); return; }
     setSubmitting(true); setSubmitError("");
     try {
-      const act = activities.find(a => a.title === form.activity);
-      const total = act ? act.price * parseInt(form.guests) : 0;
-      await bookingsApi.submit({ name: form.name.trim(), email: form.email.trim(), phone: form.phone.trim(), activity: form.activity, date: form.date.toISOString().split("T")[0], slot: form.slot.split(" ")[0], guests: parseInt(form.guests), total, message: form.message.trim() });
+      let payload = { name: form.name.trim(), email: form.email.trim(), phone: form.phone.trim(), date: form.date.toISOString().split("T")[0], slot: form.slot.split(" ")[0], guests: parseInt(form.guests), message: form.message.trim() };
+
+      if (selectedActivities && selectedActivities.length > 0) {
+        payload.activities = selectedActivities.map(a => a._id);
+      } else {
+        payload.activity = form.activity;
+      }
+
+      await bookingsApi.submit(payload);
       setSubmitted(true);
     } catch (err) { setSubmitError(err.message || "Something went wrong."); }
     finally { setSubmitting(false); }
   };
 
   const resetForm = () => { setSubmitted(false); setForm({ name: "", email: "", phone: "", activity: "", guests: "1", slot: "", date: null, message: "" }); setErrors({}); setSubmitError(""); };
+  
+  // Clear selected activities when user starts a fresh booking
+  const clearBooking = () => { resetForm(); clearSelected(); };
 
   const inputClass = field => `w-full bg-white border ${errors[field] ? "border-red-400" : "border-stone-300"} rounded-xl px-4 py-3 text-stone-800 text-sm placeholder-stone-400 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-100 transition-colors shadow-sm`;
   const slotOptions = activeSlots.length > 0 ? activeSlots.map(s => `${s.label} (${s.time})`) : ["Morning (8:00 AM – 11:00 AM)", "Midday (11:30 AM – 2:30 PM)", "Afternoon (3:00 PM – 5:00 PM)"];
   const selectedAct = activities.find(a => a.title === form.activity);
-  const priceEst = selectedAct ? selectedAct.price * parseInt(form.guests || 1) : null;
+  const priceEst = (selectedActivities && selectedActivities.length > 0)
+    ? selectedActivities.reduce((s, a) => s + (Number(a.price || 0) * parseInt(form.guests || 1)), 0)
+    : (selectedAct ? selectedAct.price * parseInt(form.guests || 1) : null);
 
   return (
     <section id="booking" className="bg-white py-28 px-6 relative overflow-hidden">
@@ -127,7 +138,10 @@ export default function Booking() {
             <h3 className="text-stone-900 font-black text-3xl mb-3" style={{ fontFamily: "'Bebas Neue','Impact',sans-serif" }}>BOOKING RECEIVED!</h3>
             <p className="text-stone-500 mb-2" style={{ fontFamily: "'DM Sans',sans-serif" }}>Thanks, <strong className="text-stone-900">{form.name}</strong>! We'll contact you shortly.</p>
             <div className="bg-stone-50 rounded-xl p-5 text-left mt-6 space-y-2 border border-stone-100">
-              {[["🏄", "Activity", form.activity], ["📅", "Date", form.date?.toLocaleDateString("en-GB", { weekday: "long", year: "numeric", month: "long", day: "numeric" })], ["⏱", "Time", form.slot], ["👥", "Guests", form.guests]].map(([e, l, v]) => (
+              {((selectedActivities && selectedActivities.length > 0) ? selectedActivities : (form.activity ? [{ title: form.activity }] : [])).map((activity, idx) => (
+                <p key={activity._id || `${activity.title}-${idx}`} className="text-stone-700 text-sm">🏄 <strong>Activity:</strong> {activity.title || activity}</p>
+              ))}
+              {[ ["📅", "Date", form.date?.toLocaleDateString("en-GB", { weekday: "long", year: "numeric", month: "long", day: "numeric" })], ["⏱", "Time", form.slot], ["👥", "Guests", form.guests] ].map(([e, l, v]) => (
                 <p key={l} className="text-stone-700 text-sm">{e} <strong>{l}:</strong> {v}</p>
               ))}
               {priceEst && <p className="text-stone-700 text-sm">💰 <strong>Estimated:</strong> $ {priceEst.toLocaleString()}</p>}
@@ -137,7 +151,7 @@ export default function Booking() {
               <span className="text-cyan-600">{form.email}</span>.{" "}
               Please check your inbox and spam folder if you don't see it.
             </p>            
-            <button onClick={resetForm} className="mt-8 px-6 py-3 border border-stone-200 hover:border-cyan-400 text-stone-500 hover:text-cyan-600 text-2xl font-bold tracking-widest uppercase rounded-full transition-all" style={{ fontFamily: "'Bebas Neue', 'Impact', sans-serif" }}>Book Another</button>
+            <button onClick={clearBooking} className="mt-8 px-6 py-3 border border-stone-200 hover:border-cyan-400 text-stone-500 hover:text-cyan-600 text-2xl font-bold tracking-widest uppercase rounded-full transition-all" style={{ fontFamily: "'Bebas Neue', 'Impact', sans-serif" }}>Book Another</button>
           </div>
         ) : (
           <div className="grid lg:grid-cols-5 gap-8">
@@ -166,23 +180,29 @@ export default function Booking() {
               {/* Step 2 */}
               <div className="bg-stone-50 border border-stone-200 rounded-2xl p-6">
                 <h3 className="text-stone-900 font-black text-2xl mb-5 flex items-center gap-2" style={{ fontFamily: "'Bebas Neue', 'Impact', sans-serif", letterSpacing: "0.05em" }}>
-                  <span className="w-7 h-7 rounded-full bg-cyan-500 text-white text-xs flex items-center justify-center font-black">2</span> Choose Activity
+                  <span className="w-7 h-7 rounded-full bg-cyan-500 text-white text-xs flex items-center justify-center font-black">2</span> Choose Activities
                 </h3>
                 {loadingData ? (
                   <div className="grid sm:grid-cols-2 gap-2">{[...Array(6)].map((_, i) => <div key={i} className="h-14 bg-stone-100 rounded-xl animate-pulse" />)}</div>
                 ) : (
                   <div className="grid sm:grid-cols-2 gap-2">
-                    {activities.map(act => (
-                      <button key={act._id} onClick={() => set("activity", act.title)}
-                        className={`text-left px-4 py-3 rounded-xl border text-sm transition-all ${form.activity === act.title ? "bg-cyan-50 border-cyan-400 text-cyan-700" : "bg-white border-stone-200 text-stone-600 hover:border-stone-300 hover:bg-stone-50"}`}
-                        style={{ fontFamily: "'DM Sans',sans-serif" }}>
-                        <span className="font-semibold block">{act.title}</span>
-                        <span className="text-xs opacity-70">{act.duration} · $ {act.price?.toLocaleString()}</span>
-                      </button>
-                    ))}
+                    {activities.map(act => {
+                      const isSelected = selectedActivities.some(a => a._id === act._id);
+                      return (
+                        <button key={act._id} onClick={() => toggleActivity(act)}
+                          className={`text-left px-4 py-3 rounded-xl border text-sm transition-all ${isSelected ? "bg-cyan-50 border-cyan-400 text-cyan-700" : "bg-white border-stone-200 text-stone-600 hover:border-stone-300 hover:bg-stone-50"}`}
+                          style={{ fontFamily: "'DM Sans',sans-serif" }}>
+                          <span className="font-semibold block">{act.title}</span>
+                          <span className="text-xs opacity-70">{act.duration} · $ {act.price?.toLocaleString()}</span>
+                        </button>
+                      );
+                    })}
                   </div>
                 )}
                 {errors.activity && <p className="text-red-500 text-xs mt-2">{errors.activity}</p>}
+                {selectedActivities && selectedActivities.length > 0 && (
+                  <p className="text-cyan-700 text-xs font-semibold mt-3">Selected: {selectedActivities.map(a => a.title).join(", ")}</p>
+                )}
               </div>
 
               {/* Step 4 */}
@@ -228,7 +248,26 @@ export default function Booking() {
               <div className="bg-stone-50 border border-stone-200 rounded-2xl p-6">
                 <h3 className="text-stone-900 font-black text-2xl mb-4" style={{ fontFamily: "'Bebas Neue', 'Impact', sans-serif", letterSpacing: "0.05em" }}>Summary</h3>
                 <div className="space-y-3 text-sm" style={{ fontFamily: "'DM Sans',sans-serif" }}>
-                  {[["Activity", form.activity || "—"], ["Date", form.date ? form.date.toLocaleDateString("en-GB") : "—"], ["Time", form.slot ? form.slot.split(" ")[0] : "—"], ["Guests", form.guests]].map(([l, v]) => (
+                  {selectedActivities && selectedActivities.length > 0 ? (
+                    selectedActivities.map(a => (
+                      <div key={a._id} className="flex justify-between items-center py-2 border-b border-stone-200 last:border-0">
+                        <div className="max-w-[70%]">
+                          <div className="text-stone-400 text-xs">Activity</div>
+                          <div className="text-stone-800 font-semibold truncate">{a.title} — $ {Number(a.price || 0).toLocaleString()}</div>
+                        </div>
+                        <div>
+                          <button onClick={() => removeActivity(a._id)} className="text-red-500 text-sm px-3 py-1 rounded-lg border border-red-200">Remove</button>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="flex justify-between items-center py-2 border-b border-stone-200 last:border-0">
+                      <span className="text-stone-400">Activity</span>
+                      <span className="text-stone-800 font-semibold text-right max-w-[60%] truncate">{form.activity || "—"}</span>
+                    </div>
+                  )}
+
+                  {[ ["Date", form.date ? form.date.toLocaleDateString("en-GB") : "—"], ["Time", form.slot ? form.slot.split(" ")[0] : "—"], ["Guests", form.guests] ].map(([l, v]) => (
                     <div key={l} className="flex justify-between items-center py-2 border-b border-stone-200 last:border-0">
                       <span className="text-stone-400">{l}</span>
                       <span className="text-stone-800 font-semibold text-right max-w-[60%] truncate">{v}</span>

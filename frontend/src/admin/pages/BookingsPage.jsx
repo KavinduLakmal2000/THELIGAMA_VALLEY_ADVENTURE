@@ -99,13 +99,15 @@ function BookingRow({ b, onStatus, onSendPaymentInstructions, onConfirmBooking, 
 
   return (
     <>
+      {/* helper to display activities (supports legacy single `activity` or new `activities` array) */}
+      {null}
       <tr className="border-b border-stone-800/60 hover:bg-stone-800/20 transition-colors cursor-pointer" onClick={() => setExpanded(e => !e)}>
         <td className="py-3 px-4 text-stone-500 font-mono text-xs whitespace-nowrap">{id.slice(-6).toUpperCase()}</td>
         <td className="py-3 px-4">
           <div className="text-stone-200 font-semibold text-sm" style={{ fontFamily: "'DM Sans', sans-serif" }}>{b.name}</div>
           <div className="text-stone-500 text-xs">{b.email}</div>
         </td>
-        <td className="py-3 px-4 text-stone-400 text-sm hidden md:table-cell">{b.activity}</td>
+        <td className="py-3 px-4 text-stone-400 text-sm hidden md:table-cell">{(b.activities && b.activities.length) ? b.activities.map(a => a.title).join(', ') : b.activity}</td>
         <td className="py-3 px-4 text-stone-300 text-sm whitespace-nowrap hidden sm:table-cell">{b.date}</td>
         <td className="py-3 px-4 text-stone-400 text-sm hidden lg:table-cell">{b.slot}</td>
         <td className="py-3 px-4 text-stone-400 text-sm hidden lg:table-cell">{b.guests}</td>
@@ -138,7 +140,7 @@ function BookingRow({ b, onStatus, onSendPaymentInstructions, onConfirmBooking, 
               </div>
               <div>
                 <p className="text-stone-600 text-xs uppercase tracking-widest font-bold mb-1">Details</p>
-                <p className="text-stone-300">{b.activity}</p><p className="text-stone-400">{b.date} · {b.slot} · {b.guests} guests</p>
+                <p className="text-stone-300">{(b.activities && b.activities.length) ? b.activities.map(a => a.title).join(', ') : b.activity}</p><p className="text-stone-400">{b.date} · {b.slot} · {b.guests} guests</p>
               </div>
               <div>
                 <p className="text-stone-600 text-xs uppercase tracking-widest font-bold mb-1">Notes</p>
@@ -243,7 +245,7 @@ export default function BookingsPage({ onCountChange }) {
     else { setSortBy(col); setSortDir("asc"); }
   };
 
-  const activities = [...new Set(bookings.map(b => b.activity))].sort();
+  const activities = [...new Set(bookings.flatMap(b => (b.activities && b.activities.length) ? b.activities.map(a=>a.title) : [b.activity]))].sort();
   const counts = { all: bookings.length, pending: 0, payment_pending: 0, confirmed: 0, completed: 0, rejected: 0, cancelled: 0 };
   bookings.forEach(b => {
     const status = b.status === "cancelled" ? "rejected" : b.status;

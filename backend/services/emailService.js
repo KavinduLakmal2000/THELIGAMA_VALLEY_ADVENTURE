@@ -44,6 +44,17 @@ function isValidEmail(value) {
   return validator.isEmail(email);
 }
 
+function extractActivityList(booking) {
+  if (!booking) return [];
+  if (Array.isArray(booking.activities) && booking.activities.length) {
+    return booking.activities.map(a => ({ title: sanitizeText(a.title || ""), price: Number(a.price || 0) }));
+  }
+  if (booking.activity) {
+    return [{ title: sanitizeText(booking.activity), price: Number(booking.total || 0) }];
+  }
+  return [];
+}
+
 async function sendEmail({ to, subject, text, html }) {
   const emailFrom = getEmailFrom();
 
@@ -98,7 +109,7 @@ async function sendBookingConfirmedEmail(booking) {
   }
 
   const customerName = sanitizeText(booking.name || "Guest");
-  const activity = sanitizeText(booking.activity || "Your booking");
+  const activities = extractActivityList(booking);
   const date = sanitizeText(booking.date || "");
   const slot = sanitizeText(booking.slot || "");
   const guests = Number(booking.guests || 1);
@@ -111,7 +122,7 @@ async function sendBookingConfirmedEmail(booking) {
     "",
     "We are pleased to confirm your booking.",
     "",
-    `Activity: ${activity}`,
+    `Activities: ${activities.map(a => a.title).join(", ")}`,
     `Date: ${date}`,
     `Time: ${slot}`,
     `Guests: ${guests}`,
@@ -129,7 +140,10 @@ async function sendBookingConfirmedEmail(booking) {
       <p>Hi <strong>${escapeHtml(customerName)}</strong>,</p>
       <p>We are pleased to confirm your booking.</p>
       <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; margin: 20px 0;">
-        <p><strong>Activity:</strong> ${escapeHtml(activity)}</p>
+        <p><strong>Activities:</strong></p>
+        <ul>
+          ${activities.map(a => `<li>${escapeHtml(a.title)}${a.price?` — $ ${escapeHtml(String(Number(a.price).toLocaleString()))}`:''}</li>`).join("")}
+        </ul>
         <p><strong>Date:</strong> ${escapeHtml(date)}</p>
         <p><strong>Time:</strong> ${escapeHtml(slot)}</p>
         <p><strong>Guests:</strong> ${escapeHtml(String(guests))}</p>
@@ -156,7 +170,7 @@ async function sendBookingRejectedEmail(booking) {
   }
 
   const customerName = sanitizeText(booking.name || "Guest");
-  const activity = sanitizeText(booking.activity || "Your booking");
+  const activities = extractActivityList(booking);
   const date = sanitizeText(booking.date || "");
   const slot = sanitizeText(booking.slot || "");
   const guests = Number(booking.guests || 1);
@@ -169,7 +183,7 @@ async function sendBookingRejectedEmail(booking) {
     "",
     "We are sorry to inform you that your booking was not accepted.",
     "",
-    `Activity: ${activity}`,
+    `Activities: ${activities.map(a => a.title).join(", ")}`,
     `Date: ${date}`,
     `Time: ${slot}`,
     `Guests: ${guests}`,
@@ -187,7 +201,10 @@ async function sendBookingRejectedEmail(booking) {
       <p>Hi <strong>${escapeHtml(customerName)}</strong>,</p>
       <p>We are sorry to inform you that your booking was not accepted.</p>
       <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; margin: 20px 0;">
-        <p><strong>Activity:</strong> ${escapeHtml(activity)}</p>
+        <p><strong>Activities:</strong></p>
+        <ul>
+          ${activities.map(a => `<li>${escapeHtml(a.title)}${a.price?` — $ ${escapeHtml(String(Number(a.price).toLocaleString()))}`:''}</li>`).join("")}
+        </ul>
         <p><strong>Date:</strong> ${escapeHtml(date)}</p>
         <p><strong>Time:</strong> ${escapeHtml(slot)}</p>
         <p><strong>Guests:</strong> ${escapeHtml(String(guests))}</p>
@@ -214,7 +231,7 @@ async function sendPaymentInstructionsEmail(booking) {
   }
 
   const customerName = sanitizeText(booking.name || "Guest");
-  const activity = sanitizeText(booking.activity || "Your booking");
+  const activities = extractActivityList(booking);
   const date = sanitizeText(booking.date || "");
   const slot = sanitizeText(booking.slot || "");
   const guests = Number(booking.guests || 1);
@@ -228,7 +245,7 @@ async function sendPaymentInstructionsEmail(booking) {
     "Your booking is now ready for payment.",
     "Please review the payment instructions below and complete your payment to secure your booking.",
     "",
-    `Activity: ${activity}`,
+    `Activities: ${activities.map(a => a.title).join(", ")}`,
     `Date: ${date}`,
     `Time: ${slot}`,
     `Guests: ${guests}`,
@@ -245,7 +262,10 @@ async function sendPaymentInstructionsEmail(booking) {
       <p>Hi <strong>${escapeHtml(customerName)}</strong>,</p>
       <p>Your booking is now ready for payment. Please review the payment instructions below and complete your payment to secure your booking.</p>
       <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; margin: 20px 0;">
-        <p><strong>Activity:</strong> ${escapeHtml(activity)}</p>
+        <p><strong>Activities:</strong></p>
+        <ul>
+          ${activities.map(a => `<li>${escapeHtml(a.title)}${a.price?` — $ ${escapeHtml(String(Number(a.price).toLocaleString()))}`:''}</li>`).join("")}
+        </ul>
         <p><strong>Date:</strong> ${escapeHtml(date)}</p>
         <p><strong>Time:</strong> ${escapeHtml(slot)}</p>
         <p><strong>Guests:</strong> ${escapeHtml(String(guests))}</p>
@@ -275,7 +295,7 @@ async function sendNewBookingNotification(booking) {
   if (!companyEmail) throw new Error("COMPANY_EMAIL is not configured.");
 
   const customerName = sanitizeText(booking.name || "Guest");
-  const activity = sanitizeText(booking.activity || "");
+  const activities = extractActivityList(booking);
   const date = sanitizeText(booking.date || "");
   const slot = sanitizeText(booking.slot || "");
   const guests = Number(booking.guests || 1);
@@ -290,7 +310,7 @@ async function sendNewBookingNotification(booking) {
     `Email: ${email}`,
     phone ? `Phone: ${phone}` : "",
     "",
-    `Activity: ${activity}`,
+    `Activities: ${activities.map(a => a.title).join(", ")}`,
     `Date: ${date}`,
     `Time: ${slot}`,
     `Guests: ${guests}`,
@@ -309,7 +329,10 @@ async function sendNewBookingNotification(booking) {
         ${phone ? `<p>Phone: ${escapeHtml(phone)}</p>` : ""}
         <hr />
         <p><strong>Booking details:</strong></p>
-        <p>Activity: ${escapeHtml(activity)}</p>
+        <p><strong>Activities:</strong></p>
+        <ul>
+          ${activities.map(a => `<li>${escapeHtml(a.title)}${a.price?` — $ ${escapeHtml(String(Number(a.price).toLocaleString()))}`:''}</li>`).join("")}
+        </ul>
         <p>Date: ${escapeHtml(date)}</p>
         <p>Time: ${escapeHtml(slot)}</p>
         <p>Guests: ${escapeHtml(String(guests))}</p>
@@ -332,7 +355,7 @@ async function sendBookingReceivedEmail(booking) {
   if (!booking || !booking.email) throw new Error("Booking email is required for received email.");
 
   const customerName = sanitizeText(booking.name || "Guest");
-  const activity = sanitizeText(booking.activity || "");
+  const activities = extractActivityList(booking);
   const date = sanitizeText(booking.date || "");
   const slot = sanitizeText(booking.slot || "");
   const guests = Number(booking.guests || 1);
@@ -346,7 +369,7 @@ async function sendBookingReceivedEmail(booking) {
     "",
     "Your booking is currently pending confirmation. Our team will review it and send you another email once your booking has been confirmed or rejected.",
     "",
-    `Activity: ${activity}`,
+    `Activities: ${activities.map(a => a.title).join(", ")}`,
     `Date: ${date}`,
     `Time: ${slot}`,
     `Guests: ${guests}`,
@@ -363,7 +386,10 @@ async function sendBookingReceivedEmail(booking) {
       <p>We have received your booking request.</p>
       <p>Your booking is currently <strong>pending confirmation</strong>. Our team will review it and send you another email once your booking has been confirmed or rejected.</p>
       <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; margin: 20px 0;">
-        <p><strong>Activity:</strong> ${escapeHtml(activity)}</p>
+        <p><strong>Activities:</strong></p>
+        <ul>
+          ${activities.map(a => `<li>${escapeHtml(a.title)}${a.price?` — $ ${escapeHtml(String(Number(a.price).toLocaleString()))}`:''}</li>`).join("")}
+        </ul>
         <p><strong>Date:</strong> ${escapeHtml(date)}</p>
         <p><strong>Time:</strong> ${escapeHtml(slot)}</p>
         <p><strong>Guests:</strong> ${escapeHtml(String(guests))}</p>

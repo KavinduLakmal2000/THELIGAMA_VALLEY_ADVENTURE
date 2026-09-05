@@ -1,6 +1,11 @@
 const express = require("express");
 const Booking = require("../models/Booking");
-const { isValidBookingTransition, normalizeBookingStatus } = require("../models/Booking");
+const Activity = require("../models/Activity");
+const {
+  isValidBookingTransition,
+  normalizeBookingStatus,
+  normalizeSelectedActivityIds,
+} = require("../models/Booking");
 const { protect } = require("../middleware/auth");
 const {
   isValidEmail,
@@ -25,18 +30,49 @@ const router = express.Router();
 // POST /api/bookings  — customer submits a booking from the public site
 router.post("/", async (req, res, next) => {
   try {
-    const { name, email, phone, activity, date, slot, guests, total, message } = req.body;
+    const { name, email, phone, activity, activities, date, slot, guests, total, message } = req.body;
 
     const cleanEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
-
     if (!isValidEmail(cleanEmail)) {
       return res.status(400).json({ success: false, message: "Please provide a valid email address." });
     }
 
+    const guestCount = parseInt(guests) || 1;
+
+    // Determine activities: accept legacy `activity` (string title) or new `activities` (array of IDs)
+    let bookingActivities = [];
+    const normalizedIds = normalizeSelectedActivityIds(activities);
+    if (normalizedIds.length > 0) {
+      const found = await Activity.find({ _id: { $in: normalizedIds }, active: true });
+      if (found.length !== normalizedIds.length) {
+        return res.status(400).json({ success: false, message: "One or more activities are invalid or inactive." });
+      }
+      bookingActivities = found.map(a => ({ activity: a._id, title: a.title, price: a.price }));
+    } else if (typeof activity === "string" && activity.trim()) {
+      // Legacy single-activity flow: find by title
+      const found = await Activity.findOne({ title: activity.trim() });
+      if (!found) {
+        return res.status(400).json({ success: false, message: "Selected activity not found." });
+      }
+      bookingActivities = [{ activity: found._id, title: found.title, price: found.price }];
+    } else {
+      return res.status(400).json({ success: false, message: "Please select at least one activity." });
+    }
+
+    // Calculate total server-side; ignore client-provided `total`
+    const totalPrice = bookingActivities.reduce((sum, a) => sum + (Number(a.price || 0) * guestCount), 0);
+
     const booking = await Booking.create({
-      name, email: cleanEmail, phone, activity, date, slot,
-      guests: parseInt(guests) || 1,
-      total:  parseInt(total)  || 0,
+      name,
+      email: cleanEmail,
+      phone,
+      // Keep legacy `activity` populated for backward-compatibility
+      activity: bookingActivities.map(a => a.title).join(", "),
+      activities: bookingActivities,
+      date,
+      slot,
+      guests: guestCount,
+      total: totalPrice,
       message,
       status: "pending",
       adminNote: "",
@@ -77,7 +113,7 @@ router.get("/admin", protect, async (req, res, next) => {
 
     const filter = {};
     if (status)   filter.status   = status;
-    if (activity) filter.activity = activity;
+    if (activity) filter.$or = [{ activity: activity }, { "activities.title": activity }];
     if (date)     filter.date     = date;
     if (search) {
       const q = new RegExp(search, "i");
@@ -136,8 +172,21 @@ router.get("/admin/stats", protect, async (req, res, next) => {
     ]);
 
     // Activity popularity
+    // Aggregate activity popularity supporting both legacy `activity` and new `activities` array
     const activityStats = await Booking.aggregate([
-      { $group: { _id: "$activity", count: { $sum: 1 } } },
+      {
+        $project: {
+          activitiesArr: {
+            $cond: [
+              { $gt: ["$activities", null] },
+              "$activities",
+              [{ title: "$activity" }]
+            ]
+          }
+        }
+      },
+      { $unwind: "$activitiesArr" },
+      { $group: { _id: "$activitiesArr.title", count: { $sum: 1 } } },
       { $sort: { count: -1 } },
       { $limit: 10 },
     ]);

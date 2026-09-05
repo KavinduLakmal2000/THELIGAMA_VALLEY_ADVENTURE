@@ -2,7 +2,7 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 
 const emailService = require("../services/emailService");
-const { isValidBookingTransition, BOOKING_STATUS_TRANSITIONS } = require("../models/Booking");
+const { isValidBookingTransition, BOOKING_STATUS_TRANSITIONS, normalizeSelectedActivityIds } = require("../models/Booking");
 
 delete process.env.RESEND_API_KEY;
 delete process.env.EMAIL_FROM;
@@ -33,4 +33,10 @@ test("booking workflow allows only the new valid transitions", () => {
   assert.equal(isValidBookingTransition("confirmed", "rejected"), false);
   assert.deepEqual(BOOKING_STATUS_TRANSITIONS.pending, ["payment_pending", "rejected"]);
   assert.deepEqual(BOOKING_STATUS_TRANSITIONS.payment_pending, ["confirmed"]);
+});
+
+test("multiple selected activities are normalized and deduplicated", () => {
+  assert.deepEqual(normalizeSelectedActivityIds(["a1", "b2", "a1", "c3"]), ["a1", "b2", "c3"]);
+  assert.deepEqual(normalizeSelectedActivityIds(["", null, undefined, "d4"]), ["d4"]);
+  assert.deepEqual(normalizeSelectedActivityIds([]), []);
 });

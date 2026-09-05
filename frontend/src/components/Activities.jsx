@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { activitiesApi, imgUrl } from "../api/client";
 
-export default function Activities() {
+export default function Activities({ addToBooking = () => {}, selectedActivities = [] }) {
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const scrollRef = useRef(null);
@@ -67,7 +67,7 @@ export default function Activities() {
           <div
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 pt-2 pb-8 px-1"
           >
-            {activities.map(act => (
+                {activities.map(act => (
               <div
                 key={act._id}
                 onClick={() => {
@@ -95,14 +95,19 @@ export default function Activities() {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-cyan-600 font-black text-4xl" style={{ fontFamily: "'Bebas Neue', 'Impact', sans-serif" }}>$ {act.price?.toLocaleString()}</span>
-                    <a
-                      href="#booking"
-                      onClick={(e) => e.stopPropagation()}
-                      className="text-xl font-black tracking-widest uppercase text-stone-400 hover:text-cyan-600 transition-colors"
-                      style={{ fontFamily: "'Bebas Neue', 'Impact', sans-serif" }}
-                    >
-                      Book →
-                    </a>
+                    <div className="flex items-center gap-2">
+                      <button onClick={(e) => { e.stopPropagation(); addToBooking(act); }} className={`px-3 py-2 rounded-xl font-bold ${selectedActivities.find(a=>a._id===act._id)?'bg-green-500 text-white':'bg-cyan-50 text-cyan-700 hover:bg-cyan-100'}`}>
+                        {selectedActivities.find(a=>a._id===act._id) ? '✓ Added' : 'Add'}
+                      </button>
+                      <a
+                        href="#booking"
+                        onClick={(e) => { e.stopPropagation(); setSelectedActivity(act); }}
+                        className="text-xl font-black tracking-widest uppercase text-stone-400 hover:text-cyan-600 transition-colors"
+                        style={{ fontFamily: "'Bebas Neue', 'Impact', sans-serif" }}
+                      >
+                        Details →
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -319,37 +324,12 @@ export default function Activities() {
                   </div>
 
                   {/* Book button */}
-                  <a
-                    href="#booking"
-                    onClick={() => setSelectedActivity(null)}
-                    className="
-              inline-flex
-              items-center
-              justify-center
-              gap-2
-              bg-gradient-to-r
-              from-cyan-500
-              to-teal-500
-              hover:from-cyan-600
-              hover:to-teal-600
-              text-white
-              px-4 py-3
-              sm:px-8 sm:py-4
-              rounded-xl
-              text-base sm:text-xl
-              font-black
-              tracking-widest
-              uppercase
-              shadow-lg
-              hover:shadow-xl
-              transition-all
-            "
-                    style={{
-                      fontFamily: "'Bebas Neue', 'Impact', sans-serif"
-                    }}
-                  >
-                    Book →
-                  </a>
+                  <div className="flex items-center gap-3">
+                    <button onClick={() => { addToBooking(selectedActivity); setSelectedActivity(null); }} className={`px-4 py-3 rounded-xl font-bold ${selectedActivities.find(a=>a._id===selectedActivity._id)?'bg-green-500 text-white':'bg-cyan-500 text-white'}`}>
+                      {selectedActivities.find(a=>a._id===selectedActivity._id) ? '✓ Added' : 'Add to Booking'}
+                    </button>
+                    <a href="#booking" onClick={() => setSelectedActivity(null)} className="text-stone-700">Review Booking →</a>
+                  </div>
 
                 </div>
 

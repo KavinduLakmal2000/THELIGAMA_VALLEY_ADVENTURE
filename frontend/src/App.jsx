@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { BrowserRouter, HashRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
@@ -80,6 +80,20 @@ function BodyTheme() {
 // ─── Public site ──────────────────────────────────────────────────────────────
 function PublicSite() {
   const location = useLocation();
+  const [selectedActivities, setSelectedActivities] = useState([]);
+
+  const toggleActivity = (act) => {
+    setSelectedActivities((current) => {
+      const exists = current.some((item) => item._id === act._id);
+      return exists ? current.filter((item) => item._id !== act._id) : [...current, act];
+    });
+  };
+
+  const removeActivity = (id) => {
+    setSelectedActivities((current) => current.filter((item) => item._id !== id));
+  };
+
+  const clearSelectedActivities = () => setSelectedActivities([]);
 
   // Lets other pages (e.g. the Summer Camp page) navigate home and land on a
   // specific section, by passing state={{ scrollTo: "booking" }} to <Link>/navigate.
@@ -103,7 +117,7 @@ function PublicSite() {
       {/* ① River — between About and Activities */}
       <ParallaxDivider {...PARALLAX.river} />
 
-      <Activities />
+      <Activities addToBooking={toggleActivity} selectedActivities={selectedActivities} />
       {/* <Schedule /> */}
 
       {/* ② Jungle — between Schedule and Reviews */}
@@ -120,7 +134,12 @@ function PublicSite() {
       {/* ④ Waterfall — between Guidelines and Booking */}
       <ParallaxDivider {...PARALLAX.waterfall} />
 
-      <Booking />
+      <Booking
+        selectedActivities={selectedActivities}
+        removeActivity={removeActivity}
+        clearSelected={clearSelectedActivities}
+        toggleActivity={toggleActivity}
+      />
       <Contact />
       <Footer />
     </div>

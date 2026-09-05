@@ -30,12 +30,31 @@ function isValidBookingTransition(fromStatus, toStatus) {
   return transitions.includes(end);
 }
 
+function normalizeSelectedActivityIds(input) {
+  if (!Array.isArray(input)) return [];
+
+  return [...new Set(
+    input
+      .map(value => (typeof value === "string" || typeof value === "number") ? String(value).trim() : "")
+      .filter(Boolean)
+  )];
+}
+
 const bookingSchema = new mongoose.Schema(
   {
     name:     { type: String, required: true, trim: true },
     email:    { type: String, required: true, trim: true, lowercase: true },
     phone:    { type: String, required: true, trim: true },
-    activity: { type: String, required: true },
+    // Backwards-compatible single activity string (legacy bookings)
+    activity: { type: String, default: "" },
+    // New: store multiple activities per booking. Each item keeps a reference and snapshot data.
+    activities: [
+      {
+        activity: { type: mongoose.Schema.Types.ObjectId, ref: "Activity" },
+        title: { type: String },
+        price: { type: Number },
+      },
+    ],
     date:     { type: String, required: true },   // "YYYY-MM-DD"
     slot:     { type: String, required: true, enum: ["Morning", "Midday", "Afternoon"] },
     guests:   { type: Number, required: true, min: 1, max: 50 },
@@ -65,3 +84,4 @@ module.exports.BOOKING_STATUS = BOOKING_STATUS;
 module.exports.BOOKING_STATUS_TRANSITIONS = BOOKING_STATUS_TRANSITIONS;
 module.exports.normalizeBookingStatus = normalizeBookingStatus;
 module.exports.isValidBookingTransition = isValidBookingTransition;
+module.exports.normalizeSelectedActivityIds = normalizeSelectedActivityIds;
