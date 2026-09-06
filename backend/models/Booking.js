@@ -40,6 +40,22 @@ function normalizeSelectedActivityIds(input) {
   )];
 }
 
+function isValidBookingDate(value) {
+  if (typeof value !== "string") return false;
+
+  const trimmed = value.trim();
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) return false;
+
+  const [year, month, day] = trimmed.split("-").map(Number);
+  const parsed = new Date(year, month - 1, day);
+
+  return (
+    parsed.getFullYear() === year &&
+    parsed.getMonth() === month - 1 &&
+    parsed.getDate() === day
+  );
+}
+
 const bookingSchema = new mongoose.Schema(
   {
     name:     { type: String, required: true, trim: true },
@@ -55,7 +71,15 @@ const bookingSchema = new mongoose.Schema(
         price: { type: Number },
       },
     ],
-    date:     { type: String, required: true },   // "YYYY-MM-DD"
+    date: {
+      type: String,
+      required: true,
+      match: /^\d{4}-\d{2}-\d{2}$/,
+      validate: {
+        validator: isValidBookingDate,
+        message: "Booking date must be a valid calendar date in YYYY-MM-DD format.",
+      },
+    },
     slot:     { type: String, required: true, enum: ["Morning", "Midday", "Afternoon"] },
     guests:   { type: Number, required: true, min: 1, max: 50 },
     total:    { type: Number, default: 0 },
@@ -85,3 +109,4 @@ module.exports.BOOKING_STATUS_TRANSITIONS = BOOKING_STATUS_TRANSITIONS;
 module.exports.normalizeBookingStatus = normalizeBookingStatus;
 module.exports.isValidBookingTransition = isValidBookingTransition;
 module.exports.normalizeSelectedActivityIds = normalizeSelectedActivityIds;
+module.exports.isValidBookingDate = isValidBookingDate;

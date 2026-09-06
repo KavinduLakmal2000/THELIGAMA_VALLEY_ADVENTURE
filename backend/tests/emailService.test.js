@@ -2,7 +2,12 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 
 const emailService = require("../services/emailService");
-const { isValidBookingTransition, BOOKING_STATUS_TRANSITIONS, normalizeSelectedActivityIds } = require("../models/Booking");
+const {
+  isValidBookingTransition,
+  BOOKING_STATUS_TRANSITIONS,
+  normalizeSelectedActivityIds,
+  isValidBookingDate,
+} = require("../models/Booking");
 
 delete process.env.RESEND_API_KEY;
 delete process.env.EMAIL_FROM;
@@ -39,4 +44,20 @@ test("multiple selected activities are normalized and deduplicated", () => {
   assert.deepEqual(normalizeSelectedActivityIds(["a1", "b2", "a1", "c3"]), ["a1", "b2", "c3"]);
   assert.deepEqual(normalizeSelectedActivityIds(["", null, undefined, "d4"]), ["d4"]);
   assert.deepEqual(normalizeSelectedActivityIds([]), []);
+});
+
+test("booking dates remain calendar-only values and reject malformed input", () => {
+  assert.equal(isValidBookingDate("2026-09-15"), true);
+  assert.equal(isValidBookingDate("2026-09-01"), true);
+  assert.equal(isValidBookingDate("2026-09-30"), true);
+  assert.equal(isValidBookingDate("2024-02-29"), true);
+
+  assert.equal(isValidBookingDate("15/09/2026"), false);
+  assert.equal(isValidBookingDate("09-15-2026"), false);
+  assert.equal(isValidBookingDate("abc"), false);
+  assert.equal(isValidBookingDate(undefined), false);
+  assert.equal(isValidBookingDate(null), false);
+  assert.equal(isValidBookingDate("2026-02-29"), false);
+  assert.equal(isValidBookingDate("2026-02-30"), false);
+  assert.equal(isValidBookingDate("2026-13-15"), false);
 });

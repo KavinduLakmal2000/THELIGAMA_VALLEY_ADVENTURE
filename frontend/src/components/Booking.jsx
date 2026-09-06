@@ -4,10 +4,46 @@ import { activitiesApi, scheduleApi, bookingsApi } from "../api/client";
 const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 const DAY_NAMES = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 
+function formatDateKey(date) {
+  if (!date) return "";
+  if (typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(date)) return date;
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function parseDateKey(dateString) {
+  if (typeof dateString !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(dateString)) return null;
+
+  const [year, month, day] = dateString.split("-").map(Number);
+  const parsed = new Date(year, month - 1, day);
+
+  if (parsed.getFullYear() !== year || parsed.getMonth() !== month - 1 || parsed.getDate() !== day) {
+    return null;
+  }
+
+  return parsed;
+}
+
+function formatDisplayDate(dateValue) {
+  const parsed = typeof dateValue === "string" ? parseDateKey(dateValue) : (dateValue instanceof Date ? dateValue : null);
+  if (!parsed) return "—";
+
+  return parsed.toLocaleDateString("en-GB", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
 function MiniCalendar({ selected, onSelect, minDate, blockedDates = [] }) {
   const today = new Date();
-  const [viewYear, setViewYear] = useState(selected ? selected.getFullYear() : today.getFullYear());
-  const [viewMonth, setViewMonth] = useState(selected ? selected.getMonth() : today.getMonth());
+  const selectedDate = typeof selected === "string" ? parseDateKey(selected) : selected;
+  const [viewYear, setViewYear] = useState(selectedDate ? selectedDate.getFullYear() : today.getFullYear());
+  const [viewMonth, setViewMonth] = useState(selectedDate ? selectedDate.getMonth() : today.getMonth());
 
   const prev = () => { if (viewMonth === 0) { setViewMonth(11); setViewYear(y => y - 1); } else setViewMonth(m => m - 1); };
   const next = () => { if (viewMonth === 11) { setViewMonth(0); setViewYear(y => y + 1); } else setViewMonth(m => m + 1); };
@@ -15,7 +51,7 @@ function MiniCalendar({ selected, onSelect, minDate, blockedDates = [] }) {
 
   const isDisabled = d => { const dt = new Date(viewYear, viewMonth, d); if (minDate && dt < minDate) return true; return blockedDates.includes(`${viewYear}-${pad(viewMonth + 1)}-${pad(d)}`); };
   const isBlocked = d => blockedDates.includes(`${viewYear}-${pad(viewMonth + 1)}-${pad(d)}`);
-  const isSelected = d => selected && selected.getDate() === d && selected.getMonth() === viewMonth && selected.getFullYear() === viewYear;
+  const isSelected = d => selectedDate && selectedDate.getDate() === d && selectedDate.getMonth() === viewMonth && selectedDate.getFullYear() === viewYear;
   const isToday = d => today.getDate() === d && today.getMonth() === viewMonth && today.getFullYear() === viewYear;
 
   const cells = [];
@@ -36,7 +72,7 @@ function MiniCalendar({ selected, onSelect, minDate, blockedDates = [] }) {
         {cells.map((day, i) => (
           <div key={i} className="flex justify-center">
             {day ? (
-              <button onClick={() => !isDisabled(day) && onSelect(new Date(viewYear, viewMonth, day))} disabled={isDisabled(day)} title={isBlocked(day) ? "Unavailable" : ""}
+              <button onClick={() => !isDisabled(day) && onSelect(formatDateKey(new Date(viewYear, viewMonth, day)))} disabled={isDisabled(day)} title={isBlocked(day) ? "Unavailable" : ""}
                 className={`w-8 h-8 rounded-full text-sm font-semibold transition-all ${isSelected(day) ? "bg-cyan-500 text-white font-black shadow-md shadow-cyan-200"
                     : isBlocked(day) ? "bg-red-50 text-red-300 cursor-not-allowed line-through"
                       : isDisabled(day) ? "text-stone-300 cursor-not-allowed"
@@ -60,7 +96,7 @@ export default function Booking({ selectedActivities = [], removeActivity = () =
   const [blockedDates, setBlockedDates] = useState([]);
   const [loadingData, setLoadingData] = useState(true);
 
-  const [form, setForm] = useState({ name: "", email: "", phone: "", activity: "", guests: "1", slot: "", date: null, message: "" });
+  const [form, setForm] = useState({ name: "", email: "", phone: "", activity: "", guests: "1", slot: "", date: "", message: "" });
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
@@ -83,7 +119,7 @@ export default function Booking({ selectedActivities = [], removeActivity = () =
     if (!emailValue || !emailPattern.test(emailValue)) e.email = "Valid email required";
     if (!form.phone.trim()) e.phone = "Phone is required";
     if ((!selectedActivities || selectedActivities.length === 0) && !form.activity) e.activity = "Please select at least one activity";
-    if (!form.date) e.date = "Please select a date";
+    if (!form.date || !/^\d{4}-\d{2}-\d{2}$/.test(form.date)) e.date = "Please select a date";
     if (!form.slot) e.slot = "Please select a time slot";
     return e;
   };
@@ -92,7 +128,8 @@ export default function Booking({ selectedActivities = [], removeActivity = () =
     const e = validate(); if (Object.keys(e).length) { setErrors(e); return; }
     setSubmitting(true); setSubmitError("");
     try {
-      let payload = { name: form.name.trim(), email: form.email.trim(), phone: form.phone.trim(), date: form.date.toISOString().split("T")[0], slot: form.slot.split(" ")[0], guests: parseInt(form.guests), message: form.message.trim() };
+      const bookingDate = typeof form.date === "string" ? form.date : formatDateKey(form.date);
+      let payload = { name: form.name.trim(), email: form.email.trim(), phone: form.phone.trim(), date: bookingDate, slot: form.slot.split(" ")[0], guests: parseInt(form.guests), message: form.message.trim() };
 
       if (selectedActivities && selectedActivities.length > 0) {
         payload.activities = selectedActivities.map(a => a._id);
@@ -106,7 +143,7 @@ export default function Booking({ selectedActivities = [], removeActivity = () =
     finally { setSubmitting(false); }
   };
 
-  const resetForm = () => { setSubmitted(false); setForm({ name: "", email: "", phone: "", activity: "", guests: "1", slot: "", date: null, message: "" }); setErrors({}); setSubmitError(""); };
+  const resetForm = () => { setSubmitted(false); setForm({ name: "", email: "", phone: "", activity: "", guests: "1", slot: "", date: "", message: "" }); setErrors({}); setSubmitError(""); };
   
   // Clear selected activities when user starts a fresh booking
   const clearBooking = () => { resetForm(); clearSelected(); };
@@ -141,7 +178,7 @@ export default function Booking({ selectedActivities = [], removeActivity = () =
               {((selectedActivities && selectedActivities.length > 0) ? selectedActivities : (form.activity ? [{ title: form.activity }] : [])).map((activity, idx) => (
                 <p key={activity._id || `${activity.title}-${idx}`} className="text-stone-700 text-sm">🏄 <strong>Activity:</strong> {activity.title || activity}</p>
               ))}
-              {[ ["📅", "Date", form.date?.toLocaleDateString("en-GB", { weekday: "long", year: "numeric", month: "long", day: "numeric" })], ["⏱", "Time", form.slot], ["👥", "Guests", form.guests] ].map(([e, l, v]) => (
+              {[ ["📅", "Date", formatDisplayDate(form.date)], ["⏱", "Time", form.slot], ["👥", "Guests", form.guests] ].map(([e, l, v]) => (
                 <p key={l} className="text-stone-700 text-sm">{e} <strong>{l}:</strong> {v}</p>
               ))}
               {priceEst && <p className="text-stone-700 text-sm">💰 <strong>Estimated:</strong> $ {priceEst.toLocaleString()}</p>}
@@ -240,7 +277,7 @@ export default function Booking({ selectedActivities = [], removeActivity = () =
                   <span className="w-7 h-7 rounded-full bg-cyan-500 text-white text-xs flex items-center justify-center font-black">3</span> Pick a Date
                 </h3>
                 <MiniCalendar selected={form.date} onSelect={d => set("date", d)} minDate={today} blockedDates={blockedDates} />
-                {form.date && <p className="text-cyan-600 text-sm font-semibold mt-3 text-center">📅 {form.date.toLocaleDateString("en-GB", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}</p>}
+                {form.date && <p className="text-cyan-600 text-sm font-semibold mt-3 text-center">📅 {formatDisplayDate(form.date)}</p>}
                 {errors.date && <p className="text-red-500 text-xs mt-2 text-center">{errors.date}</p>}
               </div>
 
@@ -267,7 +304,7 @@ export default function Booking({ selectedActivities = [], removeActivity = () =
                     </div>
                   )}
 
-                  {[ ["Date", form.date ? form.date.toLocaleDateString("en-GB") : "—"], ["Time", form.slot ? form.slot.split(" ")[0] : "—"], ["Guests", form.guests] ].map(([l, v]) => (
+                  {[ ["Date", form.date ? formatDisplayDate(form.date) : "—"], ["Time", form.slot ? form.slot.split(" ")[0] : "—"], ["Guests", form.guests] ].map(([l, v]) => (
                     <div key={l} className="flex justify-between items-center py-2 border-b border-stone-200 last:border-0">
                       <span className="text-stone-400">{l}</span>
                       <span className="text-stone-800 font-semibold text-right max-w-[60%] truncate">{v}</span>

@@ -5,6 +5,7 @@ const {
   isValidBookingTransition,
   normalizeBookingStatus,
   normalizeSelectedActivityIds,
+  isValidBookingDate,
 } = require("../models/Booking");
 const { protect } = require("../middleware/auth");
 const {
@@ -38,6 +39,11 @@ router.post("/", async (req, res, next) => {
     }
 
     const guestCount = parseInt(guests) || 1;
+    const bookingDate = typeof date === "string" ? date.trim() : "";
+
+    if (!isValidBookingDate(bookingDate)) {
+      return res.status(400).json({ success: false, message: "Please provide a valid booking date in YYYY-MM-DD format." });
+    }
 
     // Determine activities: accept legacy `activity` (string title) or new `activities` (array of IDs)
     let bookingActivities = [];
@@ -69,7 +75,7 @@ router.post("/", async (req, res, next) => {
       // Keep legacy `activity` populated for backward-compatibility
       activity: bookingActivities.map(a => a.title).join(", "),
       activities: bookingActivities,
-      date,
+      date: bookingDate,
       slot,
       guests: guestCount,
       total: totalPrice,
