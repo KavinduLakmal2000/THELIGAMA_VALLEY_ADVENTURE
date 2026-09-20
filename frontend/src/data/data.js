@@ -307,3 +307,8 @@ export const footer = {
   ],
   copyright: "© Alpine To Island. All Rights Reserved.",
 };
+
+// ─── WHATSAPP CONFIG ─────────────────────────────────────────────────────────
+// Add your WhatsApp number here in international format without plus sign.
+// Example: 947XXXXXXXX
+export const whatsappNumber = "+94716954412";

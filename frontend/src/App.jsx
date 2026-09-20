@@ -13,6 +13,7 @@ import Booking from "./components/Booking";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import ParallaxDivider from "./components/ParallaxDivider";
+import WhatsAppButton from "./components/WhatsAppButton";
 
 import SummerCampPage from "./pages/SummerCampPage";
 
@@ -142,6 +143,7 @@ function PublicSite() {
       />
       <Contact />
       <Footer />
+      <WhatsAppButton />
     </div>
   );
 }
